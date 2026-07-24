@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hashsight"
+version = "2.0.0"
+description = "HashSight - instant, auditable hashcat mode identification."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.8"
+authors = [{ name = "HashSight Contributors" }]
+keywords = ["hashcat", "hash", "security", "identification", "password-cracking"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Security",
+]
+
+[project.urls]
+Homepage = "https://github.com/azurekid/HashSight"
+
+[project.scripts]
+hashsight = "hashsight.cli:main"
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+completion = ["argcomplete>=3.5"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["hashsight*"]
+
+[tool.setuptools.package-data]
+hashsight = ["data/*.json", "assets/*.txt"]
