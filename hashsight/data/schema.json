@@ -1,0 +1,51 @@
+{
+  "$id": "https://github.com/azurekid/HashSight/hashsight/data/schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HashSight signature database",
+  "type": "object",
+  "required": ["version", "signatures"],
+  "properties": {
+    "version": { "type": "string" },
+    "source": { "type": "string" },
+    "description": { "type": "string" },
+    "signatures": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/signature" }
+    }
+  },
+  "definitions": {
+    "candidate": {
+      "type": "object",
+      "required": ["mode", "name", "category"],
+      "properties": {
+        "mode": { "type": "integer", "minimum": 0 },
+        "name": { "type": "string", "minLength": 1 },
+        "category": { "type": "string", "minLength": 1 },
+        "john_format": { "type": "string", "minLength": 1 },
+        "popularity": { "type": "integer", "minimum": 1, "maximum": 10 }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "required": ["kind", "name", "category"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["Prefix", "Regex", "Hex"] },
+        "match": { "type": "string", "description": "Required for kind Prefix/Regex." },
+        "length": { "type": "integer", "minimum": 1, "description": "Required for kind Hex." },
+        "mode": { "type": "integer", "minimum": 0 },
+        "name": { "type": "string", "minLength": 1 },
+        "category": { "type": "string", "minLength": 1 },
+        "john_format": { "type": "string", "minLength": 1 },
+        "verified": { "type": "boolean" },
+        "candidates": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/candidate" }
+        }
+      },
+      "oneOf": [
+        { "required": ["mode"] },
+        { "required": ["candidates"] }
+      ]
+    }
+  }
+}

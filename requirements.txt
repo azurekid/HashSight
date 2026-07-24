@@ -1,0 +1,3 @@
+# Compatibility requirements file for users/tools expecting pip -r.
+# The project itself is defined in pyproject.toml.
+-e .
