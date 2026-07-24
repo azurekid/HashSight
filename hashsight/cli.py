@@ -18,6 +18,18 @@ from .banner import show_banner
 
 _GREEN = "\033[32m"
 _RESET = "\033[0m"
+_MIN_VISIBLE_CANDIDATE_CERTAINTY = 25
+
+
+def _bounded_percent(value: str) -> int:
+    """Parse an integer percent value constrained to 0..100."""
+    try:
+        parsed = int(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("must be an integer between 0 and 100") from exc
+    if parsed < 0 or parsed > 100:
+        raise argparse.ArgumentTypeError("must be an integer between 0 and 100")
+    return parsed
 
 
 def _format_hash_for_display(value: str, full_hash: bool = False) -> str:
@@ -134,6 +146,17 @@ def _per_candidate_certainties(result: Any, top_certainty_pct: int) -> list[int]
     return out
 
 
+def _visible_candidates(
+    candidates: list[dict[str, Any]], certainties: list[int], min_certainty: int
+) -> list[tuple[dict[str, Any], int]]:
+    """Return only candidates that meet the minimum display certainty threshold."""
+    return [
+        (candidate, certainty)
+        for candidate, certainty in zip(candidates, certainties)
+        if certainty >= min_certainty
+    ]
+
+
 def _emit_progress(enabled: bool, message: str) -> None:
     """Write progress updates to stderr to avoid polluting result output."""
     if enabled:
@@ -157,6 +180,7 @@ def _cmd_hash(args: argparse.Namespace) -> int:
     progress_enabled = args.progress
     if progress_enabled is None:
         progress_enabled = not args.json
+    min_certainty = args.min_certainty
 
     results = []
     for value in values:
@@ -181,9 +205,12 @@ def _cmd_hash(args: argparse.Namespace) -> int:
             item = asdict(r)
             if item.get("candidates"):
                 candidate_certainties = _per_candidate_certainties(r, int(certainty.rstrip("%")))
-                for candidate, cand_certainty in zip(item["candidates"], candidate_certainties):
+                visible = _visible_candidates(item["candidates"], candidate_certainties, min_certainty)
+                item["candidates"] = []
+                for candidate, cand_certainty in visible:
                     candidate["john_format"] = candidate.get("john_format") or "-"
                     candidate["certainty"] = f"{cand_certainty}%"
+                    item["candidates"].append(candidate)
             item["john_format"] = item.get("john_format") or "-"
             item["certainty"] = certainty
             item["certainty_basis"] = basis
@@ -201,7 +228,20 @@ def _cmd_hash(args: argparse.Namespace) -> int:
 
             if r.candidates:
                 candidate_certainties = _per_candidate_certainties(r, int(certainty.rstrip("%")))
-                for candidate, cand_certainty in zip(r.candidates, candidate_certainties):
+                visible = _visible_candidates(r.candidates, candidate_certainties, min_certainty)
+                if not visible:
+                    summary_rows.append(
+                        [
+                            str(r.name or "Ambiguous candidates hidden"),
+                            "-",
+                            "-",
+                            str(r.category or "-"),
+                            f"<{min_certainty}% filtered",
+                            str(len(r.hash)),
+                            hash_table,
+                        ]
+                    )
+                for candidate, cand_certainty in visible:
                     summary_rows.append(
                         [
                             str(candidate.get("name", "-")),
@@ -323,6 +363,12 @@ def build_parser() -> argparse.ArgumentParser:
         dest="progress",
         action="store_false",
         help="Disable progress updates while analyzing input hashes.",
+    )
+    hash_parser.add_argument(
+        "--min-certainty",
+        type=_bounded_percent,
+        default=_MIN_VISIBLE_CANDIDATE_CERTAINTY,
+        help="Hide ambiguous candidates below this certainty percentage (0-100, default: 25).",
     )
     hash_parser.set_defaults(func=_cmd_hash, progress=None)
 
