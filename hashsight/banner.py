@@ -8,11 +8,13 @@ from pathlib import Path
 _RESET = "\033[0m"
 _BOLD = "\033[1m"
 _DIM = "\033[2m"
-_CYAN = "\033[36m"
-_BLUE = "\033[34m"
-_MAGENTA = "\033[35m"
-_YELLOW = "\033[33m"
-_GREEN = "\033[32m"
+_CYAN = "\033[38;5;51m"
+_AQUA = "\033[38;5;45m"
+_NEON_PINK = "\033[38;5;213m"
+_HOT_PINK = "\033[38;5;205m"
+_VIOLET = "\033[38;5;99m"
+_SUNSET_ORANGE = "\033[38;5;208m"
+_SUNSET_GOLD = "\033[38;5;220m"
 
 _FALLBACK_BANNER = r"""
   _   _           _      ____  _       _     _
@@ -50,7 +52,8 @@ def show_banner() -> None:
     if not lines:
         return
 
-    palette = [_CYAN, _BLUE, _MAGENTA, _YELLOW, _GREEN]
+    # Outrun / Miami Vice inspired row palette.
+    palette = [_NEON_PINK, _HOT_PINK, _VIOLET, _AQUA, _CYAN]
     styled_lines: list[str] = []
 
     for idx, line in enumerate(lines):
@@ -59,11 +62,15 @@ def show_banner() -> None:
             continue
 
         if "hash signature intelligence" in line.lower():
-            styled_lines.append(f"{_BOLD}{_YELLOW}{line}{_RESET}")
+            styled_lines.append(f"{_BOLD}{_SUNSET_ORANGE}{line}{_RESET}")
+            continue
+
+        if "|___/" in line:
+            styled_lines.append(f"{_DIM}{_SUNSET_GOLD}{line}{_RESET}")
             continue
 
         color = palette[idx % len(palette)]
-        style = _BOLD if idx < 2 else ""
+        style = _BOLD if idx < 3 else ""
         if idx >= len(lines) - 2:
             style = _DIM
         styled_lines.append(f"{style}{color}{line}{_RESET}")
