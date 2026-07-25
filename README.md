@@ -65,10 +65,21 @@ source .venv/bin/activate
 pip install .
 ```
 
-**`hashsight: command not found`** after install:
+**`hashsight: command not found`** after install, or pip warns
+`The script hashsight is installed in '/usr/local/bin' which is not on PATH`
+(common when installing as root, e.g. on Kali):
 
 ```bash
 python -m hashsight --help
+# or
+/usr/local/bin/hashsight --help
+```
+
+To make `hashsight` work directly in new shells, add the install directory to `PATH`:
+
+```bash
+echo 'export PATH="/usr/local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
 ```
 
 <details>

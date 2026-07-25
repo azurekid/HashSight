@@ -137,11 +137,37 @@ resolve_venv_abs() {
   fi
 }
 
+try_autoheal_venv_package() {
+  if ! command -v apt-get >/dev/null 2>&1; then
+    return 1
+  fi
+
+  local py_minor
+  py_minor="$("$PYTHON_BIN" -c 'import sys; print(f"{sys.version_info[0]}.{sys.version_info[1]}")' 2>/dev/null || true)"
+  if [[ -z "$py_minor" ]]; then
+    return 1
+  fi
+
+  warn "Attempting to auto-install python${py_minor}-venv via apt to fix virtual environment creation."
+  export DEBIAN_FRONTEND=noninteractive
+  if apt-get update && apt-get install -y --no-install-recommends "python${py_minor}-venv"; then
+    return 0
+  fi
+
+  warn "Falling back to generic python3-venv package."
+  apt-get install -y --no-install-recommends python3-venv
+}
+
 install_hashsight() {
   if ! "$PYTHON_BIN" -m venv "$VENV_DIR"; then
-    echo "Failed to create virtual environment with $PYTHON_BIN." >&2
-    echo "Install venv support (for apt-based distros: python3-venv) and retry." >&2
-    exit 1
+    warn "Virtual environment creation failed with $PYTHON_BIN (commonly missing ensurepip/venv support)."
+    rm -rf "$VENV_DIR"
+    if ! try_autoheal_venv_package || ! "$PYTHON_BIN" -m venv "$VENV_DIR"; then
+      echo "Failed to create virtual environment with $PYTHON_BIN." >&2
+      echo "Install venv support (for apt-based distros: python3-venv) and retry." >&2
+      exit 1
+    fi
+    echo "Virtual environment created successfully after installing venv support." >&2
   fi
   # shellcheck disable=SC1090
   source "$VENV_DIR/bin/activate"
