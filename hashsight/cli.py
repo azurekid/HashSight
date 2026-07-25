@@ -17,6 +17,8 @@ except ImportError:  # optional dependency
 
 from . import get_hash, get_signature
 from .banner import show_banner
+from .update_check import get_update_notice
+from .version import __version__
 
 _GREEN = "\033[32m"
 _YELLOW = "\033[33m"
@@ -258,6 +260,8 @@ def _cmd_hash(args: argparse.Namespace) -> int:
                 visible = _visible_candidates(item["candidates"], candidate_certainties, min_certainty)
                 item["candidates"] = []
                 for candidate, cand_certainty in visible:
+                    if candidate.get("mode") is None:
+                        candidate["mode"] = None
                     candidate["john_format"] = candidate.get("john_format") or "-"
                     candidate["certainty"] = f"{cand_certainty}%"
                     item["candidates"].append(candidate)
@@ -298,7 +302,7 @@ def _cmd_hash(args: argparse.Namespace) -> int:
                     summary_rows.append(
                         [
                             _paint(str(candidate.get("name", "-")), _CYAN, enabled=color_enabled),
-                            _paint(str(candidate.get("mode", "-")), _BLUE, enabled=color_enabled),
+                            _paint(str(candidate["mode"]) if candidate.get("mode") is not None else "-", _BLUE, enabled=color_enabled),
                             _paint(str(candidate.get("john_format") or "-"), _MAGENTA, enabled=color_enabled),
                             _paint(str(candidate.get("category", "-")), _DIM, enabled=color_enabled),
                             _paint(certainty_text, _certainty_color(certainty_text), _BOLD, enabled=color_enabled),
@@ -390,47 +394,54 @@ def _cmd_completion(args: argparse.Namespace) -> int:
 def _normalize_argv(argv: list[str]) -> list[str]:
     """Normalize convenience command aliases and implicit hash mode."""
     known_subcommands = {"hash", "signature", "completion"}
+    global_flags = {"--no-banner", "--no-update-check"}
     alias_to_command = {
         "--hash": "hash",
         "--signature": "signature",
         "--completion": "completion",
     }
 
+    prefix: list[str] = []
+    while argv and argv[0] in global_flags:
+        prefix.append(argv[0])
+        argv = argv[1:]
+
     if not argv:
         if not sys.stdin.isatty():
-            return ["hash"]
-        return argv
+            return [*prefix, "hash"]
+        return prefix
 
     first = argv[0]
 
     # Keep top-level help behavior intact.
     if first in {"-h", "--help"}:
-        return argv
-
-    # Handle global --no-banner before command selection.
-    if first == "--no-banner":
-        if len(argv) == 1:
-            if not sys.stdin.isatty():
-                return ["--no-banner", "hash"]
-            return argv
-
-        second = argv[1]
-        if second in alias_to_command:
-            return ["--no-banner", alias_to_command[second], *argv[2:]]
-        if second in known_subcommands or second in {"-h", "--help"}:
-            return argv
-        return ["--no-banner", "hash", *argv[1:]]
+        return [*prefix, *argv]
 
     # Explicit long-form command aliases.
     if first in alias_to_command:
-        return [alias_to_command[first], *argv[1:]]
+        return [*prefix, alias_to_command[first], *argv[1:]]
 
     # Existing explicit subcommands.
     if first in known_subcommands:
-        return argv
+        return [*prefix, *argv]
 
     # Default to hash mode for direct hash args and piped input.
-    return ["hash", *argv]
+    return [*prefix, "hash", *argv]
+
+
+def _emit_update_notice(args: argparse.Namespace) -> None:
+    """Optionally print a one-line update notice in interactive sessions."""
+    if args.no_update_check:
+        return
+    if not sys.stderr.isatty():
+        return
+    notice = get_update_notice(__version__)
+    if not notice:
+        return
+    color_enabled = _colors_enabled()
+    prefix = _paint("update", _BOLD, _YELLOW, enabled=color_enabled)
+    body = _paint(notice, _DIM, enabled=color_enabled)
+    print(f"{prefix}: {body}", file=sys.stderr)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -442,6 +453,12 @@ def build_parser() -> argparse.ArgumentParser:
             "  --hash         alias for the 'hash' command\n"
             "  --signature    alias for the 'signature' command\n"
             "  --completion   alias for the 'completion' command\n\n"
+            "Feedback / pull requests:\n"
+            "  Open issues or PRs at: https://github.com/azurekid/HashSight\n"
+            "  Include the output of: hashsight --help and your sample hash shape (masked).\n\n"
+            "Version checks:\n"
+            "  HashSight checks PyPI for new versions in interactive sessions (cached daily).\n"
+            "  Disable with: --no-update-check or HASHSIGHT_NO_UPDATE_CHECK=1\n\n"
             "Examples:\n"
             "  hashsight --hash '$6$rounds=5000$abc$def...'\n"
             "  hashsight '$6$rounds=5000$abc$def...'\n"
@@ -452,6 +469,11 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--no-banner", action="store_true", help="Suppress the startup banner.")
+    parser.add_argument(
+        "--no-update-check",
+        action="store_true",
+        help="Disable automatic update checks for newer releases.",
+    )
     parser.add_argument(
         "--hash",
         dest="hash_alias",
@@ -546,6 +568,8 @@ def main(argv: Optional[list[str]] = None) -> int:
     if args.command != "completion" and not args.no_banner:
         show_banner()
         print()
+    if args.command != "completion":
+        _emit_update_notice(args)
 
     return args.func(args)
 

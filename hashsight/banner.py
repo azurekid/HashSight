@@ -5,6 +5,8 @@ import os
 import sys
 from pathlib import Path
 
+from .version import __version__
+
 _RESET = "\033[0m"
 _BOLD = "\033[1m"
 _DIM = "\033[2m"
@@ -42,10 +44,12 @@ def show_banner() -> None:
         return
 
     banner = _load_banner().rstrip("\n")
+    version_text = f"v{__version__}"
 
     # Colorful in interactive terminals, plain everywhere else.
     if not sys.stdout.isatty() or os.environ.get("NO_COLOR") is not None:
         print(banner)
+        print(version_text)
         return
 
     lines = banner.splitlines()
@@ -75,4 +79,5 @@ def show_banner() -> None:
             style = _DIM
         styled_lines.append(f"{style}{color}{line}{_RESET}")
 
+    styled_lines.append(f"{_DIM}{_AQUA}{version_text}{_RESET}")
     print("\n".join(styled_lines))

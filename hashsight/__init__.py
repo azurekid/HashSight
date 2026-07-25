@@ -9,15 +9,15 @@ from typing import Any, Optional
 
 from .matcher import HashResult, HashSightIndex, resolve_hash
 from .signatures import filter_signatures, load_signatures
+from .version import __version__
 
 __all__ = [
     "HashResult",
     "get_hash",
     "get_signature",
     "load_signatures",
+    "__version__",
 ]
-
-__version__ = "2.0.0"
 
 _signatures: list[dict[str, Any]] = load_signatures()
 _index = HashSightIndex(_signatures)

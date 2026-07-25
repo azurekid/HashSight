@@ -157,6 +157,10 @@ Use `--no-banner` to suppress it:
 hashsight --no-banner --help
 ```
 
+HashSight also checks for newer releases automatically in interactive sessions
+(cached once per day). Disable this with `--no-update-check` or the environment
+variable `HASHSIGHT_NO_UPDATE_CHECK=1`.
+
 Progress lines are shown during analysis in green terminal text using `-` markers.
 
 Use `--no-progress` to disable status lines:
@@ -255,6 +259,20 @@ If completion still doesn't trigger, confirm `hashsight` resolves to the same
 interpreter/environment where `argcomplete` is installed (`which hashsight`, then
 `pip show argcomplete` in that same environment) - a `hashsight` on PATH from a
 different venv than the one with `argcomplete` installed will not complete.
+
+## Feedback and PRs
+
+Feedback, bug reports, and pull requests are welcome at:
+
+- https://github.com/azurekid/HashSight/issues
+- https://github.com/azurekid/HashSight/pulls
+
+When reporting a detection issue, include:
+
+1. `hashsight --help` output (for version context)
+2. the command you ran
+3. masked sample hash shape (do not paste sensitive real hashes)
+4. expected mode(s) and actual mode(s)
 
 
 ### Table output

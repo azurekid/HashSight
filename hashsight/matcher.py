@@ -110,9 +110,11 @@ def complete_match(hash_value: str, entry: dict[str, Any]) -> HashResult:
             deterministic_structural_match=top_strong_match,
         )
 
+    mode = entry.get("mode")
+
     confidence = "Exact"
     if entry.get("verified") is False:
-        confidence = f"Exact (unverified mode #{entry.get('mode')})"
+        confidence = f"Exact (unverified mode #{mode})"
 
     return HashResult(
         hash=hash_value,
