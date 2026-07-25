@@ -65,6 +65,13 @@ def _read_hashes(args: argparse.Namespace) -> list[str]:
 
 
 def _cmd_hash(args: argparse.Namespace) -> int:
+    if not args.hash and sys.stdin.isatty():
+        print(
+            "No hash input provided. Pass one or more hashes, or pipe input via stdin.",
+            file=sys.stderr,
+        )
+        return 2
+
     values = _read_hashes(args)
     if not values:
         return 0
@@ -272,6 +279,7 @@ def _normalize_argv(argv: list[str]) -> list[str]:
     """Normalize convenience command aliases and implicit hash mode."""
     known_subcommands = {"hash", "signature", "completion"}
     global_flags = {"--no-banner", "--no-update-check"}
+    passthrough_flags = {"--version", "-h", "--help"}
     alias_to_command = {
         "--hash": "hash",
         "--signature": "signature",
@@ -290,8 +298,8 @@ def _normalize_argv(argv: list[str]) -> list[str]:
 
     first = argv[0]
 
-    # Keep top-level help behavior intact.
-    if first in {"-h", "--help"}:
+    # Keep top-level parser flags as-is.
+    if first in passthrough_flags:
         return [*prefix, *argv]
 
     # Explicit long-form command aliases.
