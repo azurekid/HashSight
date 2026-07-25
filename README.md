@@ -30,7 +30,7 @@ reality:
 
 ## Install
 
-Requires Python 3.11+.
+Requires Python 3.9+.
 
 Quick start (recommended)
 
@@ -97,6 +97,22 @@ echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
+If `--with-apt` shows apt repository errors (for example `NO_PUBKEY` or `404 Not Found`),
+HashSight now continues with whatever Python is already installed. In that case:
+
+```bash
+python3 --version
+python3 -m venv --help
+```
+
+If Python is below 3.9 or `venv` is missing, fix apt repositories first, then rerun:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y python3 python3-venv python3-pip
+sudo ./install-linux.sh --with-apt
+```
+
 Some shells cache command lookups. If install succeeded but the command is still not
 recognized in the same shell session, refresh and retry:
 
@@ -153,7 +169,7 @@ Important notes:
 - Do not use `--user` inside an active virtual environment.
 - `pip install -r requirements.txt` currently points to `-e .`, so it should
    produce the same result as `pip install -e .`.
-- HashSight requires Python >= 3.11.
+- HashSight requires Python >= 3.9.
 - If entrypoint creation still fails, run `python3 -m hashsight.cli --help` to
    confirm the package imports, then compare `python3 -m pip --version` and
    `which python3` to ensure pip and python are from the same environment.

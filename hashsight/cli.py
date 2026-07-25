@@ -61,6 +61,8 @@ def _emit_progress(enabled: bool, message: str) -> None:
 def _read_hashes(args: argparse.Namespace) -> list[str]:
     if args.hash:
         return args.hash
+    if sys.stdin.isatty():
+        return []
     return [line.strip() for line in sys.stdin if line.strip()]
 
 

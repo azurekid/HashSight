@@ -31,6 +31,10 @@ require_cmd() {
   fi
 }
 
+warn() {
+  echo "WARNING: $*" >&2
+}
+
 parse_args() {
   while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -66,12 +70,21 @@ bootstrap_apt_if_requested() {
 
   require_cmd apt-get
   export DEBIAN_FRONTEND=noninteractive
-  apt-get update
-  apt-get install -y --no-install-recommends \
+  if ! apt-get update; then
+    warn "apt-get update failed; continuing without apt bootstrap."
+    warn "Detected apt metadata/signature issues can cause this (for example NO_PUBKEY or 404 errors)."
+    warn "Fix apt repositories, then rerun with --with-apt if you want automatic dependency installation."
+    return
+  fi
+
+  if ! apt-get install -y --no-install-recommends \
     ca-certificates \
     python3 \
     python3-venv \
-    python3-pip
+    python3-pip; then
+    warn "apt install failed; continuing with currently available Python tooling."
+    warn "If virtualenv creation later fails, install package: python3-venv"
+  fi
 
   # When apt bootstrap is used and caller did not pin --python, use distro default python3.
   if [[ $PYTHON_BIN_EXPLICIT -eq 0 ]]; then
@@ -107,6 +120,7 @@ verify_python_version() {
 import sys
 if sys.version_info < (3, 11):
     print("HashSight requires Python >= 3.11. Detected:", sys.version.split()[0])
+    print("Install a newer Python and rerun, or pass --python <path-to-python>=3.11+.")
     raise SystemExit(1)
 print("Python version OK:", sys.version.split()[0])
 PY
@@ -123,7 +137,11 @@ resolve_venv_abs() {
 }
 
 install_hashsight() {
-  "$PYTHON_BIN" -m venv "$VENV_DIR"
+  if ! "$PYTHON_BIN" -m venv "$VENV_DIR"; then
+    echo "Failed to create virtual environment with $PYTHON_BIN." >&2
+    echo "Install venv support (for apt-based distros: python3-venv) and retry." >&2
+    exit 1
+  fi
   # shellcheck disable=SC1090
   source "$VENV_DIR/bin/activate"
 
