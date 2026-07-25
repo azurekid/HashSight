@@ -447,6 +447,18 @@ def main(argv: Optional[list[str]] = None) -> int:
     if argv is None:
         argv = sys.argv[1:]
 
+    stdin_is_tty = sys.stdin.isatty()
+
+    # Running `hashsight` with no args should show help in interactive shells.
+    if not argv and stdin_is_tty:
+        if "--no-banner" not in argv:
+            show_banner()
+            print()
+        parser = build_parser()
+        parser.print_help()
+        print()
+        return 0
+
     # Show logo on help output (unless user explicitly suppresses the banner).
     if any(arg in {"-h", "--help"} for arg in argv) and "--no-banner" not in argv:
         show_banner()
