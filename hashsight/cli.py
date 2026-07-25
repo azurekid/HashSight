@@ -65,16 +65,13 @@ def _read_hashes(args: argparse.Namespace) -> list[str]:
 
 
 def _cmd_hash(args: argparse.Namespace) -> int:
-    if not args.hash and sys.stdin.isatty():
+    values = _read_hashes(args)
+    if not values:
         print(
             "No hash input provided. Pass one or more hashes, or pipe input via stdin.",
             file=sys.stderr,
         )
         return 2
-
-    values = _read_hashes(args)
-    if not values:
-        return 0
 
     progress_enabled = args.progress if args.progress is not None else not args.json
     min_certainty = args.min_certainty
