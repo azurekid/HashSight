@@ -387,12 +387,89 @@ def _cmd_completion(args: argparse.Namespace) -> int:
     return 0
 
 
+def _normalize_argv(argv: list[str]) -> list[str]:
+    """Normalize convenience command aliases and implicit hash mode."""
+    known_subcommands = {"hash", "signature", "completion"}
+    alias_to_command = {
+        "--hash": "hash",
+        "--signature": "signature",
+        "--completion": "completion",
+    }
+
+    if not argv:
+        if not sys.stdin.isatty():
+            return ["hash"]
+        return argv
+
+    first = argv[0]
+
+    # Keep top-level help behavior intact.
+    if first in {"-h", "--help"}:
+        return argv
+
+    # Handle global --no-banner before command selection.
+    if first == "--no-banner":
+        if len(argv) == 1:
+            if not sys.stdin.isatty():
+                return ["--no-banner", "hash"]
+            return argv
+
+        second = argv[1]
+        if second in alias_to_command:
+            return ["--no-banner", alias_to_command[second], *argv[2:]]
+        if second in known_subcommands or second in {"-h", "--help"}:
+            return argv
+        return ["--no-banner", "hash", *argv[1:]]
+
+    # Explicit long-form command aliases.
+    if first in alias_to_command:
+        return [alias_to_command[first], *argv[1:]]
+
+    # Existing explicit subcommands.
+    if first in known_subcommands:
+        return argv
+
+    # Default to hash mode for direct hash args and piped input.
+    return ["hash", *argv]
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="hashsight",
         description="HashSight - identify hashcat modes from a hash string, without cracking anything.",
+        epilog=(
+            "Command aliases:\n"
+            "  --hash         alias for the 'hash' command\n"
+            "  --signature    alias for the 'signature' command\n"
+            "  --completion   alias for the 'completion' command\n\n"
+            "Examples:\n"
+            "  hashsight --hash '$6$rounds=5000$abc$def...'\n"
+            "  hashsight '$6$rounds=5000$abc$def...'\n"
+            "  hashsight --hash < hashes.txt\n"
+            "  hashsight --signature --mode 1800\n"
+            "  hashsight --completion zsh --check"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--no-banner", action="store_true", help="Suppress the startup banner.")
+    parser.add_argument(
+        "--hash",
+        dest="hash_alias",
+        action="store_true",
+        help="Alias for the 'hash' command (supports direct hashes and stdin).",
+    )
+    parser.add_argument(
+        "--signature",
+        dest="signature_alias",
+        action="store_true",
+        help="Alias for the 'signature' command.",
+    )
+    parser.add_argument(
+        "--completion",
+        dest="completion_alias",
+        action="store_true",
+        help="Alias for the 'completion' command.",
+    )
 
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -456,22 +533,12 @@ def main(argv: Optional[list[str]] = None) -> int:
     if argv is None:
         argv = sys.argv[1:]
 
-    # Make `hash` optional: `hashsight <hash>` and `cat hashes.txt | hashsight`
-    # behave like `hashsight hash <hash>` and `cat hashes.txt | hashsight hash`.
-    known_subcommands = {"hash", "signature", "completion"}
-    if argv:
-        first = argv[0]
-        if first in {"-h", "--help"}:
-            pass
-        elif first == "--no-banner":
-            if len(argv) == 1 and not sys.stdin.isatty():
-                argv = ["--no-banner", "hash"]
-            elif len(argv) > 1 and argv[1] not in known_subcommands:
-                argv = ["--no-banner", "hash", *argv[1:]]
-        elif first not in known_subcommands:
-            argv = ["hash", *argv]
-    elif not sys.stdin.isatty():
-        argv = ["hash"]
+    # Show logo on help output (unless user explicitly suppresses the banner).
+    if any(arg in {"-h", "--help"} for arg in argv) and "--no-banner" not in argv:
+        show_banner()
+        print()
+
+    argv = _normalize_argv(argv)
 
     parser = build_parser()
     args = parser.parse_args(argv)

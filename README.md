@@ -135,12 +135,26 @@ Important notes:
 
 ```bash
 hashsight hash '$6$rounds=5000$abc$def...'
+hashsight --hash '$6$rounds=5000$abc$def...'
 
 # `hash` is optional for direct hash input
 hashsight '$6$rounds=5000$abc$def...'
 
 # file input also works without `hash`
 hashsight < hashes.txt
+hashsight --hash < hashes.txt
+```
+
+Global help shows the logo/banner by default:
+
+```bash
+hashsight --help
+```
+
+Use `--no-banner` to suppress it:
+
+```bash
+hashsight --no-banner --help
 ```
 
 Progress lines are shown during analysis in green terminal text using `-` markers.
@@ -174,10 +188,13 @@ Look up known signatures:
 
 ```bash
 hashsight signature --mode 1800
+hashsight --signature --mode 1800
 hashsight signature --category 'Crypto Wallet'
+hashsight --signature --category 'Crypto Wallet'
 
 # Completion health check
 hashsight completion zsh --check
+hashsight --completion zsh --check
 ```
 
 ### Shell tab completion
