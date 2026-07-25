@@ -178,6 +178,7 @@ def _cmd_hash(args: argparse.Namespace) -> int:
             f"- {paint(hash_table, DIM, enabled=color_enabled)}: "
             f"{paint(basis, DIM, enabled=color_enabled)}"
         )
+    print()
 
     return 0
 
@@ -223,6 +224,7 @@ def _cmd_signature(args: argparse.Namespace) -> int:
         print(render_table(headers, summary_rows))
     else:
         print("No signatures matched the provided filters.")
+    print()
     return 0
 
 
