@@ -5,6 +5,15 @@ import os
 import sys
 from pathlib import Path
 
+_RESET = "\033[0m"
+_BOLD = "\033[1m"
+_DIM = "\033[2m"
+_CYAN = "\033[36m"
+_BLUE = "\033[34m"
+_MAGENTA = "\033[35m"
+_YELLOW = "\033[33m"
+_GREEN = "\033[32m"
+
 _FALLBACK_BANNER = r"""
   _   _           _      ____  _       _     _
  | | | | __ _ ___| |__  / ___|(_) __ _| |__ | |_
@@ -32,8 +41,31 @@ def show_banner() -> None:
 
     banner = _load_banner().rstrip("\n")
 
-    # Green by default for terminal-first workflows.
-    if sys.stdout.isatty():
-        print(f"\033[32m{banner}\033[0m")
-    else:
+    # Colorful in interactive terminals, plain everywhere else.
+    if not sys.stdout.isatty() or os.environ.get("NO_COLOR") is not None:
         print(banner)
+        return
+
+    lines = banner.splitlines()
+    if not lines:
+        return
+
+    palette = [_CYAN, _BLUE, _MAGENTA, _YELLOW, _GREEN]
+    styled_lines: list[str] = []
+
+    for idx, line in enumerate(lines):
+        if not line.strip():
+            styled_lines.append(line)
+            continue
+
+        if "hash signature intelligence" in line.lower():
+            styled_lines.append(f"{_BOLD}{_YELLOW}{line}{_RESET}")
+            continue
+
+        color = palette[idx % len(palette)]
+        style = _BOLD if idx < 2 else ""
+        if idx >= len(lines) - 2:
+            style = _DIM
+        styled_lines.append(f"{style}{color}{line}{_RESET}")
+
+    print("\n".join(styled_lines))
