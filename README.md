@@ -70,7 +70,7 @@ python3 -m pip install .
 Quick Linux install (fault-resistant, advanced)
 
 ```bash
-# Optional: bootstrap Python 3.11 + venv tooling via apt (Debian/Ubuntu)
+# Optional: bootstrap distro Python + venv tooling via apt (Debian/Ubuntu)
 sudo ./install-linux.sh --with-apt
 
 # Standard local install (no apt)

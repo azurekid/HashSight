@@ -69,14 +69,37 @@ bootstrap_apt_if_requested() {
   apt-get update
   apt-get install -y --no-install-recommends \
     ca-certificates \
-    python3.11 \
-    python3.11-venv \
+    python3 \
+    python3-venv \
     python3-pip
 
-  # When apt bootstrap is used and caller did not pin --python, prefer 3.11 explicitly.
+  # When apt bootstrap is used and caller did not pin --python, use distro default python3.
   if [[ $PYTHON_BIN_EXPLICIT -eq 0 ]]; then
-    PYTHON_BIN="python3.11"
+    PYTHON_BIN="python3"
   fi
+}
+
+pick_python_if_needed() {
+  if [[ $PYTHON_BIN_EXPLICIT -eq 1 ]]; then
+    return
+  fi
+
+  local candidates=(python3 python3.13 python3.12 python3.11)
+  local candidate
+  for candidate in "${candidates[@]}"; do
+    if ! command -v "$candidate" >/dev/null 2>&1; then
+      continue
+    fi
+
+    if "$candidate" - <<'PY' >/dev/null 2>&1
+import sys
+raise SystemExit(0 if sys.version_info >= (3, 11) else 1)
+PY
+    then
+      PYTHON_BIN="$candidate"
+      return
+    fi
+  done
 }
 
 verify_python_version() {
@@ -205,6 +228,7 @@ print_summary() {
 
 parse_args "$@"
 bootstrap_apt_if_requested
+pick_python_if_needed
 require_cmd "$PYTHON_BIN"
 resolve_venv_abs
 verify_python_version
