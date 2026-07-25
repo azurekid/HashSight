@@ -30,149 +30,69 @@ reality:
 
 ## Install
 
-Requires Python 3.9+.
-
-Quick start (recommended)
+Requires Python 3.11+.
 
 ```bash
 git clone https://github.com/azurekid/HashSight.git
 cd HashSight
+
+# Install HashSight
+pip install .
+
+# Run HashSight
+hashsight --help
+```
+
+If `hashsight` is not on your PATH yet, run it as a module instead:
+
+```bash
+python -m hashsight --help
+```
+
+### Troubleshooting
+
+**`error: externally-managed-environment`** (common on Debian/Ubuntu/Kali):
+
+```bash
+pip install . --break-system-packages
+```
+
+or install into a virtual environment instead:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install .
+```
+
+**`hashsight: command not found`** after install:
+
+```bash
+python -m hashsight --help
+```
+
+<details>
+<summary>Optional: scripted installer for Linux (advanced, not required)</summary>
+
+`install-linux.sh` creates a dedicated virtualenv and launcher for you, with an
+optional `--with-apt` flag to bootstrap Python via apt first:
+
+```bash
+./install-linux.sh
+sudo ./install-linux.sh --with-apt
+```
+
+`run-hashsight.sh` runs HashSight directly from a cloned checkout, without
+installing anything:
+
+```bash
 ./run-hashsight.sh --help
 ```
 
-Run a hash immediately:
+These scripts are optional convenience wrappers around the same `pip install .`
+flow above and are not required for normal use.
 
-```bash
-./run-hashsight.sh hash '$6$rounds=5000$abc$def...'
-```
-
-What this does on first run:
-
-- checks Python version
-- runs HashSight directly from source
-
-No virtual environment or pip install is required for this quick path.
-
-Tip: create a shell alias if you want a shorter command:
-
-```bash
-alias hashsight='~/HashSight/run-hashsight.sh'
-```
-
-Manual install (advanced)
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python3 -m pip install .
-```
-
-Quick Linux install (fault-resistant, advanced)
-
-```bash
-# Optional: bootstrap distro Python + venv tooling via apt (Debian/Ubuntu)
-sudo ./install-linux.sh --with-apt
-
-# Standard local install (no apt)
-./install-linux.sh
-```
-
-The installer script validates Python version, creates a virtual environment,
-installs HashSight in editable mode, refreshes shell command cache, and verifies
-that `hashsight` is callable. It also creates a launcher at
-`~/.local/bin/hashsight` so you do not need to manually run venv/pip steps.
-
-If `~/.local/bin` is not already on your PATH, add it once:
-
-```bash
-export PATH="$HOME/.local/bin:$PATH"
-```
-
-If `hashsight` still says "command not found" after install, run it directly once,
-then fix PATH permanently:
-
-```bash
-~/.local/bin/hashsight --help
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-```
-
-If `--with-apt` shows apt repository errors (for example `NO_PUBKEY` or `404 Not Found`),
-HashSight now continues with whatever Python is already installed. In that case:
-
-```bash
-python3 --version
-python3 -m venv --help
-```
-
-If Python is below 3.9 or `venv` is missing, fix apt repositories first, then rerun:
-
-```bash
-sudo apt-get update
-sudo apt-get install -y python3 python3-venv python3-pip
-sudo ./install-linux.sh --with-apt
-```
-
-Some shells cache command lookups. If install succeeded but the command is still not
-recognized in the same shell session, refresh and retry:
-
-```bash
-# bash/sh
-hash -r
-
-# zsh
-rehash
-
-hashsight --help
-```
-
-```bash
-git clone https://github.com/azurekid/HashSight.git
-cd HashSight
-python3 -m venv .venv
-source .venv/bin/activate
-python3 -m pip install .
-```
-
-If your tooling expects requirements files:
-
-```bash
-python3 -m pip install -r requirements.txt
-```
-
-Optional: install shell tab completion support:
-
-```bash
-python3 -m pip install '.[completion]'
-```
-
-Linux troubleshooting: command not found after install
-
-If `hashsight` is not recognized after install, the package usually did not finish
-installing, it was installed into a different Python environment, or Python is
-below the minimum supported version.
-
-Use this exact sequence inside your virtual environment:
-
-```bash
-source .venv/bin/activate
-python3 --version
-python3 -m pip install --upgrade pip setuptools wheel
-python3 -m pip install -e .
-hash -r
-which hashsight
-hashsight --help
-```
-
-Important notes:
-
-- Do not use `--user` inside an active virtual environment.
-- `pip install -r requirements.txt` currently points to `-e .`, so it should
-   produce the same result as `pip install -e .`.
-- HashSight requires Python >= 3.9.
-- If entrypoint creation still fails, run `python3 -m hashsight.cli --help` to
-   confirm the package imports, then compare `python3 -m pip --version` and
-   `which python3` to ensure pip and python are from the same environment.
+</details>
 
 ## Usage
 

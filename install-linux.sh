@@ -11,6 +11,7 @@ WITH_APT=0
 PYTHON_BIN="python3"
 VENV_DIR=".venv"
 SYSTEM_BIN="/usr/local/bin/hashsight"
+SYSTEM_BIN_FALLBACK="/usr/bin/hashsight"
 PYTHON_BIN_EXPLICIT=0
 
 show_help() {
@@ -172,6 +173,7 @@ resolve_target_home() {
 write_launcher() {
   local launcher_path
   launcher_path="$1"
+  mkdir -p "$(dirname "$launcher_path")"
   cat > "$launcher_path" <<EOF
 #!/usr/bin/env bash
 exec "$HASHSIGHT_BIN" "\$@"
@@ -187,9 +189,16 @@ install_launchers() {
   write_launcher "$USER_LAUNCHER"
 
   SYSTEM_LAUNCHER=""
-  if [[ -w "/usr/local/bin" ]]; then
-    SYSTEM_LAUNCHER="$SYSTEM_BIN"
-    write_launcher "$SYSTEM_LAUNCHER"
+  if [[ $EUID -eq 0 ]]; then
+    if write_launcher "$SYSTEM_BIN"; then
+      SYSTEM_LAUNCHER="$SYSTEM_BIN"
+    elif write_launcher "$SYSTEM_BIN_FALLBACK"; then
+      SYSTEM_LAUNCHER="$SYSTEM_BIN_FALLBACK"
+    fi
+  elif [[ -d "$(dirname "$SYSTEM_BIN")" && -w "$(dirname "$SYSTEM_BIN")" ]]; then
+    if write_launcher "$SYSTEM_BIN"; then
+      SYSTEM_LAUNCHER="$SYSTEM_BIN"
+    fi
   fi
 }
 
@@ -201,7 +210,11 @@ show_path_help_if_needed() {
 
   echo "HashSight installed, but 'hashsight' is not currently on your PATH." >&2
   echo "You can run it right now with:" >&2
-  echo "  ${USER_LAUNCHER} --help" >&2
+  if [[ -n "$SYSTEM_LAUNCHER" ]]; then
+    echo "  ${SYSTEM_LAUNCHER} --help" >&2
+  else
+    echo "  ${USER_LAUNCHER} --help" >&2
+  fi
   if [[ -n "$SYSTEM_LAUNCHER" ]]; then
     echo "A system launcher was installed at: $SYSTEM_LAUNCHER" >&2
   fi
