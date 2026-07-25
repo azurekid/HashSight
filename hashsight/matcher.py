@@ -83,10 +83,14 @@ def complete_match(hash_value: str, entry: dict[str, Any]) -> HashResult:
                 candidate, hint_terms, salt_features
             )
             candidate_copy = dict(candidate)
-            candidate_copy["john_format"] = candidate_copy.get("john_format") or john_format_for(
-                candidate_copy.get("mode"),
-                candidate_copy.get("name"),
-                candidate_copy.get("category"),
+            candidate_copy["john_format"] = (
+                candidate_copy.get("john_format")
+                or entry.get("john_format")
+                or john_format_for(
+                    candidate_copy.get("mode"),
+                    candidate_copy.get("name"),
+                    candidate_copy.get("category"),
+                )
             )
             candidate_copy["match_score"] = score
             scored.append((score, candidate_copy, hint_matched, structural_matched, strong_match))

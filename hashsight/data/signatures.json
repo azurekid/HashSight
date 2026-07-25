@@ -2848,13 +2848,15 @@
           "mode": 17300,
           "name": "SHA3-224",
           "category": "Raw Digest",
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "raw-sha3"
         },
         {
           "mode": 17700,
           "name": "Keccak-224",
           "category": "Raw Digest",
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "raw-keccak"
         },
         {
           "mode": 34400,
@@ -2887,19 +2889,22 @@
           "mode": 17400,
           "name": "SHA3-256",
           "category": "Raw Digest",
-          "popularity": 4
+          "popularity": 4,
+          "john_format": "raw-sha3"
         },
         {
           "mode": 17800,
           "name": "Keccak-256",
           "category": "Raw Digest",
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "raw-keccak-256"
         },
         {
           "mode": 11700,
           "name": "GOST R 34.11-2012 (Streebog) 256-bit",
           "category": "Raw Digest",
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "stribog-256"
         },
         {
           "mode": 6900,
@@ -2912,19 +2917,22 @@
           "mode": 31100,
           "name": "SM3",
           "category": "Raw Digest",
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "raw-sm3"
         },
         {
           "mode": 31000,
           "name": "BLAKE2s-256",
           "category": "Raw Digest",
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "raw-blake2"
         },
         {
           "mode": 34800,
           "name": "BLAKE2b-256",
           "category": "Raw Digest",
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "raw-blake2"
         },
         {
           "mode": 34600,
@@ -3059,13 +3067,15 @@
           "mode": 17500,
           "name": "SHA3-384",
           "category": "Raw Digest",
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "raw-sha3"
         },
         {
           "mode": 17900,
           "name": "Keccak-384",
           "category": "Raw Digest",
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "raw-keccak"
         },
         {
           "mode": 10870,
@@ -3099,19 +3109,22 @@
           "mode": 17600,
           "name": "SHA3-512",
           "category": "Raw Digest",
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "raw-sha3"
         },
         {
           "mode": 18000,
           "name": "Keccak-512",
           "category": "Raw Digest",
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "raw-keccak"
         },
         {
           "mode": 11800,
           "name": "GOST R 34.11-2012 (Streebog) 512-bit",
           "category": "Raw Digest",
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "stribog-512"
         },
         {
           "mode": 1770,
@@ -3129,7 +3142,8 @@
           "mode": 600,
           "name": "BLAKE2b-512",
           "category": "Raw Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "raw-blake2"
         },
         {
           "mode": 1750,

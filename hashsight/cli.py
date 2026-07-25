@@ -2,38 +2,39 @@
 from __future__ import annotations
 
 import argparse
-import difflib
 import json
-import os
-import re
 import shutil
 import sys
 from dataclasses import asdict
-from typing import Any, Optional
+from typing import Optional
 
 try:
     import argcomplete
 except ImportError:  # optional dependency
     argcomplete = None
 
-from . import get_hash, get_signature
+from . import get_hash
 from .banner import show_banner
-from .john import john_format_for
+from .hash_confidence import confidence_profile, per_candidate_certainties, visible_candidates
+from .signature_search import signature_search_rows
+from .terminal_ui import (
+    BOLD,
+    CYAN,
+    DIM,
+    GREEN,
+    MAGENTA,
+    WHITE,
+    YELLOW,
+    certainty_color,
+    colors_enabled,
+    format_hash_for_table,
+    paint,
+    render_table,
+)
 from .update_check import get_update_notice
 from .version import __version__
 
-_GREEN = "\033[32m"
-_YELLOW = "\033[33m"
-_BLUE = "\033[34m"
-_MAGENTA = "\033[35m"
-_CYAN = "\033[36m"
-_RED = "\033[31m"
-_WHITE = "\033[97m"
-_BOLD = "\033[1m"
-_DIM = "\033[2m"
-_RESET = "\033[0m"
-_MIN_VISIBLE_CANDIDATE_CERTAINTY = 25
-_ANSI_RE = re.compile(r"\x1b\[[0-9;]*m")
+MIN_VISIBLE_CANDIDATE_CERTAINTY = 25
 
 
 def _bounded_percent(value: str) -> int:
@@ -47,288 +48,14 @@ def _bounded_percent(value: str) -> int:
     return parsed
 
 
-def _format_hash_for_display(value: str, full_hash: bool = False) -> str:
-    """Format hashes for human-readable CLI output.
-
-    Default behavior keeps short hashes intact and compacts very long hashes to
-    `prefix...suffix (len=N)` so table output remains readable.
-    """
-    if full_hash or len(value) <= 64:
-        return value
-    return f"{value[:24]}...{value[-16:]} (len={len(value)})"
-
-
-def _format_hash_for_table(value: str) -> str:
-    """Always return a masked hash preview for table output (never full hash)."""
-    preview = value[: min(12, len(value))]
-    return f"{preview}... (len={len(value)})"
-
-
-def _render_table(headers: list[str], rows: list[list[str]]) -> str:
-    """Render a simple fixed-width table for terminal output."""
-    widths = [_display_len(h) for h in headers]
-    for row in rows:
-        for idx, cell in enumerate(row):
-            widths[idx] = max(widths[idx], _display_len(cell))
-
-    def _line(parts: list[str]) -> str:
-        return " | ".join(_pad_cell(parts[i], widths[i]) for i in range(len(parts)))
-
-    divider = "-+-".join("-" * w for w in widths)
-    lines = [_line(headers), divider]
-    lines.extend(_line(row) for row in rows)
-    return "\n".join(lines)
-
-
-def _display_len(value: str) -> int:
-    """Length of text as displayed in terminal, excluding ANSI escape codes."""
-    return len(_ANSI_RE.sub("", value))
-
-
-def _pad_cell(value: str, width: int) -> str:
-    """Right-pad cell while accounting for ANSI escape sequences."""
-    pad = max(0, width - _display_len(value))
-    return value + (" " * pad)
-
-
-def _colors_enabled() -> bool:
-    """Enable ANSI colors only for interactive terminals unless explicitly disabled."""
-    return sys.stdout.isatty() and os.environ.get("NO_COLOR") is None
-
-
-def _paint(text: str, *codes: str, enabled: bool) -> str:
-    """Wrap text with ANSI styles when color is enabled."""
-    if not enabled or not codes:
-        return text
-    return "".join(codes) + text + _RESET
-
-
-def _certainty_color(certainty: str) -> str:
-    """Map certainty percentages to a semantic color."""
-    match = re.match(r"^(\d+)%$", certainty)
-    if not match:
-        return _DIM
-    value = int(match.group(1))
-    if value >= 90:
-        return _GREEN
-    if value >= 70:
-        return _CYAN
-    if value >= 50:
-        return _YELLOW
-    if value > 0:
-        return _MAGENTA
-    return _RED
-
-
-def _confidence_profile(result: Any) -> tuple[str, str]:
-    """Return certainty percentage and rationale based on confidence + candidates."""
-    confidence = result.confidence
-
-    if confidence == "Exact":
-        return "100%", "Unique signature match."
-
-    if confidence.startswith("Exact (unverified"):
-        return "90%", "Format is unique, but mode numbering may drift across releases."
-
-    if confidence == "Ambiguous":
-        candidates = result.candidates or []
-        if not candidates:
-            return "50%", "Shape matches multiple families, but no ranked candidates available."
-
-        scores = [c.get("match_score", c.get("popularity", 0) * 10) for c in candidates]
-        top = scores[0]
-        second = scores[1] if len(scores) > 1 else 0
-        denom = max(top, 10)
-        relative_gap = max(0.0, (top - second) / denom)
-
-        # Count real rivals: candidates whose score is close enough to the top one
-        # that they're still plausible. This scales with how decisive the win is,
-        # instead of the old flat "number of siblings in the family" penalty, which
-        # crushed certainty toward the floor for every large family (e.g. the 20-30
-        # candidate bare-hex buckets) regardless of how one-sided the evidence was.
-        band = max(6, top * 0.15)
-        contenders = sum(1 for s in scores if (top - s) <= band)
-
-        certainty = 42 + (relative_gap * 43)
-        certainty -= min(18, (contenders - 1) * 3)
-        if getattr(result, "hint_applied", False):
-            certainty += 10
-        if getattr(result, "deterministic_structural_match", False):
-            certainty += 20
-        elif getattr(result, "structural_hint_applied", False):
-            certainty += 8
-        certainty = int(round(max(20, min(96, certainty))))
-
-        basis = "Multiple valid modes share this shape; ranked by popularity."
-        if getattr(result, "hint_applied", False):
-            basis += " Context hint matched candidate metadata and improved ranking confidence."
-        if getattr(result, "deterministic_structural_match", False):
-            basis += " The hash's salt length matches a documented, mandatory constraint for this format."
-        elif getattr(result, "structural_hint_applied", False):
-            basis += " The hash's own salt length/format matched this candidate's known structure."
-        if contenders > 1:
-            basis += f" {contenders} candidates remain closely competitive."
-        return f"{certainty}%", basis
-
-    if confidence == "Unknown":
-        return "0%", "No signature matched the observed format."
-
-    if confidence == "Invalid":
-        return "0%", "Input was empty after trimming whitespace."
-
-    return "0%", "No confidence profile available."
-
-
-def _per_candidate_certainties(result: Any, top_certainty_pct: int) -> list[int]:
-    """Scale the overall certainty down per-candidate based on relative match_score.
-
-    Without this, every sibling in an ambiguous family (which can be 20-30+ entries)
-    would display the exact same certainty as the top pick, which is misleading -
-    a candidate with 1/10th the popularity and no matching evidence is obviously not
-    as certain as the winner.
-    """
-    candidates = result.candidates or []
-    if not candidates:
-        return []
-
-    scores = [max(0, c.get("match_score", c.get("popularity", 0) * 10)) for c in candidates]
-    top_score = max(scores[0], 1)
-    out = []
-    for score in scores:
-        ratio = score / top_score
-        value = int(round(top_certainty_pct * ratio))
-        out.append(max(3, min(top_certainty_pct, value)))
-    return out
-
-
-def _normalize_search_text(text: str) -> str:
-    """Normalize user-facing names for robust matching/scoring."""
-    return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9]+", " ", text.lower())).strip()
-
-
-def _search_certainty(query: Optional[str], target: str) -> int:
-    """Return certainty score (0-100) that a search query matches a signature name."""
-    if not query:
-        return 100
-
-    q = _normalize_search_text(query)
-    t = _normalize_search_text(target)
-    if not q or not t:
-        return 0
-
-    if q == t:
-        return 100
-    if t.startswith(q):
-        return 94
-    if f" {q} " in f" {t} ":
-        return 88
-    if q in t:
-        return 78
-
-    ratio = difflib.SequenceMatcher(None, q, t).ratio()
-    if ratio < 0.6:
-        return 0
-    return int(round(45 + (ratio * 50)))
-
-
-def _signature_search_rows(
-    *,
-    mode: Optional[int],
-    category: Optional[str],
-    name: Optional[str],
-) -> list[dict[str, Any]]:
-    """Search top-level signatures and nested candidates with certainty ranking."""
-    all_entries = get_signature()
-    rows: list[dict[str, Any]] = []
-
-    for entry in all_entries:
-        entry_candidates = entry.get("candidates") or []
-
-        # Consider a direct (non-candidate) entry result.
-        if not entry_candidates:
-            entry_mode = entry.get("mode")
-            entry_name = str(entry.get("name") or "")
-            entry_category = str(entry.get("category") or "-")
-
-            if mode is not None and entry_mode != mode:
-                continue
-            if category and entry_category != category:
-                continue
-
-            certainty = _search_certainty(name, entry_name)
-            if name and certainty == 0:
-                continue
-
-            rows.append(
-                {
-                    "name": entry_name or "-",
-                    "mode": entry_mode,
-                    "john": entry.get("john_format")
-                    or john_format_for(entry_mode, entry_name, entry_category)
-                    or "-",
-                    "category": entry_category,
-                    "certainty": certainty,
-                }
-            )
-            continue
-
-        # Consider each candidate row when an entry is ambiguous.
-        for candidate in entry_candidates:
-            cand_mode = candidate.get("mode")
-            cand_name = str(candidate.get("name") or "")
-            cand_category = str(candidate.get("category") or entry.get("category") or "-")
-
-            if mode is not None and cand_mode != mode:
-                continue
-            if category and cand_category != category:
-                continue
-
-            certainty = _search_certainty(name, cand_name)
-            if name and certainty == 0:
-                continue
-
-            rows.append(
-                {
-                    "name": cand_name or "-",
-                    "mode": cand_mode,
-                    "john": candidate.get("john_format")
-                    or john_format_for(cand_mode, cand_name, cand_category)
-                    or "-",
-                    "category": cand_category,
-                    "certainty": certainty,
-                }
-            )
-
-    # Deduplicate while preserving best certainty for each unique signature row.
-    best: dict[tuple[Any, ...], dict[str, Any]] = {}
-    for row in rows:
-        key = (row["name"], row["mode"], row["john"], row["category"])
-        existing = best.get(key)
-        if existing is None or row["certainty"] > existing["certainty"]:
-            best[key] = row
-
-    ranked = sorted(best.values(), key=lambda r: (r["certainty"], str(r["name"]).lower()), reverse=True)
-    return ranked
-
-
-def _visible_candidates(
-    candidates: list[dict[str, Any]], certainties: list[int], min_certainty: int
-) -> list[tuple[dict[str, Any], int]]:
-    """Return only candidates that meet the minimum display certainty threshold."""
-    return [
-        (candidate, certainty)
-        for candidate, certainty in zip(candidates, certainties)
-        if certainty >= min_certainty
-    ]
-
-
 def _emit_progress(enabled: bool, message: str) -> None:
     """Write progress updates to stderr to avoid polluting result output."""
-    if enabled:
-        if sys.stderr.isatty():
-            print(f"{_GREEN}- {message}{_RESET}", file=sys.stderr)
-        else:
-            print(f"- {message}", file=sys.stderr)
+    if not enabled:
+        return
+    if sys.stderr.isatty():
+        print(f"{GREEN}- {message}\033[0m", file=sys.stderr)
+    else:
+        print(f"- {message}", file=sys.stderr)
 
 
 def _read_hashes(args: argparse.Namespace) -> list[str]:
@@ -342,9 +69,7 @@ def _cmd_hash(args: argparse.Namespace) -> int:
     if not values:
         return 0
 
-    progress_enabled = args.progress
-    if progress_enabled is None:
-        progress_enabled = not args.json
+    progress_enabled = args.progress if args.progress is not None else not args.json
     min_certainty = args.min_certainty
 
     results = []
@@ -365,12 +90,12 @@ def _cmd_hash(args: argparse.Namespace) -> int:
 
     if args.json:
         payload = []
-        for r in results:
-            certainty, basis = _confidence_profile(r)
-            item = asdict(r)
+        for result in results:
+            certainty, basis = confidence_profile(result)
+            item = asdict(result)
             if item.get("candidates"):
-                candidate_certainties = _per_candidate_certainties(r, int(certainty.rstrip("%")))
-                visible = _visible_candidates(item["candidates"], candidate_certainties, min_certainty)
+                certainties = per_candidate_certainties(result, int(certainty.rstrip("%")))
+                visible = visible_candidates(item["candidates"], certainties, min_certainty)
                 item["candidates"] = []
                 for candidate, cand_certainty in visible:
                     candidate["john_format"] = candidate.get("john_format") or "-"
@@ -381,124 +106,123 @@ def _cmd_hash(args: argparse.Namespace) -> int:
             item["certainty_basis"] = basis
             payload.append(item)
         print(json.dumps(payload, indent=2))
-    else:
-        if progress_enabled:
-            print()
+        return 0
 
-        color_enabled = _colors_enabled()
+    if progress_enabled:
+        print()
 
-        summary_rows = []
-        reasons = []
-        for r in results:
-            certainty, basis = _confidence_profile(r)
-            hash_table = _format_hash_for_table(r.hash)
+    color_enabled = colors_enabled()
+    summary_rows: list[list[str]] = []
+    reasons: list[tuple[str, str]] = []
 
-            if r.candidates:
-                candidate_certainties = _per_candidate_certainties(r, int(certainty.rstrip("%")))
-                visible = _visible_candidates(r.candidates, candidate_certainties, min_certainty)
-                if not visible:
-                    summary_rows.append(
-                        [
-                            str(r.name or "Ambiguous candidates hidden"),
-                            "-",
-                            "-",
-                            str(r.category or "-"),
-                            f"<{min_certainty}% filtered",
-                            str(len(r.hash)),
-                            hash_table,
-                        ]
-                    )
-                for candidate, cand_certainty in visible:
-                    certainty_text = f"{cand_certainty}%"
-                    summary_rows.append(
-                        [
-                            _paint(str(candidate.get("name", "-")), _CYAN, enabled=color_enabled),
-                            _paint(str(candidate["mode"]) if candidate.get("mode") is not None else "-", _WHITE, _BOLD, enabled=color_enabled),
-                            _paint(str(candidate.get("john_format") or "-"), _MAGENTA, enabled=color_enabled),
-                            _paint(str(candidate.get("category", "-")), _DIM, enabled=color_enabled),
-                            _paint(certainty_text, _certainty_color(certainty_text), _BOLD, enabled=color_enabled),
-                            _paint(str(len(r.hash)), _DIM, enabled=color_enabled),
-                            _paint(hash_table, _DIM, enabled=color_enabled),
-                        ]
-                    )
-            else:
+    for result in results:
+        certainty, basis = confidence_profile(result)
+        hash_table = format_hash_for_table(result.hash)
+
+        if result.candidates:
+            certainties = per_candidate_certainties(result, int(certainty.rstrip("%")))
+            visible = visible_candidates(result.candidates, certainties, min_certainty)
+            if not visible:
                 summary_rows.append(
                     [
-                        _paint("-" if r.name is None else r.name, _CYAN, enabled=color_enabled),
-                        _paint("-" if r.mode is None else str(r.mode), _WHITE, _BOLD, enabled=color_enabled),
-                        _paint(str(r.john_format or "-"), _MAGENTA, enabled=color_enabled),
-                        _paint("-" if r.category is None else r.category, _DIM, enabled=color_enabled),
-                        _paint(certainty, _certainty_color(certainty), _BOLD, enabled=color_enabled),
-                        _paint(str(len(r.hash)), _DIM, enabled=color_enabled),
-                        _paint(hash_table, _DIM, enabled=color_enabled),
+                        str(result.name or "Ambiguous candidates hidden"),
+                        "-",
+                        "-",
+                        str(result.category or "-"),
+                        f"<{min_certainty}% filtered",
+                        str(len(result.hash)),
+                        hash_table,
                     ]
                 )
-
-            reasons.append((hash_table, basis))
-
-        headers = ["Name", "Mode", "John", "Category", "Certainty", "Len", "Hash"]
-        if color_enabled:
-            headers = [_paint(h, _BOLD, _CYAN, enabled=True) for h in headers]
-
-        print(
-            _render_table(
-                headers,
-                summary_rows,
+            for candidate, cand_certainty in visible:
+                certainty_text = f"{cand_certainty}%"
+                summary_rows.append(
+                    [
+                        paint(str(candidate.get("name", "-")), CYAN, enabled=color_enabled),
+                        paint(
+                            str(candidate["mode"]) if candidate.get("mode") is not None else "-",
+                            WHITE,
+                            BOLD,
+                            enabled=color_enabled,
+                        ),
+                        paint(str(candidate.get("john_format") or "-"), MAGENTA, enabled=color_enabled),
+                        paint(str(candidate.get("category", "-")), DIM, enabled=color_enabled),
+                        paint(certainty_text, certainty_color(certainty_text), BOLD, enabled=color_enabled),
+                        paint(str(len(result.hash)), DIM, enabled=color_enabled),
+                        paint(hash_table, DIM, enabled=color_enabled),
+                    ]
+                )
+        else:
+            summary_rows.append(
+                [
+                    paint("-" if result.name is None else result.name, CYAN, enabled=color_enabled),
+                    paint("-" if result.mode is None else str(result.mode), WHITE, BOLD, enabled=color_enabled),
+                    paint(str(result.john_format or "-"), MAGENTA, enabled=color_enabled),
+                    paint("-" if result.category is None else result.category, DIM, enabled=color_enabled),
+                    paint(certainty, certainty_color(certainty), BOLD, enabled=color_enabled),
+                    paint(str(len(result.hash)), DIM, enabled=color_enabled),
+                    paint(hash_table, DIM, enabled=color_enabled),
+                ]
             )
-        )
 
-        print("\n" + _paint("Reasons:", _BOLD, _YELLOW, enabled=color_enabled))
-        for hash_table, basis in reasons:
-            hash_part = _paint(hash_table, _DIM, enabled=color_enabled)
-            basis_part = _paint(basis, _DIM, enabled=color_enabled)
-            print(f"- {hash_part}: {basis_part}")
+        reasons.append((hash_table, basis))
+
+    headers = ["Name", "Mode", "John", "Category", "Certainty", "Len", "Hash"]
+    if color_enabled:
+        headers = [paint(h, BOLD, CYAN, enabled=True) for h in headers]
+    print(render_table(headers, summary_rows))
+
+    print("\n" + paint("Reasons:", BOLD, YELLOW, enabled=color_enabled))
+    for hash_table, basis in reasons:
+        print(
+            f"- {paint(hash_table, DIM, enabled=color_enabled)}: "
+            f"{paint(basis, DIM, enabled=color_enabled)}"
+        )
 
     return 0
 
 
 def _cmd_signature(args: argparse.Namespace) -> int:
-    rows = _signature_search_rows(mode=args.mode, category=args.category, name=args.name)
+    rows = signature_search_rows(mode=args.mode, category=args.category, name=args.name)
     if args.top is not None:
         rows = rows[: args.top]
 
     if args.json:
-        payload = []
-        for row in rows:
-            payload.append(
-                {
-                    "name": row["name"],
-                    "mode": row["mode"],
-                    "john_format": row["john"],
-                    "category": row["category"],
-                    "certainty": f"{row['certainty']}%",
-                }
-            )
+        payload = [
+            {
+                "name": row["name"],
+                "mode": row["mode"],
+                "john_format": row["john"],
+                "category": row["category"],
+                "certainty": f"{row['certainty']}%",
+            }
+            for row in rows
+        ]
         print(json.dumps(payload, indent=2))
         return 0
 
-    color_enabled = _colors_enabled()
-    summary_rows: list[list[str]] = []
+    color_enabled = colors_enabled()
+    summary_rows = []
     for row in rows:
         certainty_text = f"{row['certainty']}%"
         summary_rows.append(
             [
-                _paint(str(row["name"]), _CYAN, enabled=color_enabled),
-                _paint(str(row["mode"]) if row["mode"] is not None else "-", _WHITE, _BOLD, enabled=color_enabled),
-                _paint(str(row["john"]), _MAGENTA, enabled=color_enabled),
-                _paint(str(row["category"]), _DIM, enabled=color_enabled),
-                _paint(certainty_text, _certainty_color(certainty_text), _BOLD, enabled=color_enabled),
+                paint(str(row["name"]), CYAN, enabled=color_enabled),
+                paint(str(row["mode"]) if row["mode"] is not None else "-", WHITE, BOLD, enabled=color_enabled),
+                paint(str(row["john"]), MAGENTA, enabled=color_enabled),
+                paint(str(row["category"]), DIM, enabled=color_enabled),
+                paint(certainty_text, certainty_color(certainty_text), BOLD, enabled=color_enabled),
             ]
         )
 
     headers = ["Name", "Mode", "John", "Category", "Certainty"]
     if color_enabled:
-        headers = [_paint(h, _BOLD, _CYAN, enabled=True) for h in headers]
+        headers = [paint(h, BOLD, CYAN, enabled=True) for h in headers]
 
     if summary_rows:
-        print(_render_table(headers, summary_rows))
+        print(render_table(headers, summary_rows))
     else:
         print("No signatures matched the provided filters.")
-
     return 0
 
 
@@ -589,9 +313,9 @@ def _emit_update_notice(args: argparse.Namespace) -> None:
     notice = get_update_notice(__version__)
     if not notice:
         return
-    color_enabled = _colors_enabled()
-    prefix = _paint("update", _BOLD, _YELLOW, enabled=color_enabled)
-    body = _paint(notice, _DIM, enabled=color_enabled)
+    color_enabled = colors_enabled()
+    prefix = paint("update", BOLD, YELLOW, enabled=color_enabled)
+    body = paint(notice, DIM, enabled=color_enabled)
     print(f"{prefix}: {body}", file=sys.stderr)
 
 
@@ -676,7 +400,7 @@ def build_parser() -> argparse.ArgumentParser:
     hash_parser.add_argument(
         "--min-certainty",
         type=_bounded_percent,
-        default=_MIN_VISIBLE_CANDIDATE_CERTAINTY,
+        default=MIN_VISIBLE_CANDIDATE_CERTAINTY,
         help="Hide ambiguous candidates below this certainty percentage (0-100, default: 25).",
     )
     hash_parser.set_defaults(func=_cmd_hash, progress=None)
