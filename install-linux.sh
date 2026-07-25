@@ -5,7 +5,7 @@ set -euo pipefail
 # Usage:
 #   ./install-linux.sh
 #   ./install-linux.sh --with-apt
-#   ./install-linux.sh --python python3.11 --venv .venv
+#   ./install-linux.sh --python python3.9 --venv .venv
 
 WITH_APT=0
 PYTHON_BIN="python3"
@@ -98,7 +98,7 @@ pick_python_if_needed() {
     return
   fi
 
-  local candidates=(python3 python3.13 python3.12 python3.11)
+  local candidates=(python3 python3.13 python3.12 python3.11 python3.10 python3.9)
   local candidate
   for candidate in "${candidates[@]}"; do
     if ! command -v "$candidate" >/dev/null 2>&1; then
@@ -107,7 +107,7 @@ pick_python_if_needed() {
 
     if "$candidate" - <<'PY' >/dev/null 2>&1
 import sys
-raise SystemExit(0 if sys.version_info >= (3, 11) else 1)
+raise SystemExit(0 if sys.version_info >= (3, 9) else 1)
 PY
     then
       PYTHON_BIN="$candidate"
@@ -119,9 +119,9 @@ PY
 verify_python_version() {
   "$PYTHON_BIN" - <<'PY'
 import sys
-if sys.version_info < (3, 11):
-    print("HashSight requires Python >= 3.11. Detected:", sys.version.split()[0])
-    print("Install a newer Python and rerun, or pass --python <path-to-python>=3.11+.")
+if sys.version_info < (3, 9):
+    print("HashSight requires Python >= 3.9. Detected:", sys.version.split()[0])
+    print("Install a newer Python and rerun, or pass --python <path-to-python>=3.9+.")
     raise SystemExit(1)
 print("Python version OK:", sys.version.split()[0])
 PY

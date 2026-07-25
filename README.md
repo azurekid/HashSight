@@ -30,7 +30,7 @@ reality:
 
 ## Install
 
-Requires Python 3.11+.
+Requires Python 3.9+.
 
 ```bash
 git clone https://github.com/azurekid/HashSight.git
