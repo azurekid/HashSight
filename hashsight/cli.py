@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import difflib
 import json
 import os
 import re
@@ -17,6 +18,7 @@ except ImportError:  # optional dependency
 
 from . import get_hash, get_signature
 from .banner import show_banner
+from .john import john_format_for
 from .update_check import get_update_notice
 from .version import __version__
 
@@ -199,6 +201,116 @@ def _per_candidate_certainties(result: Any, top_certainty_pct: int) -> list[int]
     return out
 
 
+def _normalize_search_text(text: str) -> str:
+    """Normalize user-facing names for robust matching/scoring."""
+    return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9]+", " ", text.lower())).strip()
+
+
+def _search_certainty(query: Optional[str], target: str) -> int:
+    """Return certainty score (0-100) that a search query matches a signature name."""
+    if not query:
+        return 100
+
+    q = _normalize_search_text(query)
+    t = _normalize_search_text(target)
+    if not q or not t:
+        return 0
+
+    if q == t:
+        return 100
+    if t.startswith(q):
+        return 94
+    if f" {q} " in f" {t} ":
+        return 88
+    if q in t:
+        return 78
+
+    ratio = difflib.SequenceMatcher(None, q, t).ratio()
+    if ratio < 0.6:
+        return 0
+    return int(round(45 + (ratio * 50)))
+
+
+def _signature_search_rows(
+    *,
+    mode: Optional[int],
+    category: Optional[str],
+    name: Optional[str],
+) -> list[dict[str, Any]]:
+    """Search top-level signatures and nested candidates with certainty ranking."""
+    all_entries = get_signature()
+    rows: list[dict[str, Any]] = []
+
+    for entry in all_entries:
+        entry_candidates = entry.get("candidates") or []
+
+        # Consider a direct (non-candidate) entry result.
+        if not entry_candidates:
+            entry_mode = entry.get("mode")
+            entry_name = str(entry.get("name") or "")
+            entry_category = str(entry.get("category") or "-")
+
+            if mode is not None and entry_mode != mode:
+                continue
+            if category and entry_category != category:
+                continue
+
+            certainty = _search_certainty(name, entry_name)
+            if name and certainty == 0:
+                continue
+
+            rows.append(
+                {
+                    "name": entry_name or "-",
+                    "mode": entry_mode,
+                    "john": entry.get("john_format")
+                    or john_format_for(entry_mode, entry_name, entry_category)
+                    or "-",
+                    "category": entry_category,
+                    "certainty": certainty,
+                }
+            )
+            continue
+
+        # Consider each candidate row when an entry is ambiguous.
+        for candidate in entry_candidates:
+            cand_mode = candidate.get("mode")
+            cand_name = str(candidate.get("name") or "")
+            cand_category = str(candidate.get("category") or entry.get("category") or "-")
+
+            if mode is not None and cand_mode != mode:
+                continue
+            if category and cand_category != category:
+                continue
+
+            certainty = _search_certainty(name, cand_name)
+            if name and certainty == 0:
+                continue
+
+            rows.append(
+                {
+                    "name": cand_name or "-",
+                    "mode": cand_mode,
+                    "john": candidate.get("john_format")
+                    or john_format_for(cand_mode, cand_name, cand_category)
+                    or "-",
+                    "category": cand_category,
+                    "certainty": certainty,
+                }
+            )
+
+    # Deduplicate while preserving best certainty for each unique signature row.
+    best: dict[tuple[Any, ...], dict[str, Any]] = {}
+    for row in rows:
+        key = (row["name"], row["mode"], row["john"], row["category"])
+        existing = best.get(key)
+        if existing is None or row["certainty"] > existing["certainty"]:
+            best[key] = row
+
+    ranked = sorted(best.values(), key=lambda r: (r["certainty"], str(r["name"]).lower()), reverse=True)
+    return ranked
+
+
 def _visible_candidates(
     candidates: list[dict[str, Any]], certainties: list[int], min_certainty: int
 ) -> list[tuple[dict[str, Any], int]]:
@@ -345,8 +457,48 @@ def _cmd_hash(args: argparse.Namespace) -> int:
 
 
 def _cmd_signature(args: argparse.Namespace) -> int:
-    entries = get_signature(mode=args.mode, category=args.category, name=args.name)
-    print(json.dumps(entries, indent=2))
+    rows = _signature_search_rows(mode=args.mode, category=args.category, name=args.name)
+    if args.top is not None:
+        rows = rows[: args.top]
+
+    if args.json:
+        payload = []
+        for row in rows:
+            payload.append(
+                {
+                    "name": row["name"],
+                    "mode": row["mode"],
+                    "john_format": row["john"],
+                    "category": row["category"],
+                    "certainty": f"{row['certainty']}%",
+                }
+            )
+        print(json.dumps(payload, indent=2))
+        return 0
+
+    color_enabled = _colors_enabled()
+    summary_rows: list[list[str]] = []
+    for row in rows:
+        certainty_text = f"{row['certainty']}%"
+        summary_rows.append(
+            [
+                _paint(str(row["name"]), _CYAN, enabled=color_enabled),
+                _paint(str(row["mode"]) if row["mode"] is not None else "-", _WHITE, _BOLD, enabled=color_enabled),
+                _paint(str(row["john"]), _MAGENTA, enabled=color_enabled),
+                _paint(str(row["category"]), _DIM, enabled=color_enabled),
+                _paint(certainty_text, _certainty_color(certainty_text), _BOLD, enabled=color_enabled),
+            ]
+        )
+
+    headers = ["Name", "Mode", "John", "Category", "Certainty"]
+    if color_enabled:
+        headers = [_paint(h, _BOLD, _CYAN, enabled=True) for h in headers]
+
+    if summary_rows:
+        print(_render_table(headers, summary_rows))
+    else:
+        print("No signatures matched the provided filters.")
+
     return 0
 
 
@@ -532,7 +684,9 @@ def build_parser() -> argparse.ArgumentParser:
     sig_parser = subparsers.add_parser("signature", help="List or search the signature database.")
     sig_parser.add_argument("--mode", type=int, default=None, help="Filter by hashcat mode number.")
     sig_parser.add_argument("--category", type=str, default=None, help="Filter by category.")
-    sig_parser.add_argument("--name", type=str, default=None, help="Filter by name (contains, case-insensitive).")
+    sig_parser.add_argument("--name", type=str, default=None, help="Search by signature/candidate name.")
+    sig_parser.add_argument("--top", type=int, default=20, help="Limit ranked signature search results (default: 20).")
+    sig_parser.add_argument("--json", action="store_true", help="Output signature search results as JSON.")
     sig_parser.set_defaults(func=_cmd_signature)
 
     comp_parser = subparsers.add_parser("completion", help="Print or validate shell completion setup.")

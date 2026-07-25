@@ -10,23 +10,10 @@ set -euo pipefail
 WITH_APT=0
 PYTHON_BIN="python3"
 VENV_DIR=".venv"
+SYSTEM_BIN="/usr/local/bin/hashsight"
 
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --with-apt)
-      WITH_APT=1
-      shift
-      ;;
-    --python)
-      PYTHON_BIN="${2:-}"
-      shift 2
-      ;;
-    --venv)
-      VENV_DIR="${2:-}"
-      shift 2
-      ;;
-    -h|--help)
-      cat <<'EOF'
+show_help() {
+  cat <<'EOF'
 HashSight Linux installer
 
 Options:
@@ -34,14 +21,7 @@ Options:
   --python <binary>   Python executable to use (default: python3)
   --venv <dir>        Virtualenv path (default: .venv)
 EOF
-      exit 0
-      ;;
-    *)
-      echo "Unknown option: $1" >&2
-      exit 2
-      ;;
-  esac
-done
+}
 
 require_cmd() {
   if ! command -v "$1" >/dev/null 2>&1; then
@@ -50,7 +30,38 @@ require_cmd() {
   fi
 }
 
-if [[ $WITH_APT -eq 1 ]]; then
+parse_args() {
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --with-apt)
+        WITH_APT=1
+        shift
+        ;;
+      --python)
+        PYTHON_BIN="${2:-}"
+        shift 2
+        ;;
+      --venv)
+        VENV_DIR="${2:-}"
+        shift 2
+        ;;
+      -h|--help)
+        show_help
+        exit 0
+        ;;
+      *)
+        echo "Unknown option: $1" >&2
+        exit 2
+        ;;
+    esac
+  done
+}
+
+bootstrap_apt_if_requested() {
+  if [[ $WITH_APT -ne 1 ]]; then
+    return
+  fi
+
   require_cmd apt-get
   export DEBIAN_FRONTEND=noninteractive
   apt-get update
@@ -59,88 +70,118 @@ if [[ $WITH_APT -eq 1 ]]; then
     python3 \
     python3-venv \
     python3-pip
-fi
+}
 
-require_cmd "$PYTHON_BIN"
-
-INSTALL_ROOT="$(pwd -P)"
-if [[ "$VENV_DIR" = /* ]]; then
-  VENV_ABS="$VENV_DIR"
-else
-  VENV_ABS="$INSTALL_ROOT/$VENV_DIR"
-fi
-
-# Enforce project minimum supported Python version from pyproject.toml.
-"$PYTHON_BIN" - <<'PY'
+verify_python_version() {
+  "$PYTHON_BIN" - <<'PY'
 import sys
 if sys.version_info < (3, 8):
     print("HashSight requires Python >= 3.8. Detected:", sys.version.split()[0])
     raise SystemExit(1)
 print("Python version OK:", sys.version.split()[0])
 PY
+}
 
-"$PYTHON_BIN" -m venv "$VENV_DIR"
-# shellcheck disable=SC1090
-source "$VENV_DIR/bin/activate"
-
-python -m pip install --upgrade pip setuptools wheel
-python -m pip install -e .
-hash -r
-
-HASHSIGHT_BIN="$VENV_ABS/bin/hashsight"
-if [[ ! -x "$HASHSIGHT_BIN" ]]; then
-  echo "Install finished but expected executable was not found: $HASHSIGHT_BIN" >&2
-  exit 1
-fi
-
-TARGET_USER="${SUDO_USER:-${USER}}"
-TARGET_HOME="$HOME"
-if command -v getent >/dev/null 2>&1; then
-  TARGET_HOME_FROM_DB="$(getent passwd "$TARGET_USER" | cut -d: -f6 || true)"
-  if [[ -n "$TARGET_HOME_FROM_DB" ]]; then
-    TARGET_HOME="$TARGET_HOME_FROM_DB"
+resolve_venv_abs() {
+  local install_root
+  install_root="$(pwd -P)"
+  if [[ "$VENV_DIR" = /* ]]; then
+    VENV_ABS="$VENV_DIR"
+  else
+    VENV_ABS="$install_root/$VENV_DIR"
   fi
-fi
+}
 
-USER_BIN_DIR="${TARGET_HOME}/.local/bin"
-mkdir -p "$USER_BIN_DIR"
-cat > "$USER_BIN_DIR/hashsight" <<EOF
+install_hashsight() {
+  "$PYTHON_BIN" -m venv "$VENV_DIR"
+  # shellcheck disable=SC1090
+  source "$VENV_DIR/bin/activate"
+
+  python -m pip install --upgrade pip setuptools wheel
+  python -m pip install -e .
+  hash -r
+
+  HASHSIGHT_BIN="$VENV_ABS/bin/hashsight"
+  if [[ ! -x "$HASHSIGHT_BIN" ]]; then
+    echo "Install finished but expected executable was not found: $HASHSIGHT_BIN" >&2
+    exit 1
+  fi
+}
+
+resolve_target_home() {
+  TARGET_USER="${SUDO_USER:-${USER}}"
+  TARGET_HOME="$HOME"
+
+  if command -v getent >/dev/null 2>&1; then
+    local target_home_from_db
+    target_home_from_db="$(getent passwd "$TARGET_USER" | cut -d: -f6 || true)"
+    if [[ -n "$target_home_from_db" ]]; then
+      TARGET_HOME="$target_home_from_db"
+    fi
+  fi
+}
+
+write_launcher() {
+  local launcher_path
+  launcher_path="$1"
+  cat > "$launcher_path" <<EOF
 #!/usr/bin/env bash
 exec "$HASHSIGHT_BIN" "\$@"
 EOF
-chmod +x "$USER_BIN_DIR/hashsight"
+  chmod +x "$launcher_path"
+}
 
-SYSTEM_BIN="/usr/local/bin/hashsight"
-if [[ -w "/usr/local/bin" ]]; then
-  cat > "$SYSTEM_BIN" <<EOF
-#!/usr/bin/env bash
-exec "$HASHSIGHT_BIN" "\$@"
-EOF
-  chmod +x "$SYSTEM_BIN"
-fi
+install_launchers() {
+  USER_BIN_DIR="${TARGET_HOME}/.local/bin"
+  USER_LAUNCHER="$USER_BIN_DIR/hashsight"
 
-if ! command -v hashsight >/dev/null 2>&1; then
+  mkdir -p "$USER_BIN_DIR"
+  write_launcher "$USER_LAUNCHER"
+
+  SYSTEM_LAUNCHER=""
+  if [[ -w "/usr/local/bin" ]]; then
+    SYSTEM_LAUNCHER="$SYSTEM_BIN"
+    write_launcher "$SYSTEM_LAUNCHER"
+  fi
+}
+
+show_path_help_if_needed() {
+  if command -v hashsight >/dev/null 2>&1; then
+    hashsight --help >/dev/null
+    return
+  fi
+
   echo "HashSight installed, but 'hashsight' is not currently on your PATH." >&2
   echo "You can run it right now with:" >&2
-  echo "  ${USER_BIN_DIR}/hashsight --help" >&2
-  if [[ -x "$SYSTEM_BIN" ]]; then
-    echo "A system launcher was installed at: $SYSTEM_BIN" >&2
+  echo "  ${USER_LAUNCHER} --help" >&2
+  if [[ -n "$SYSTEM_LAUNCHER" ]]; then
+    echo "A system launcher was installed at: $SYSTEM_LAUNCHER" >&2
   fi
-  echo "" >&2
+  echo >&2
   echo "To make 'hashsight' available in new shells, add this line to your profile:" >&2
-  echo "Add this line to your shell profile (~/.bashrc or ~/.zshrc):" >&2
   echo "  export PATH=\"${USER_BIN_DIR}:\$PATH\"" >&2
   echo "Then reload your shell and run: hashsight --help" >&2
-else
-  hashsight --help >/dev/null
-fi
+}
 
-echo "HashSight installed successfully."
-echo "Virtualenv: $VENV_DIR"
-echo "Launcher: $USER_BIN_DIR/hashsight"
-if [[ -x "$SYSTEM_BIN" ]]; then
-  echo "System launcher: $SYSTEM_BIN"
-fi
-if command -v hashsight >/dev/null 2>&1; then
-  echo "Command: $(command -v hashsight)"
-fi
+print_summary() {
+  echo "HashSight installed successfully."
+  echo "Virtualenv: $VENV_DIR"
+  echo "Launcher: $USER_LAUNCHER"
+  if [[ -n "$SYSTEM_LAUNCHER" ]]; then
+    echo "System launcher: $SYSTEM_LAUNCHER"
+  fi
+  if command -v hashsight >/dev/null 2>&1; then
+    echo "Command: $(command -v hashsight)"
+  fi
+}
+
+parse_args "$@"
+bootstrap_apt_if_requested
+require_cmd "$PYTHON_BIN"
+resolve_venv_abs
+verify_python_version
+install_hashsight
+resolve_target_home
+install_launchers
+show_path_help_if_needed
+print_summary

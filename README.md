@@ -211,10 +211,26 @@ hashsight signature --mode 1800
 hashsight --signature --mode 1800
 hashsight signature --category 'Crypto Wallet'
 hashsight --signature --category 'Crypto Wallet'
+hashsight signature --name 'Keccak-256'
 
 # Completion health check
 hashsight completion zsh --check
 hashsight --completion zsh --check
+```
+
+Signature search output is ranked and includes certainty with these columns:
+
+1. name
+2. mode
+3. john
+4. category
+5. certainty
+
+Use `--top` to limit results (default `20`) or `--json` for machine-readable output:
+
+```bash
+hashsight signature --name 'Keccak' --top 5
+hashsight signature --name 'Keccak-256' --json
 ```
 
 ### Shell tab completion
