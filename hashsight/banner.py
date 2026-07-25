@@ -44,12 +44,10 @@ def show_banner() -> None:
         return
 
     banner = _load_banner().rstrip("\n")
-    version_text = f"v{__version__}"
 
     # Colorful in interactive terminals, plain everywhere else.
     if not sys.stdout.isatty() or os.environ.get("NO_COLOR") is not None:
         print(banner)
-        print(version_text)
         return
 
     lines = banner.splitlines()
