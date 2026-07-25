@@ -79,7 +79,14 @@ sudo ./install-linux.sh --with-apt
 
 The installer script validates Python version, creates a virtual environment,
 installs HashSight in editable mode, refreshes shell command cache, and verifies
-that `hashsight` is callable.
+that `hashsight` is callable. It also creates a launcher at
+`~/.local/bin/hashsight` so you do not need to manually run venv/pip steps.
+
+If `~/.local/bin` is not already on your PATH, add it once:
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+```
 
 ```bash
 git clone https://github.com/azurekid/HashSight.git

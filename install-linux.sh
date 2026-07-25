@@ -63,6 +63,13 @@ fi
 
 require_cmd "$PYTHON_BIN"
 
+INSTALL_ROOT="$(pwd -P)"
+if [[ "$VENV_DIR" = /* ]]; then
+  VENV_ABS="$VENV_DIR"
+else
+  VENV_ABS="$INSTALL_ROOT/$VENV_DIR"
+fi
+
 # Enforce project minimum supported Python version from pyproject.toml.
 "$PYTHON_BIN" - <<'PY'
 import sys
@@ -80,13 +87,32 @@ python -m pip install --upgrade pip setuptools wheel
 python -m pip install -e .
 hash -r
 
-if ! command -v hashsight >/dev/null 2>&1; then
-  echo "Install finished but hashsight not on PATH; try: source $VENV_DIR/bin/activate" >&2
+HASHSIGHT_BIN="$VENV_ABS/bin/hashsight"
+if [[ ! -x "$HASHSIGHT_BIN" ]]; then
+  echo "Install finished but expected executable was not found: $HASHSIGHT_BIN" >&2
   exit 1
 fi
 
-hashsight --help >/dev/null
+USER_BIN_DIR="${HOME}/.local/bin"
+mkdir -p "$USER_BIN_DIR"
+cat > "$USER_BIN_DIR/hashsight" <<EOF
+#!/usr/bin/env bash
+exec "$HASHSIGHT_BIN" "\$@"
+EOF
+chmod +x "$USER_BIN_DIR/hashsight"
+
+if ! command -v hashsight >/dev/null 2>&1; then
+  echo "HashSight installed, but '${USER_BIN_DIR}' is not on your PATH yet." >&2
+  echo "Add this line to your shell profile (~/.bashrc or ~/.zshrc):" >&2
+  echo "  export PATH=\"${USER_BIN_DIR}:\$PATH\"" >&2
+  echo "Then reload your shell and run: hashsight --help" >&2
+else
+  hashsight --help >/dev/null
+fi
 
 echo "HashSight installed successfully."
 echo "Virtualenv: $VENV_DIR"
-echo "Command: $(command -v hashsight)"
+echo "Launcher: $USER_BIN_DIR/hashsight"
+if command -v hashsight >/dev/null 2>&1; then
+  echo "Command: $(command -v hashsight)"
+fi
