@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import re
 import shutil
 import sys
 from dataclasses import asdict
@@ -17,8 +19,16 @@ from . import get_hash, get_signature
 from .banner import show_banner
 
 _GREEN = "\033[32m"
+_YELLOW = "\033[33m"
+_BLUE = "\033[34m"
+_MAGENTA = "\033[35m"
+_CYAN = "\033[36m"
+_RED = "\033[31m"
+_BOLD = "\033[1m"
+_DIM = "\033[2m"
 _RESET = "\033[0m"
 _MIN_VISIBLE_CANDIDATE_CERTAINTY = 25
+_ANSI_RE = re.compile(r"\x1b\[[0-9;]*m")
 
 
 def _bounded_percent(value: str) -> int:
@@ -51,18 +61,58 @@ def _format_hash_for_table(value: str) -> str:
 
 def _render_table(headers: list[str], rows: list[list[str]]) -> str:
     """Render a simple fixed-width table for terminal output."""
-    widths = [len(h) for h in headers]
+    widths = [_display_len(h) for h in headers]
     for row in rows:
         for idx, cell in enumerate(row):
-            widths[idx] = max(widths[idx], len(cell))
+            widths[idx] = max(widths[idx], _display_len(cell))
 
     def _line(parts: list[str]) -> str:
-        return " | ".join(parts[i].ljust(widths[i]) for i in range(len(parts)))
+        return " | ".join(_pad_cell(parts[i], widths[i]) for i in range(len(parts)))
 
     divider = "-+-".join("-" * w for w in widths)
     lines = [_line(headers), divider]
     lines.extend(_line(row) for row in rows)
     return "\n".join(lines)
+
+
+def _display_len(value: str) -> int:
+    """Length of text as displayed in terminal, excluding ANSI escape codes."""
+    return len(_ANSI_RE.sub("", value))
+
+
+def _pad_cell(value: str, width: int) -> str:
+    """Right-pad cell while accounting for ANSI escape sequences."""
+    pad = max(0, width - _display_len(value))
+    return value + (" " * pad)
+
+
+def _colors_enabled() -> bool:
+    """Enable ANSI colors only for interactive terminals unless explicitly disabled."""
+    return sys.stdout.isatty() and os.environ.get("NO_COLOR") is None
+
+
+def _paint(text: str, *codes: str, enabled: bool) -> str:
+    """Wrap text with ANSI styles when color is enabled."""
+    if not enabled or not codes:
+        return text
+    return "".join(codes) + text + _RESET
+
+
+def _certainty_color(certainty: str) -> str:
+    """Map certainty percentages to a semantic color."""
+    match = re.match(r"^(\d+)%$", certainty)
+    if not match:
+        return _DIM
+    value = int(match.group(1))
+    if value >= 90:
+        return _GREEN
+    if value >= 70:
+        return _CYAN
+    if value >= 50:
+        return _YELLOW
+    if value > 0:
+        return _MAGENTA
+    return _RED
 
 
 def _confidence_profile(result: Any) -> tuple[str, str]:
@@ -220,6 +270,8 @@ def _cmd_hash(args: argparse.Namespace) -> int:
         if progress_enabled:
             print()
 
+        color_enabled = _colors_enabled()
+
         summary_rows = []
         reasons = []
         for r in results:
@@ -242,42 +294,49 @@ def _cmd_hash(args: argparse.Namespace) -> int:
                         ]
                     )
                 for candidate, cand_certainty in visible:
+                    certainty_text = f"{cand_certainty}%"
                     summary_rows.append(
                         [
-                            str(candidate.get("name", "-")),
-                            str(candidate.get("mode", "-")),
-                            str(candidate.get("john_format") or "-"),
-                            str(candidate.get("category", "-")),
-                            f"{cand_certainty}%",
-                            str(len(r.hash)),
-                            hash_table,
+                            _paint(str(candidate.get("name", "-")), _CYAN, enabled=color_enabled),
+                            _paint(str(candidate.get("mode", "-")), _BLUE, enabled=color_enabled),
+                            _paint(str(candidate.get("john_format") or "-"), _MAGENTA, enabled=color_enabled),
+                            _paint(str(candidate.get("category", "-")), _DIM, enabled=color_enabled),
+                            _paint(certainty_text, _certainty_color(certainty_text), _BOLD, enabled=color_enabled),
+                            _paint(str(len(r.hash)), _DIM, enabled=color_enabled),
+                            _paint(hash_table, _DIM, enabled=color_enabled),
                         ]
                     )
             else:
                 summary_rows.append(
                     [
-                        "-" if r.name is None else r.name,
-                        "-" if r.mode is None else str(r.mode),
-                        str(r.john_format or "-"),
-                        "-" if r.category is None else r.category,
-                        certainty,
-                        str(len(r.hash)),
-                        hash_table,
+                        _paint("-" if r.name is None else r.name, _CYAN, enabled=color_enabled),
+                        _paint("-" if r.mode is None else str(r.mode), _BLUE, enabled=color_enabled),
+                        _paint(str(r.john_format or "-"), _MAGENTA, enabled=color_enabled),
+                        _paint("-" if r.category is None else r.category, _DIM, enabled=color_enabled),
+                        _paint(certainty, _certainty_color(certainty), _BOLD, enabled=color_enabled),
+                        _paint(str(len(r.hash)), _DIM, enabled=color_enabled),
+                        _paint(hash_table, _DIM, enabled=color_enabled),
                     ]
                 )
 
             reasons.append((hash_table, basis))
 
+        headers = ["Name", "Mode", "John", "Category", "Certainty", "Len", "Hash"]
+        if color_enabled:
+            headers = [_paint(h, _BOLD, _CYAN, enabled=True) for h in headers]
+
         print(
             _render_table(
-                ["Name", "Mode", "John", "Category", "Certainty", "Len", "Hash"],
+                headers,
                 summary_rows,
             )
         )
 
-        print("\nReasons:")
+        print("\n" + _paint("Reasons:", _BOLD, _YELLOW, enabled=color_enabled))
         for hash_table, basis in reasons:
-            print(f"- {hash_table}: {basis}")
+            hash_part = _paint(hash_table, _DIM, enabled=color_enabled)
+            basis_part = _paint(basis, _DIM, enabled=color_enabled)
+            print(f"- {hash_part}: {basis_part}")
 
     return 0
 
@@ -394,6 +453,26 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Optional[list[str]] = None) -> int:
+    if argv is None:
+        argv = sys.argv[1:]
+
+    # Make `hash` optional: `hashsight <hash>` and `cat hashes.txt | hashsight`
+    # behave like `hashsight hash <hash>` and `cat hashes.txt | hashsight hash`.
+    known_subcommands = {"hash", "signature", "completion"}
+    if argv:
+        first = argv[0]
+        if first in {"-h", "--help"}:
+            pass
+        elif first == "--no-banner":
+            if len(argv) == 1 and not sys.stdin.isatty():
+                argv = ["--no-banner", "hash"]
+            elif len(argv) > 1 and argv[1] not in known_subcommands:
+                argv = ["--no-banner", "hash", *argv[1:]]
+        elif first not in known_subcommands:
+            argv = ["hash", *argv]
+    elif not sys.stdin.isatty():
+        argv = ["hash"]
+
     parser = build_parser()
     args = parser.parse_args(argv)
 

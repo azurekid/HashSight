@@ -135,6 +135,12 @@ Important notes:
 
 ```bash
 hashsight hash '$6$rounds=5000$abc$def...'
+
+# `hash` is optional for direct hash input
+hashsight '$6$rounds=5000$abc$def...'
+
+# file input also works without `hash`
+hashsight < hashes.txt
 ```
 
 Progress lines are shown during analysis in green terminal text using `-` markers.
