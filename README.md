@@ -97,6 +97,19 @@ echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
+Some shells cache command lookups. If install succeeded but the command is still not
+recognized in the same shell session, refresh and retry:
+
+```bash
+# bash/sh
+hash -r
+
+# zsh
+rehash
+
+hashsight --help
+```
+
 ```bash
 git clone https://github.com/azurekid/HashSight.git
 cd HashSight

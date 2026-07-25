@@ -170,6 +170,26 @@ show_path_help_if_needed() {
   echo "Then reload your shell and run: hashsight --help" >&2
 }
 
+print_shell_refresh_hint() {
+  echo
+  echo "If your shell still says 'command not found', refresh command lookup:"
+  echo "  bash/sh: hash -r"
+  echo "  zsh: rehash"
+  echo "  or start a new login shell: exec \"\$SHELL\" -l"
+}
+
+verify_launchers() {
+  if [[ ! -x "$USER_LAUNCHER" ]]; then
+    echo "Expected user launcher missing or not executable: $USER_LAUNCHER" >&2
+    exit 1
+  fi
+
+  if [[ -n "$SYSTEM_LAUNCHER" && ! -x "$SYSTEM_LAUNCHER" ]]; then
+    echo "Expected system launcher missing or not executable: $SYSTEM_LAUNCHER" >&2
+    exit 1
+  fi
+}
+
 print_summary() {
   echo "HashSight installed successfully."
   echo "Virtualenv: $VENV_DIR"
@@ -180,6 +200,7 @@ print_summary() {
   if command -v hashsight >/dev/null 2>&1; then
     echo "Command: $(command -v hashsight)"
   fi
+  print_shell_refresh_hint
 }
 
 parse_args "$@"
@@ -190,5 +211,6 @@ verify_python_version
 install_hashsight
 resolve_target_home
 install_launchers
+verify_launchers
 show_path_help_if_needed
 print_summary
