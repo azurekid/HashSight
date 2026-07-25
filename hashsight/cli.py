@@ -347,6 +347,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--no-banner", action="store_true", help="Suppress the startup banner.")
     parser.add_argument(
+        "--version",
+        action="version",
+        version=f"hashsight {__version__}",
+        help="Show HashSight version and exit.",
+    )
+    parser.add_argument(
         "--no-update-check",
         action="store_true",
         help="Disable automatic update checks for newer releases.",

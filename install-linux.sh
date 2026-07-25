@@ -11,6 +11,7 @@ WITH_APT=0
 PYTHON_BIN="python3"
 VENV_DIR=".venv"
 SYSTEM_BIN="/usr/local/bin/hashsight"
+PYTHON_BIN_EXPLICIT=0
 
 show_help() {
   cat <<'EOF'
@@ -39,6 +40,7 @@ parse_args() {
         ;;
       --python)
         PYTHON_BIN="${2:-}"
+        PYTHON_BIN_EXPLICIT=1
         shift 2
         ;;
       --venv)
@@ -67,16 +69,21 @@ bootstrap_apt_if_requested() {
   apt-get update
   apt-get install -y --no-install-recommends \
     ca-certificates \
-    python3 \
-    python3-venv \
+    python3.11 \
+    python3.11-venv \
     python3-pip
+
+  # When apt bootstrap is used and caller did not pin --python, prefer 3.11 explicitly.
+  if [[ $PYTHON_BIN_EXPLICIT -eq 0 ]]; then
+    PYTHON_BIN="python3.11"
+  fi
 }
 
 verify_python_version() {
   "$PYTHON_BIN" - <<'PY'
 import sys
-if sys.version_info < (3, 8):
-    print("HashSight requires Python >= 3.8. Detected:", sys.version.split()[0])
+if sys.version_info < (3, 11):
+    print("HashSight requires Python >= 3.11. Detected:", sys.version.split()[0])
     raise SystemExit(1)
 print("Python version OK:", sys.version.split()[0])
 PY

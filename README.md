@@ -30,7 +30,7 @@ reality:
 
 ## Install
 
-Requires Python 3.8+.
+Requires Python 3.11+.
 
 Quick start (recommended)
 
@@ -70,7 +70,7 @@ python3 -m pip install .
 Quick Linux install (fault-resistant, advanced)
 
 ```bash
-# Optional: bootstrap Python + venv tooling via apt (Debian/Ubuntu)
+# Optional: bootstrap Python 3.11 + venv tooling via apt (Debian/Ubuntu)
 sudo ./install-linux.sh --with-apt
 
 # Standard local install (no apt)
@@ -140,7 +140,7 @@ Important notes:
 - Do not use `--user` inside an active virtual environment.
 - `pip install -r requirements.txt` currently points to `-e .`, so it should
    produce the same result as `pip install -e .`.
-- HashSight requires Python >= 3.8.
+- HashSight requires Python >= 3.11.
 - If entrypoint creation still fails, run `python3 -m hashsight.cli --help` to
    confirm the package imports, then compare `python3 -m pip --version` and
    `which python3` to ensure pip and python are from the same environment.

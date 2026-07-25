@@ -9,14 +9,14 @@ PYTHON_BIN="${PYTHON_BIN:-python3}"
 
 ensure_python() {
   if ! command -v "$PYTHON_BIN" >/dev/null 2>&1; then
-    echo "Error: $PYTHON_BIN not found. Install Python 3.8+ first." >&2
+    echo "Error: $PYTHON_BIN not found. Install Python 3.11+ first." >&2
     exit 1
   fi
 
   "$PYTHON_BIN" - <<'PY'
 import sys
-if sys.version_info < (3, 8):
-    print(f"Error: HashSight requires Python >= 3.8, found {sys.version.split()[0]}")
+if sys.version_info < (3, 11):
+    print(f"Error: HashSight requires Python >= 3.11, found {sys.version.split()[0]}")
     raise SystemExit(1)
 PY
 }
