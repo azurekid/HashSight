@@ -77,5 +77,4 @@ def show_banner() -> None:
             style = _DIM
         styled_lines.append(f"{style}{color}{line}{_RESET}")
 
-    styled_lines.append(f"{_DIM}{_AQUA}{version_text}{_RESET}")
     print("\n".join(styled_lines))
