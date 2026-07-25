@@ -26,7 +26,7 @@ _FALLBACK_BANNER = r"""
  |_| |_|\__,_|___/_| |_||____/|_|\__, |_| |_|\__|
                                  |___/
                                         v 2.0.1
-    practical hash signature intelligence
+          hash signature intelligence
 """
 
 
