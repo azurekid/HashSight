@@ -10,6 +10,24 @@ def _default_data_path() -> Path:
     return Path(__file__).resolve().parent / "data" / "signatures.json"
 
 
+def _validate_signatures(signatures: list[dict[str, Any]], source: Path) -> None:
+    """Validate required fields so malformed entries fail fast and loudly."""
+    for idx, entry in enumerate(signatures):
+        candidates = entry.get("candidates") or []
+        for c_idx, candidate in enumerate(candidates):
+            if "mode" not in candidate or candidate.get("mode") is None:
+                raise ValueError(
+                    "HashSight: invalid signature data in "
+                    f"'{source}': signatures[{idx}].candidates[{c_idx}] is missing required 'mode'."
+                )
+            mode = candidate.get("mode")
+            if not isinstance(mode, int):
+                raise ValueError(
+                    "HashSight: invalid signature data in "
+                    f"'{source}': signatures[{idx}].candidates[{c_idx}].mode must be an integer, got {type(mode).__name__}."
+                )
+
+
 def load_signatures(path: Optional[Path] = None) -> list[dict[str, Any]]:
     """Load the signature database from a JSON file.
 
@@ -30,6 +48,8 @@ def load_signatures(path: Optional[Path] = None) -> list[dict[str, Any]]:
     signatures = doc.get("signatures")
     if not signatures:
         raise ValueError(f"HashSight: signature file '{source}' does not contain a 'signatures' array.")
+
+    _validate_signatures(signatures, source)
 
     return signatures
 

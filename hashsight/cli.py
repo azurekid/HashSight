@@ -26,6 +26,7 @@ _BLUE = "\033[34m"
 _MAGENTA = "\033[35m"
 _CYAN = "\033[36m"
 _RED = "\033[31m"
+_WHITE = "\033[97m"
 _BOLD = "\033[1m"
 _DIM = "\033[2m"
 _RESET = "\033[0m"
@@ -260,8 +261,6 @@ def _cmd_hash(args: argparse.Namespace) -> int:
                 visible = _visible_candidates(item["candidates"], candidate_certainties, min_certainty)
                 item["candidates"] = []
                 for candidate, cand_certainty in visible:
-                    if candidate.get("mode") is None:
-                        candidate["mode"] = None
                     candidate["john_format"] = candidate.get("john_format") or "-"
                     candidate["certainty"] = f"{cand_certainty}%"
                     item["candidates"].append(candidate)
@@ -302,7 +301,7 @@ def _cmd_hash(args: argparse.Namespace) -> int:
                     summary_rows.append(
                         [
                             _paint(str(candidate.get("name", "-")), _CYAN, enabled=color_enabled),
-                            _paint(str(candidate["mode"]) if candidate.get("mode") is not None else "-", _BLUE, enabled=color_enabled),
+                            _paint(str(candidate["mode"]) if candidate.get("mode") is not None else "-", _WHITE, _BOLD, enabled=color_enabled),
                             _paint(str(candidate.get("john_format") or "-"), _MAGENTA, enabled=color_enabled),
                             _paint(str(candidate.get("category", "-")), _DIM, enabled=color_enabled),
                             _paint(certainty_text, _certainty_color(certainty_text), _BOLD, enabled=color_enabled),
@@ -314,7 +313,7 @@ def _cmd_hash(args: argparse.Namespace) -> int:
                 summary_rows.append(
                     [
                         _paint("-" if r.name is None else r.name, _CYAN, enabled=color_enabled),
-                        _paint("-" if r.mode is None else str(r.mode), _BLUE, enabled=color_enabled),
+                        _paint("-" if r.mode is None else str(r.mode), _WHITE, _BOLD, enabled=color_enabled),
                         _paint(str(r.john_format or "-"), _MAGENTA, enabled=color_enabled),
                         _paint("-" if r.category is None else r.category, _DIM, enabled=color_enabled),
                         _paint(certainty, _certainty_color(certainty), _BOLD, enabled=color_enabled),
