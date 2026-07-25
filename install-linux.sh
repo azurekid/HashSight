@@ -93,7 +93,16 @@ if [[ ! -x "$HASHSIGHT_BIN" ]]; then
   exit 1
 fi
 
-USER_BIN_DIR="${HOME}/.local/bin"
+TARGET_USER="${SUDO_USER:-${USER}}"
+TARGET_HOME="$HOME"
+if command -v getent >/dev/null 2>&1; then
+  TARGET_HOME_FROM_DB="$(getent passwd "$TARGET_USER" | cut -d: -f6 || true)"
+  if [[ -n "$TARGET_HOME_FROM_DB" ]]; then
+    TARGET_HOME="$TARGET_HOME_FROM_DB"
+  fi
+fi
+
+USER_BIN_DIR="${TARGET_HOME}/.local/bin"
 mkdir -p "$USER_BIN_DIR"
 cat > "$USER_BIN_DIR/hashsight" <<EOF
 #!/usr/bin/env bash
@@ -101,8 +110,24 @@ exec "$HASHSIGHT_BIN" "\$@"
 EOF
 chmod +x "$USER_BIN_DIR/hashsight"
 
+SYSTEM_BIN="/usr/local/bin/hashsight"
+if [[ -w "/usr/local/bin" ]]; then
+  cat > "$SYSTEM_BIN" <<EOF
+#!/usr/bin/env bash
+exec "$HASHSIGHT_BIN" "\$@"
+EOF
+  chmod +x "$SYSTEM_BIN"
+fi
+
 if ! command -v hashsight >/dev/null 2>&1; then
-  echo "HashSight installed, but '${USER_BIN_DIR}' is not on your PATH yet." >&2
+  echo "HashSight installed, but 'hashsight' is not currently on your PATH." >&2
+  echo "You can run it right now with:" >&2
+  echo "  ${USER_BIN_DIR}/hashsight --help" >&2
+  if [[ -x "$SYSTEM_BIN" ]]; then
+    echo "A system launcher was installed at: $SYSTEM_BIN" >&2
+  fi
+  echo "" >&2
+  echo "To make 'hashsight' available in new shells, add this line to your profile:" >&2
   echo "Add this line to your shell profile (~/.bashrc or ~/.zshrc):" >&2
   echo "  export PATH=\"${USER_BIN_DIR}:\$PATH\"" >&2
   echo "Then reload your shell and run: hashsight --help" >&2
@@ -113,6 +138,9 @@ fi
 echo "HashSight installed successfully."
 echo "Virtualenv: $VENV_DIR"
 echo "Launcher: $USER_BIN_DIR/hashsight"
+if [[ -x "$SYSTEM_BIN" ]]; then
+  echo "System launcher: $SYSTEM_BIN"
+fi
 if command -v hashsight >/dev/null 2>&1; then
   echo "Command: $(command -v hashsight)"
 fi

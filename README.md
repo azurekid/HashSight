@@ -88,6 +88,15 @@ If `~/.local/bin` is not already on your PATH, add it once:
 export PATH="$HOME/.local/bin:$PATH"
 ```
 
+If `hashsight` still says "command not found" after install, run it directly once,
+then fix PATH permanently:
+
+```bash
+~/.local/bin/hashsight --help
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+```
+
 ```bash
 git clone https://github.com/azurekid/HashSight.git
 cd HashSight
