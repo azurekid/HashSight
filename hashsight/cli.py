@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import select
 import shutil
 import sys
 from dataclasses import asdict
@@ -62,6 +63,10 @@ def _read_hashes(args: argparse.Namespace) -> list[str]:
     if args.hash:
         return args.hash
     if sys.stdin.isatty():
+        return []
+    # Avoid blocking on non-interactive stdin when no data is actually piped.
+    readable, _, _ = select.select([sys.stdin], [], [], 0)
+    if not readable:
         return []
     return [line.strip() for line in sys.stdin if line.strip()]
 
