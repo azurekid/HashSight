@@ -1,16 +1,5 @@
-```
-   _   _           _      ____  _       _     _
-  | | | | __ _ ___| |__  / ___|(_) __ _| |__ | |_
-  | |_| |/ _` / __| '_ \ \___ \| |/ _` | '_ \| __|
-  |  _  | (_| \__ \ | | | ___) | | (_| | | | | |_
-  |_| |_|\__,_|___/_| |_||____/|_|\__, |_| |_|\__|
-                                   |__/
-                                         (v2.0.1)
+<img width=70% height=70% alt="image" src="https://github.com/user-attachments/assets/04685061-f37c-4cbf-bedd-d7f5b7ec7403" />
 
-           hash signature intelligence
-```
-
-# HashSight
 
 Hash signature intelligence for hashcat mode identification.
 
