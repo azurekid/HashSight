@@ -23,7 +23,7 @@ from html import unescape
 from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 SIGNATURES_PATH = ROOT / "hashsight" / "data" / "signatures.json"
 UPSTREAM_DIR = ROOT / "hashsight" / "data" / "upstream"
 

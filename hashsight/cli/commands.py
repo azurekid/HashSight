@@ -13,10 +13,10 @@ try:
 except ImportError:  # optional dependency
     argcomplete = None
 
-from . import get_hash, get_signature_catalog_info, get_signature_catalog_version
-from .hash_confidence import confidence_profile, per_candidate_certainties, visible_candidates
-from .signature_search import signature_search_rows
-from .terminal_ui import (
+from .. import get_hash, get_signature_catalog_info, get_signature_catalog_version
+from ..core.confidence import confidence_profile, per_candidate_certainties, visible_candidates
+from ..catalog.search import signature_search_rows
+from ..ui.terminal import (
     BOLD,
     CYAN,
     DIM,
@@ -30,10 +30,10 @@ from .terminal_ui import (
     paint,
     render_table,
 )
-from .update_check import get_signature_update_notice, get_update_notice
-from .version import __version__
+from ..catalog.update_check import get_signature_update_notice, get_update_notice
+from ..version import __version__
 
-MIN_VISIBLE_CANDIDATE_CERTAINTY = 25
+MIN_VISIBLE_CANDIDATE_CERTAINTY = 35
 MIN_RESULT_CERTAINTY = 0
 
 

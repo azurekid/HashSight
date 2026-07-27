@@ -5,7 +5,7 @@ import os
 import sys
 from pathlib import Path
 
-from .version import __version__
+from ..version import __version__
 
 _RESET = "\033[0m"
 _BOLD = "\033[1m"
@@ -33,7 +33,7 @@ _FALLBACK_BANNER = r"""
 def _load_banner() -> str:
     """Load banner text from packaged asset, with a resilient inline fallback."""
     try:
-        return (Path(__file__).resolve().parent / "assets" / "logo.txt").read_text(encoding="utf-8")
+        return (Path(__file__).resolve().parent.parent / "assets" / "logo.txt").read_text(encoding="utf-8")
     except Exception:
         return _FALLBACK_BANNER
 

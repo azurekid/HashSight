@@ -21,6 +21,7 @@ _FIXED_SALT_LEN: dict[int, int] = {
     2611: 3,  # vBulletin < v3.8.5 (dynamic_7, hard 3-byte salt)
 }
 
+
 @dataclass
 class HashResult:
     """Result of identifying a single hash string."""

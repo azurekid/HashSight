@@ -4,7 +4,7 @@ set -euo pipefail
 # One-command launcher for HashSight.
 # Runs directly from source without pip/venv installation.
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PYTHON_BIN="${PYTHON_BIN:-python3}"
 
 ensure_python() {
@@ -25,11 +25,11 @@ main() {
   ensure_python
 
   if [[ $# -eq 0 ]]; then
-    exec "$PYTHON_BIN" -m hashsight.cli --help
+    exec "$PYTHON_BIN" -m hashsight --help
   fi
 
   cd "$ROOT_DIR"
-  exec "$PYTHON_BIN" -m hashsight.cli "$@"
+  exec "$PYTHON_BIN" -m hashsight "$@"
 }
 
 main "$@"

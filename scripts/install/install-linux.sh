@@ -3,9 +3,12 @@ set -euo pipefail
 
 # HashSight Linux installer with optional apt bootstrap.
 # Usage:
-#   ./install-linux.sh
-#   ./install-linux.sh --with-apt
-#   ./install-linux.sh --python python3.9 --venv .venv
+#   ./scripts/install/install-linux.sh
+#   ./scripts/install/install-linux.sh --with-apt
+#   ./scripts/install/install-linux.sh --python python3.9 --venv .venv
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$ROOT_DIR"
 
 WITH_APT=0
 PYTHON_BIN="python3"

@@ -50,6 +50,42 @@ Notes:
 - Use `--min-result-certainty N` to ignore whole results below a certainty threshold.
 - Use `--min-certainty N` to hide low-certainty ambiguous candidates within a result.
 
+## Configuration Defaults
+
+HashSight can load default CLI options from JSON files:
+
+- Global config: `~/.config/hashsight/config.json`
+- Local default: `./config.json`
+- Local override (current working directory): `./.hashsight.json`
+- Explicit override path via environment variable: `HASHSIGHT_CONFIG=/path/to/config.json`
+
+Later sources override earlier sources.
+
+Example:
+
+```json
+{
+	"global": {
+		"no_update_check": false
+	},
+	"hash": {
+		"min_candidate_certainty": 35,
+		"min_overall_certainty": 20,
+		"full_mode": true,
+		"progress": true
+	},
+	"signature": {
+		"top": 50
+	}
+}
+```
+
+Command-line flags still override config defaults.
+
+Backward-compatible keys still supported:
+- `hash.min_certainty` -> `hash.min_candidate_certainty`
+- `hash.min_result_certainty` -> `hash.min_overall_certainty`
+
 ## Troubleshooting
 
 `error: externally-managed-environment` (Debian/Ubuntu/Kali):

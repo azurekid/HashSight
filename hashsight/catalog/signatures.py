@@ -13,7 +13,7 @@ _CATALOG_VERSION_RE = re.compile(
 
 
 def _default_data_path() -> Path:
-    return Path(__file__).resolve().parent / "data" / "signatures.json"
+    return Path(__file__).resolve().parent.parent / "data" / "signatures.json"
 
 
 def _load_signature_document(path: Optional[Path] = None) -> tuple[Path, dict[str, Any]]:

@@ -7,9 +7,9 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
-from .matcher import HashResult, HashSightIndex, resolve_hash
-from .hash_confidence import confidence_profile
-from .signatures import (
+from .core.confidence import confidence_profile
+from .core.matcher import HashResult, HashSightIndex, resolve_hash
+from .catalog.signatures import (
     filter_signatures,
     load_signature_catalog_info,
     load_signatures,

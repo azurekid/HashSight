@@ -4,9 +4,10 @@ from __future__ import annotations
 import sys
 from typing import Optional
 
-from .banner import show_banner
-from .cli_commands import _emit_update_notice, _print_catalog_version
-from .cli_parser import build_parser
+from ..ui.banner import show_banner
+from .config import load_runtime_config
+from .commands import _emit_update_notice, _print_catalog_version
+from .parser import build_parser
 
 
 def _normalize_argv(argv: list[str]) -> list[str]:
@@ -52,6 +53,10 @@ def main(argv: Optional[list[str]] = None) -> int:
     if argv is None:
         argv = sys.argv[1:]
 
+    config, config_warnings = load_runtime_config()
+    for warning in config_warnings:
+        print(f"HashSight config warning: {warning}", file=sys.stderr)
+
     if "--catalog-version" in argv:
         return _print_catalog_version()
 
@@ -62,7 +67,7 @@ def main(argv: Optional[list[str]] = None) -> int:
         if "--no-banner" not in argv:
             show_banner()
             print()
-        parser = build_parser()
+        parser = build_parser(config=config)
         parser.print_help()
         print()
         return 0
@@ -74,7 +79,7 @@ def main(argv: Optional[list[str]] = None) -> int:
 
     argv = _normalize_argv(argv)
 
-    parser = build_parser()
+    parser = build_parser(config=config)
     args = parser.parse_args(argv)
 
     if args.command != "completion" and not args.no_banner:

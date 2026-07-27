@@ -23,7 +23,7 @@ jobs:
           python-version: "3.12"
 
       - name: Run upstream sync
-        run: python scripts/sync_signatures_upstream.py
+        run: python scripts/upstream/sync_signatures_upstream.py
 
       - name: Validate signatures file
         run: python -c "from hashsight.signatures import load_signatures; print(len(load_signatures()))"

@@ -1,0 +1,28 @@
+{
+  "_comment": "HashSight local defaults. Loaded automatically from ./config.json.",
+  "global": {
+    "_comment": "Global defaults for all commands.",
+    "no_banner": false,
+    "no_update_check": false
+  },
+  "hash": {
+    "_comment": "Defaults for the 'hash' command. CLI flags always override these.",
+    "min_candidate_certainty": 35,
+    "min_overall_certainty": 0,
+    "full_mode": false,
+    "progress": null,
+    "context": null,
+    "top": null,
+    "json": false,
+    "exact_only": false,
+    "full_hash": false
+  },
+  "signature": {
+    "_comment": "Defaults for the 'signature' command.",
+    "top": 20,
+    "json": false,
+    "mode": null,
+    "category": null,
+    "name": null
+  }
+}

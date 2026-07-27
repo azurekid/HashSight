@@ -5,8 +5,7 @@ import difflib
 import re
 from typing import Any, Optional
 
-from . import get_signature
-from .john import john_format_for
+from ..core.john import john_format_for
 
 
 def _normalize_search_text(text: str) -> str:
@@ -44,6 +43,8 @@ def signature_search_rows(
     name: Optional[str],
 ) -> list[dict[str, Any]]:
     """Search top-level signatures and nested candidates with certainty ranking."""
+    from .. import get_signature
+
     all_entries = get_signature()
     rows: list[dict[str, Any]] = []
 
