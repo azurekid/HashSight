@@ -122,6 +122,8 @@ def complete_match(hash_value: str, entry: dict[str, Any]) -> HashResult:
             sorted_candidates.append(candidate_copy)
 
         _, _, top_hint_matched, top_structural_matched, top_strong_match = deduped_scored[0]
+        low_signal_ambiguous = not (top_hint_matched or top_structural_matched or top_strong_match)
+        best_guess = None if low_signal_ambiguous else sorted_candidates[0]
         return HashResult(
             hash=hash_value,
             confidence="Ambiguous",
@@ -130,7 +132,7 @@ def complete_match(hash_value: str, entry: dict[str, Any]) -> HashResult:
             category=entry.get("category"),
             john_format=None,
             candidates=sorted_candidates,
-            best_guess=sorted_candidates[0],
+            best_guess=best_guess,
             hint_terms=hint_terms,
             hint_applied=top_hint_matched,
             structural_hint_applied=top_structural_matched or top_strong_match,
