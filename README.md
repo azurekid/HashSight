@@ -1,4 +1,4 @@
-<img width="1020" height="355" alt="image" src="https://github.com/user-attachments/assets/04685061-f37c-4cbf-bedd-d7f5b7ec7403" />
+<img width=70% height=70% alt="image" src="https://github.com/user-attachments/assets/04685061-f37c-4cbf-bedd-d7f5b7ec7403" />
 
 
 Hash signature intelligence for hashcat mode identification.
