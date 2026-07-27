@@ -69,10 +69,14 @@ def render_table(headers: list[str], rows: list[list[str]]) -> str:
     """Render a fixed-width table for terminal output."""
     widths = [_display_len(h) for h in headers]
     for row in rows:
+        if not row or all(cell == "" for cell in row):
+            continue
         for idx, cell in enumerate(row):
             widths[idx] = max(widths[idx], _display_len(cell))
 
     def _line(parts: list[str]) -> str:
+        if not parts or all(cell == "" for cell in parts):
+            return ""
         return " | ".join(_pad_cell(parts[i], widths[i]) for i in range(len(parts)))
 
     divider = "-+-".join("-" * w for w in widths)

@@ -128,10 +128,14 @@ def _cmd_hash(args: argparse.Namespace) -> int:
     color_enabled = colors_enabled()
     summary_rows: list[list[str]] = []
     reasons: list[tuple[str, str]] = []
+    previous_hash: str | None = None
 
     for result in results:
         certainty, basis = confidence_profile(result)
         hash_table = format_hash_for_table(result.hash)
+
+        if previous_hash is not None and result.hash != previous_hash:
+            summary_rows.append(["", "", "", "", "", "", ""])
 
         if result.candidates:
             certainties = per_candidate_certainties(result, int(certainty.rstrip("%")))
@@ -180,6 +184,7 @@ def _cmd_hash(args: argparse.Namespace) -> int:
             )
 
         reasons.append((hash_table, basis))
+        previous_hash = result.hash
 
     headers = ["Name", "Mode", "John", "Category", "Certainty", "Len", "Hash"]
     if color_enabled:
