@@ -2955,6 +2955,11 @@
     },
     {
       "kind": "Prefix",
+      "match": "$sha1$",
+      "mode": 15100
+    },
+    {
+      "kind": "Prefix",
       "match": "$8$",
       "mode": 9200
     },
@@ -3606,8 +3611,33 @@
       "mode": 23003
     },
     {
-      "kind": "Prefix",
-      "match": "$pkzip2$",
+      "kind": "Regex",
+      "match": "^\\$pkzip2\\$1\\*1\\*2\\*0\\*[A-Fa-f0-9]+\\*[A-Fa-f0-9]+\\*[A-Fa-f0-9]+\\*0\\*[A-Fa-f0-9]+\\*8\\*[A-Fa-f0-9]+\\*[A-Fa-f0-9]+\\*[A-Fa-f0-9]+\\*[A-Fa-f0-9]+\\*\\$/pkzip2\\$$",
+      "mode": 17200
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$pkzip2\\$1\\*1\\*2\\*0\\*[A-Fa-f0-9]+\\*[A-Fa-f0-9]+\\*[A-Fa-f0-9]+\\*0\\*[A-Fa-f0-9]+\\*0\\*[A-Fa-f0-9]+\\*[A-Fa-f0-9]+\\*[A-Fa-f0-9]+\\*[A-Fa-f0-9]+\\*\\$/pkzip2\\$$",
+      "mode": 17210
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$pkzip2\\$3\\*1\\*1\\*0\\*8\\*",
+      "mode": 17220
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$pkzip2\\$3\\*1\\*1\\*0\\*0\\*",
+      "mode": 17225
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$pkzip2\\$8\\*1\\*1\\*0\\*8\\*",
+      "mode": 17230
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$pkzip2\\$",
       "name": "PKZIP (Compressed / Master Key)",
       "category": "Archive",
       "candidates": [
@@ -5246,6 +5276,16 @@
           "popularity": 2
         }
       ]
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\([A-Za-z0-9/+]{20}\\)$",
+      "mode": 8700
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\([A-Za-z0-9/+]{49}\\)$",
+      "mode": 9100
     },
     {
       "kind": "Regex",

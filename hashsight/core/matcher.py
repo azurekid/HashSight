@@ -254,13 +254,21 @@ def _candidate_score(
     if struct_features is not None and total_len_hint is not None:
         diff = abs(struct_features["len"] - total_len_hint)
         if diff == 0:
-            bonus += 12
+            bonus += 28
             structural_matched = True
-        elif diff <= 4:
-            bonus += 5
+            strong_match = True
+        elif diff <= 2:
+            bonus += 14
             structural_matched = True
+        elif diff <= 6:
+            bonus += 6
+            structural_matched = True
+        elif diff <= 12:
+            bonus -= 6
+        elif diff <= 24:
+            bonus -= 14
         elif diff > 24:
-            bonus -= 4
+            bonus -= 24
 
     fixed_len = _FIXED_SALT_LEN.get(candidate.get("mode"))
     if fixed_len is not None and salt_features is not None:
