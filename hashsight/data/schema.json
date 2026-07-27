@@ -3,7 +3,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "HashSight signature database",
   "type": "object",
-  "required": ["version", "signatures"],
+  "required": ["version", "modes", "signatures"],
   "properties": {
     "version": {
       "type": "string",
@@ -12,26 +12,53 @@
     },
     "source": { "type": "string" },
     "description": { "type": "string" },
+    "modes": {
+      "type": "object",
+      "description": "Canonical catalog of intrinsic hashcat mode metadata, keyed by mode number as a string.",
+      "patternProperties": {
+        "^\\d+$": { "$ref": "#/definitions/modeMeta" }
+      },
+      "additionalProperties": false
+    },
     "signatures": {
       "type": "array",
       "items": { "$ref": "#/definitions/signature" }
     }
   },
   "definitions": {
-    "candidate": {
+    "modeMeta": {
       "type": "object",
-      "required": ["mode"],
+      "required": ["name"],
       "properties": {
-        "mode": { "type": "integer", "minimum": 0 },
         "name": { "type": "string", "minLength": 1 },
         "category": { "type": "string", "minLength": 1 },
         "john_format": { "type": "string", "minLength": 1 },
-        "popularity": { "type": "integer", "minimum": 1, "maximum": 10 }
+        "salt_len_hint": { "type": "integer", "minimum": 0 },
+        "salt_hex_hint": { "type": "boolean" },
+        "total_len_hint": { "type": "integer", "minimum": 1 },
+        "field_count_hint": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "candidate": {
+      "type": "object",
+      "description": "An object candidate reference: mode plus context-dependent popularity. Intrinsic metadata resolves from the modes catalog; extra keys act as per-candidate overrides.",
+      "required": ["mode"],
+      "properties": {
+        "mode": { "type": "integer", "minimum": 0 },
+        "popularity": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "name": { "type": "string", "minLength": 1 },
+        "category": { "type": "string", "minLength": 1 },
+        "john_format": { "type": "string", "minLength": 1 },
+        "salt_len_hint": { "type": "integer", "minimum": 0 },
+        "salt_hex_hint": { "type": "boolean" },
+        "total_len_hint": { "type": "integer", "minimum": 1 },
+        "field_count_hint": { "type": "integer", "minimum": 0 }
       }
     },
     "signature": {
       "type": "object",
-      "required": ["kind", "name", "category"],
+      "required": ["kind"],
       "properties": {
         "kind": { "type": "string", "enum": ["Prefix", "Regex", "Hex"] },
         "match": { "type": "string", "description": "Required for kind Prefix/Regex." },
@@ -41,9 +68,15 @@
         "category": { "type": "string", "minLength": 1 },
         "john_format": { "type": "string", "minLength": 1 },
         "verified": { "type": "boolean" },
+        "fallback": { "type": "boolean" },
         "candidates": {
           "type": "array",
-          "items": { "$ref": "#/definitions/candidate" }
+          "items": {
+            "anyOf": [
+              { "type": "integer", "minimum": 0 },
+              { "$ref": "#/definitions/candidate" }
+            ]
+          }
         }
       },
       "anyOf": [

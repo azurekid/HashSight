@@ -47,17 +47,31 @@ def _load_signature_document(path: Optional[Path] = None) -> tuple[Path, dict[st
     return source, doc
 
 
+def _candidate_ref_mode(candidate: Any) -> Any:
+    """Return the mode from a candidate reference (bare int or object)."""
+    if isinstance(candidate, bool):
+        return None
+    if isinstance(candidate, int):
+        return candidate
+    if isinstance(candidate, dict):
+        return candidate.get("mode")
+    return None
+
+
 def _validate_signatures(signatures: list[dict[str, Any]], source: Path) -> None:
-    """Validate required fields so malformed entries fail fast and loudly."""
+    """Validate required fields so malformed entries fail fast and loudly.
+
+    Candidate references may be a bare integer mode or an object with a ``mode``.
+    """
     for idx, entry in enumerate(signatures):
         candidates = entry.get("candidates") or []
         for c_idx, candidate in enumerate(candidates):
-            if "mode" not in candidate or candidate.get("mode") is None:
+            mode = _candidate_ref_mode(candidate)
+            if mode is None:
                 raise ValueError(
                     "HashSight: invalid signature data in "
                     f"'{source}': signatures[{idx}].candidates[{c_idx}] is missing required 'mode'."
                 )
-            mode = candidate.get("mode")
             if not isinstance(mode, int):
                 raise ValueError(
                     "HashSight: invalid signature data in "
@@ -65,8 +79,67 @@ def _validate_signatures(signatures: list[dict[str, Any]], source: Path) -> None
                 )
 
 
+_CANDIDATE_META_FIELDS = (
+    "name",
+    "category",
+    "john_format",
+    "salt_len_hint",
+    "salt_hex_hint",
+    "total_len_hint",
+    "field_count_hint",
+)
+
+
+def _expand_from_catalog(doc: dict[str, Any], signatures: list[dict[str, Any]]) -> None:
+    """Expand a normalized document (with a top-level ``modes`` catalog) in place.
+
+    Candidate references (bare ``int`` or ``{"mode", "popularity", ...}``) are expanded
+    into full candidate dicts by merging the catalog's intrinsic mode metadata. Explicit
+    per-reference keys always win over catalog values. Single-mode signatures have their
+    ``name``/``category``/``john_format`` hydrated from the catalog when absent.
+    """
+    raw_modes = doc.get("modes") or {}
+    catalog: dict[int, dict[str, Any]] = {}
+    for key, meta in raw_modes.items():
+        try:
+            catalog[int(key)] = meta
+        except (TypeError, ValueError):
+            continue
+
+    for entry in signatures:
+        candidates = entry.get("candidates")
+        if candidates:
+            expanded: list[dict[str, Any]] = []
+            for ref in candidates:
+                if isinstance(ref, dict):
+                    mode = ref.get("mode")
+                    popularity = ref.get("popularity", 1)
+                    overrides = {
+                        k: v for k, v in ref.items() if k not in ("mode", "popularity")
+                    }
+                else:
+                    mode = ref
+                    popularity = 1
+                    overrides = {}
+
+                meta = catalog.get(mode, {})
+                candidate: dict[str, Any] = {"mode": mode, "popularity": popularity}
+                for f in _CANDIDATE_META_FIELDS:
+                    if meta.get(f) is not None:
+                        candidate[f] = meta[f]
+                candidate.update(overrides)
+                expanded.append(candidate)
+            entry["candidates"] = expanded
+        elif isinstance(entry.get("mode"), int):
+            meta = catalog.get(entry["mode"])
+            if meta:
+                for f in ("name", "category", "john_format"):
+                    if not entry.get(f) and meta.get(f) is not None:
+                        entry[f] = meta[f]
+
+
 def _canonical_mode_meta(signatures: list[dict[str, Any]]) -> dict[int, dict[str, Any]]:
-    """Build a best-effort mode->metadata map from top-level signature entries."""
+    """Build a best-effort mode->metadata map from top-level signature entries (legacy)."""
     mode_meta: dict[int, dict[str, Any]] = {}
 
     for entry in signatures:
@@ -98,11 +171,16 @@ def _canonical_mode_meta(signatures: list[dict[str, Any]]) -> dict[int, dict[str
 
 
 def _hydrate_candidate_metadata(signatures: list[dict[str, Any]]) -> None:
-    """Fill missing candidate metadata from canonical top-level mode metadata."""
+    """Fill missing candidate metadata from canonical top-level mode metadata (legacy).
+
+    Only used for legacy documents that lack a normalized ``modes`` catalog.
+    """
     mode_meta = _canonical_mode_meta(signatures)
 
     for entry in signatures:
         for candidate in entry.get("candidates") or []:
+            if not isinstance(candidate, dict):
+                continue
             mode = candidate.get("mode")
             if not isinstance(mode, int):
                 continue
@@ -126,7 +204,10 @@ def load_signatures(path: Optional[Path] = None) -> list[dict[str, Any]]:
     """
     _, doc = _load_signature_document(path)
     signatures = doc["signatures"]
-    _hydrate_candidate_metadata(signatures)
+    if doc.get("modes"):
+        _expand_from_catalog(doc, signatures)
+    else:
+        _hydrate_candidate_metadata(signatures)
 
     return signatures
 
@@ -149,7 +230,7 @@ def load_signature_catalog_info(path: Optional[Path] = None) -> dict[str, Any]:
         candidates = entry.get("candidates") or []
         candidate_count += len(candidates)
         for candidate in candidates:
-            candidate_mode = candidate.get("mode")
+            candidate_mode = _candidate_ref_mode(candidate)
             if isinstance(candidate_mode, int):
                 mode_reference_count += 1
                 unique_modes.add(candidate_mode)
