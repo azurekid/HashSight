@@ -3938,6 +3938,32 @@
     },
     {
       "kind": "Regex",
+      "match": "^[A-Fa-f0-9]{64}:[A-Fa-f0-9]{32}:40000:[A-Fa-f0-9]{608}$",
+      "mode": 8200,
+      "name": "1Password, cloudkeychain",
+      "category": "Password Managers",
+      "verified": true,
+      "john_format": "cloudkeychain"
+    },
+    {
+      "kind": "Regex",
+      "match": "^1000:[A-Fa-f0-9]{16}:[A-Fa-f0-9]{2080}$",
+      "mode": 6600,
+      "name": "1Password, agilekeychain",
+      "category": "Password Managers",
+      "verified": true,
+      "john_format": "agilekeychain"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-z0-9]{32}:\\.[A-Za-z0-9.-]+:\\d+:\\d+$",
+      "mode": 8300,
+      "name": "DNSSEC (NSEC3)",
+      "category": "DNS",
+      "verified": true
+    },
+    {
+      "kind": "Regex",
       "match": "^[A-Fa-f0-9]{64}:.+$",
       "name": "64-hex digest with salt suffix (sha256-based salted family)",
       "category": "Salted Digest",
