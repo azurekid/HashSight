@@ -25,6 +25,7 @@ Homepage = "https://github.com/azurekid/HashSight"
 
 [project.scripts]
 hashsight = "hashsight.cli:main"
+hs = "hashsight.cli:main"
 
 [project.optional-dependencies]
 test = ["pytest>=7"]

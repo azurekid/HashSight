@@ -27,6 +27,8 @@ hash -r
 hashsight --help
 ```
 
+For the shorter alias, use `hs --help`. If your system already has Hammerspoon installed, `hs` may already be taken there, so `hashsight` remains the safer fallback.
+
 If `hashsight` is not found, run once as a module:
 
 ```bash
@@ -47,10 +49,12 @@ hashsight hash '<hash>'
 hashsight --hash '<hash>'
 hashsight signature --name 'Keccak'
 hashsight --version
+hs --hash '<hash>'
 ```
 
 Notes:
 - Running just `hashsight` now shows help.
+- `hs` is available as a shorter alias when the package is installed, but it can collide with Hammerspoon on macOS.
 - Hash input can be piped: `hashsight --hash < hashes.txt`.
 - Use `--json` for machine-readable output.
 
