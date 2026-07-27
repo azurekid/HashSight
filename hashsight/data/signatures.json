@@ -109,8 +109,7 @@
           "mode": 3200,
           "name": "bcrypt $2*$",
           "category": "OS/Unix Crypt",
-          "popularity": 10,
-          "john_format": "bcrypt"
+          "popularity": 10
         },
         {
           "mode": 25600,
@@ -154,8 +153,7 @@
           "mode": 3200,
           "name": "bcrypt $2*$",
           "category": "OS/Unix Crypt",
-          "popularity": 10,
-          "john_format": "bcrypt"
+          "popularity": 10
         },
         {
           "mode": 33800,
@@ -196,8 +194,7 @@
           "mode": 3200,
           "name": "bcrypt $2*$",
           "category": "OS/Unix Crypt",
-          "popularity": 6,
-          "john_format": "bcrypt"
+          "popularity": 6
         }
       ],
       "john_format": "bcrypt"
@@ -224,10 +221,8 @@
         },
         {
           "mode": 400,
-          "name": "phpass / WordPress / Joomla (MD5)",
           "category": "Web Application",
-          "popularity": 6,
-          "john_format": "phpass"
+          "popularity": 6
         }
       ],
       "john_format": "phpass"
@@ -249,8 +244,7 @@
           "mode": 400,
           "name": "phpBB3 phpass (MD5)",
           "category": "Web Application",
-          "popularity": 6,
-          "john_format": "phpass"
+          "popularity": 6
         }
       ],
       "john_format": "phpass"
@@ -415,10 +409,8 @@
         },
         {
           "mode": 2100,
-          "name": "Domain Cached Credentials 2 (DCC2), MS Cache 2",
           "category": "Windows/AD",
-          "popularity": 6,
-          "john_format": "mscash2"
+          "popularity": 6
         }
       ],
       "john_format": "mscash2"
@@ -441,10 +433,8 @@
         },
         {
           "mode": 5500,
-          "name": "NetNTLMv1 / NetNTLMv1+ESS",
           "category": "Windows/AD",
-          "popularity": 6,
-          "john_format": "netntlm"
+          "popularity": 6
         }
       ],
       "john_format": "netntlm"
@@ -467,10 +457,8 @@
         },
         {
           "mode": 5600,
-          "name": "NetNTLMv2",
           "category": "Windows/AD",
-          "popularity": 6,
-          "john_format": "netntlmv2"
+          "popularity": 6
         }
       ],
       "john_format": "netntlmv2"
@@ -490,10 +478,8 @@
         },
         {
           "mode": 13100,
-          "name": "Kerberos 5, etype 23, TGS-REP",
           "category": "Kerberos",
-          "popularity": 6,
-          "john_format": "krb5tgs"
+          "popularity": 6
         }
       ],
       "john_format": "krb5tgs"
@@ -539,10 +525,8 @@
         },
         {
           "mode": 18200,
-          "name": "Kerberos 5, etype 23, AS-REP",
           "category": "Kerberos",
-          "popularity": 6,
-          "john_format": "krb5asrep"
+          "popularity": 6
         }
       ],
       "john_format": "krb5asrep"
@@ -1043,10 +1027,8 @@
         },
         {
           "mode": 13400,
-          "name": "KeePass 1 (AES/Twofish) and 2 (AES)",
           "category": "Password Manager",
-          "popularity": 6,
-          "john_format": "keepass"
+          "popularity": 6
         }
       ],
       "john_format": "keepass"
@@ -1728,7 +1710,6 @@
         },
         {
           "mode": 34000,
-          "name": "Argon2 (i/d/id)",
           "category": "Generic KDF",
           "popularity": 6
         }
@@ -1755,7 +1736,6 @@
         },
         {
           "mode": 8900,
-          "name": "scrypt",
           "category": "Generic KDF",
           "popularity": 6
         }
@@ -2143,7 +2123,6 @@
         },
         {
           "mode": 29452,
-          "name": "VeraCrypt (many cipher/hash/XTS combinations exist - mode shown is representative)",
           "category": "Disk/Container Encryption",
           "popularity": 6
         }
@@ -2297,7 +2276,6 @@
         },
         {
           "mode": 29312,
-          "name": "TrueCrypt (many cipher/hash/XTS combinations exist - mode shown is representative)",
           "category": "Disk/Container Encryption",
           "popularity": 6
         }
@@ -2415,17 +2393,13 @@
         },
         {
           "mode": 12700,
-          "name": "Blockchain, My Wallet",
           "category": "Crypto Wallet",
-          "popularity": 6,
-          "john_format": "blockchain"
+          "popularity": 6
         },
         {
           "mode": 15200,
-          "name": "Blockchain, My Wallet, V2",
           "category": "Wallet",
-          "popularity": 3,
-          "john_format": "blockchain"
+          "popularity": 3
         }
       ],
       "john_format": "blockchain"
@@ -3245,8 +3219,7 @@
           "mode": 600,
           "name": "BLAKE2b-512",
           "category": "Raw Digest",
-          "popularity": 1,
-          "john_format": "raw-blake2"
+          "popularity": 1
         },
         {
           "mode": 1750,
@@ -4076,10 +4049,8 @@
         },
         {
           "mode": 8200,
-          "name": "1Password, agilekeychain",
           "category": "Salted Digest",
-          "popularity": 1,
-          "john_format": "cloudkeychain"
+          "popularity": 1
         },
         {
           "mode": 11750,
@@ -4311,10 +4282,8 @@
         },
         {
           "mode": 22000,
-          "name": "WPA-PBKDF2-PMKID+EAPOL",
           "category": "Wireless",
-          "popularity": 6,
-          "john_format": "wpapsk"
+          "popularity": 6
         }
       ],
       "john_format": "wpapsk"
@@ -4342,17 +4311,13 @@
         },
         {
           "mode": 22001,
-          "name": "WPA-PMK-PMKID+EAPOL",
           "category": "Wireless",
-          "popularity": 6,
-          "john_format": "wpapsk-pmk"
+          "popularity": 6
         },
         {
           "mode": 22000,
-          "name": "WPA-PBKDF2-PMKID+EAPOL",
           "category": "WiFi",
-          "popularity": 4,
-          "john_format": "wpapsk"
+          "popularity": 4
         }
       ],
       "john_format": "wpapsk-pmk"
@@ -4395,10 +4360,8 @@
         },
         {
           "mode": 5500,
-          "name": "NetNTLMv1 / NetNTLMv1+ESS",
           "category": "Windows/AD",
-          "popularity": 6,
-          "john_format": "netntlm"
+          "popularity": 6
         }
       ],
       "john_format": "netntlm"
@@ -4432,7 +4395,6 @@
         },
         {
           "mode": 16500,
-          "name": "JWT (JSON Web Token)",
           "category": "Token",
           "popularity": 6
         }
@@ -4603,10 +4565,8 @@
         },
         {
           "mode": 6600,
-          "name": "1Password, agilekeychain",
           "category": "Catalog Fallback",
-          "popularity": 1,
-          "john_format": "agilekeychain"
+          "popularity": 1
         },
         {
           "mode": 6800,
@@ -4659,14 +4619,11 @@
         },
         {
           "mode": 8200,
-          "name": "1Password, cloudkeychain",
           "category": "Catalog Fallback",
-          "popularity": 1,
-          "john_format": "cloudkeychain"
+          "popularity": 1
         },
         {
           "mode": 8300,
-          "name": "DNSSEC (NSEC3)",
           "category": "Catalog Fallback",
           "popularity": 1
         },
@@ -5400,14 +5357,11 @@
       "candidates": [
         {
           "mode": 13100,
-          "name": "Kerberos 5, etype 23, TGS-REP",
           "category": "Windows/AD",
-          "popularity": 6,
-          "john_format": "krb5tgs"
+          "popularity": 6
         },
         {
           "mode": 35300,
-          "name": "Kerberos 5, etype 23, TGS-REP (hashcat alias)",
           "category": "Windows/AD",
           "popularity": 6
         }

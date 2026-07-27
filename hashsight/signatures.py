@@ -28,6 +28,59 @@ def _validate_signatures(signatures: list[dict[str, Any]], source: Path) -> None
                 )
 
 
+def _canonical_mode_meta(signatures: list[dict[str, Any]]) -> dict[int, dict[str, Any]]:
+    """Build a best-effort mode->metadata map from top-level signature entries."""
+    mode_meta: dict[int, dict[str, Any]] = {}
+
+    for entry in signatures:
+        mode = entry.get("mode")
+        if not isinstance(mode, int):
+            continue
+
+        name = entry.get("name")
+        john_format = entry.get("john_format")
+        if not name and not john_format:
+            continue
+
+        # Prefer verified exact entries, then entries that include john_format.
+        rank = 0
+        if entry.get("verified") is True:
+            rank += 2
+        if john_format:
+            rank += 1
+
+        current = mode_meta.get(mode)
+        if current is None or rank > current["rank"]:
+            mode_meta[mode] = {
+                "name": name,
+                "john_format": john_format,
+                "rank": rank,
+            }
+
+    return mode_meta
+
+
+def _hydrate_candidate_metadata(signatures: list[dict[str, Any]]) -> None:
+    """Fill missing candidate metadata from canonical top-level mode metadata."""
+    mode_meta = _canonical_mode_meta(signatures)
+
+    for entry in signatures:
+        for candidate in entry.get("candidates") or []:
+            mode = candidate.get("mode")
+            if not isinstance(mode, int):
+                continue
+
+            meta = mode_meta.get(mode)
+            if not meta:
+                continue
+
+            if not candidate.get("name") and meta.get("name"):
+                candidate["name"] = meta["name"]
+
+            if not candidate.get("john_format") and meta.get("john_format"):
+                candidate["john_format"] = meta["john_format"]
+
+
 def load_signatures(path: Optional[Path] = None) -> list[dict[str, Any]]:
     """Load the signature database from a JSON file.
 
@@ -50,6 +103,7 @@ def load_signatures(path: Optional[Path] = None) -> list[dict[str, Any]]:
         raise ValueError(f"HashSight: signature file '{source}' does not contain a 'signatures' array.")
 
     _validate_signatures(signatures, source)
+    _hydrate_candidate_metadata(signatures)
 
     return signatures
 

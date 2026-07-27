@@ -16,7 +16,7 @@
   "definitions": {
     "candidate": {
       "type": "object",
-      "required": ["mode", "name", "category"],
+      "required": ["mode"],
       "properties": {
         "mode": { "type": "integer", "minimum": 0 },
         "name": { "type": "string", "minLength": 1 },
@@ -42,7 +42,7 @@
           "items": { "$ref": "#/definitions/candidate" }
         }
       },
-      "oneOf": [
+      "anyOf": [
         { "required": ["mode"] },
         { "required": ["candidates"] }
       ]

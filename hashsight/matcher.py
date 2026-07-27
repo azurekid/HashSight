@@ -96,9 +96,30 @@ def complete_match(hash_value: str, entry: dict[str, Any]) -> HashResult:
             scored.append((score, candidate_copy, hint_matched, structural_matched, strong_match))
 
         scored.sort(key=lambda x: x[0], reverse=True)
-        sorted_candidates = [c for _, c, _, _, _ in scored]
 
-        _, _, top_hint_matched, top_structural_matched, top_strong_match = scored[0]
+        # Guard against accidental duplicate candidate rows in signature data.
+        # Prefer the highest-scoring row for a given mode.
+        seen_keys: set[tuple[Any, ...]] = set()
+        sorted_candidates: list[dict[str, Any]] = []
+        deduped_scored: list[tuple[int, dict[str, Any], bool, bool, bool]] = []
+        for item in scored:
+            _, candidate_copy, _, _, _ = item
+            mode = candidate_copy.get("mode")
+            if mode is not None:
+                key = ("mode", mode)
+            else:
+                key = (
+                    "name",
+                    candidate_copy.get("name"),
+                    candidate_copy.get("john_format"),
+                )
+            if key in seen_keys:
+                continue
+            seen_keys.add(key)
+            deduped_scored.append(item)
+            sorted_candidates.append(candidate_copy)
+
+        _, _, top_hint_matched, top_structural_matched, top_strong_match = deduped_scored[0]
         return HashResult(
             hash=hash_value,
             confidence="Ambiguous",
