@@ -4639,65 +4639,85 @@
           "name": "Juniper NetScreen/SSG (ScreenOS)",
           "category": "Catalog Fallback",
           "popularity": 1,
-          "john_format": "md5ns"
+          "john_format": "md5ns",
+          "total_len_hint": 35,
+          "field_count_hint": 1
         },
         {
           "mode": 23,
           "name": "Skype",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 37,
+          "field_count_hint": 1
         },
         {
           "mode": 24,
           "name": "SolarWinds Serv-U",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 32,
+          "field_count_hint": 0
         },
         {
           "mode": 112,
           "name": "Oracle S: Type (Oracle 11+)",
           "category": "Catalog Fallback",
           "popularity": 1,
-          "john_format": "oracle11"
+          "john_format": "oracle11",
+          "total_len_hint": 61,
+          "field_count_hint": 1
         },
         {
           "mode": 122,
           "name": "macOS v10.4, macOS v10.5, macOS v10.6",
           "category": "Catalog Fallback",
           "popularity": 1,
-          "john_format": "xsha"
+          "john_format": "xsha",
+          "total_len_hint": 48,
+          "field_count_hint": 0
         },
         {
           "mode": 125,
           "name": "ArubaOS",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 50,
+          "field_count_hint": 0
         },
         {
           "mode": 133,
           "name": "PeopleSoft",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 28,
+          "field_count_hint": 0
         },
         {
           "mode": 501,
           "name": "Juniper IVE",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 104,
+          "field_count_hint": 0
         },
         {
           "mode": 1421,
           "name": "hMailServer",
           "category": "Catalog Fallback",
           "popularity": 1,
-          "john_format": "hmailserver"
+          "john_format": "hmailserver",
+          "total_len_hint": 70,
+          "field_count_hint": 0
         },
         {
           "mode": 1722,
           "name": "macOS v10.7",
           "category": "Catalog Fallback",
           "popularity": 1,
-          "john_format": "xsha512"
+          "john_format": "xsha512",
+          "total_len_hint": 136,
+          "field_count_hint": 0
         },
         {
           "mode": 2000,
@@ -4716,7 +4736,9 @@
           "mode": 5800,
           "name": "Samsung Android Password/PIN",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 57,
+          "field_count_hint": 1
         },
         {
           "mode": 6600,
@@ -4729,49 +4751,63 @@
           "name": "LastPass + LastPass sniffed",
           "category": "Catalog Fallback",
           "popularity": 1,
-          "john_format": "lastpass"
+          "john_format": "lastpass",
+          "total_len_hint": 54,
+          "field_count_hint": 2
         },
         {
           "mode": 7000,
           "name": "FortiGate (FortiOS)",
           "category": "Catalog Fallback",
           "popularity": 1,
-          "john_format": "fortigate"
+          "john_format": "fortigate",
+          "total_len_hint": 47,
+          "field_count_hint": 0
         },
         {
           "mode": 7700,
           "name": "SAP CODVN B (BCODE)",
           "category": "Catalog Fallback",
           "popularity": 1,
-          "john_format": "sapb"
+          "john_format": "sapb",
+          "total_len_hint": 21,
+          "field_count_hint": 1
         },
         {
           "mode": 7701,
           "name": "SAP CODVN B (BCODE) from RFC_READ_TABLE",
           "category": "Catalog Fallback",
           "popularity": 1,
-          "john_format": "sapb"
+          "john_format": "sapb",
+          "total_len_hint": 29,
+          "field_count_hint": 1
         },
         {
           "mode": 7800,
           "name": "SAP CODVN F/G (PASSCODE)",
           "category": "Catalog Fallback",
           "popularity": 1,
-          "john_format": "sapg"
+          "john_format": "sapg",
+          "total_len_hint": 45,
+          "field_count_hint": 1
         },
         {
           "mode": 7801,
           "name": "SAP CODVN F/G (PASSCODE) from RFC_READ_TABLE",
           "category": "Catalog Fallback",
           "popularity": 1,
-          "john_format": "sapg"
+          "john_format": "sapg",
+          "total_len_hint": 53,
+          "field_count_hint": 1
         },
         {
           "mode": 8000,
           "name": "Sybase ASE",
           "category": "Catalog Fallback",
           "popularity": 1,
-          "john_format": "sybasease"
+          "john_format": "sybasease",
+          "total_len_hint": 86,
+          "field_count_hint": 0
         },
         {
           "mode": 8200,
@@ -4783,21 +4819,27 @@
           "mode": 8300,
           "category": "Catalog Fallback",
           "popularity": 1,
-          "name": "DNSSEC (NSEC3)"
+          "name": "DNSSEC (NSEC3)",
+          "total_len_hint": 57,
+          "field_count_hint": 3
         },
         {
           "mode": 8600,
           "name": "Lotus Notes/Domino 5",
           "category": "Catalog Fallback",
           "popularity": 1,
-          "john_format": "lotus5"
+          "john_format": "lotus5",
+          "total_len_hint": 32,
+          "field_count_hint": 0
         },
         {
           "mode": 8700,
           "name": "Lotus Notes/Domino 6",
           "category": "Catalog Fallback",
           "popularity": 1,
-          "john_format": "dominosec"
+          "john_format": "dominosec",
+          "total_len_hint": 22,
+          "field_count_hint": 0
         },
         {
           "mode": 8800,
@@ -4817,70 +4859,92 @@
           "mode": 9100,
           "name": "Lotus Notes/Domino 8",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 51,
+          "field_count_hint": 0
         },
         {
           "mode": 9900,
           "name": "Radmin2",
           "category": "Catalog Fallback",
           "popularity": 1,
-          "john_format": "radmin"
+          "john_format": "radmin",
+          "total_len_hint": 32,
+          "field_count_hint": 0
         },
         {
           "mode": 10100,
           "name": "SipHash",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 53,
+          "field_count_hint": 3
         },
         {
           "mode": 11000,
           "name": "PrestaShop",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 89,
+          "field_count_hint": 1
         },
         {
           "mode": 12200,
           "name": "eCryptfs",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 47,
+          "field_count_hint": 5
         },
         {
           "mode": 12300,
           "name": "Oracle T: Type (Oracle 12+)",
           "category": "Catalog Fallback",
           "popularity": 1,
-          "john_format": "oracle12c"
+          "john_format": "oracle12c",
+          "total_len_hint": 160,
+          "field_count_hint": 0
         },
         {
           "mode": 12600,
           "name": "ColdFusion 10+",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 129,
+          "field_count_hint": 1
         },
         {
           "mode": 12900,
           "name": "Android FDE (Samsung DEK)",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 160,
+          "field_count_hint": 0
         },
         {
           "mode": 13800,
           "name": "Windows Phone 8+ PIN/password",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 321,
+          "field_count_hint": 1
         },
         {
           "mode": 13900,
           "name": "OpenCart",
           "category": "Catalog Fallback",
           "popularity": 1,
-          "john_format": "dynamic_38"
+          "john_format": "dynamic_38",
+          "total_len_hint": 50,
+          "field_count_hint": 1
         },
         {
           "mode": 14500,
           "name": "Linux Kernel Crypto API (2.4)",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 113,
+          "field_count_hint": 6
         },
         {
           "mode": 14600,
@@ -4892,37 +4956,49 @@
           "mode": 14900,
           "name": "Skip32 (PT = $salt, key = $pass)",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 17,
+          "field_count_hint": 1
         },
         {
           "mode": 15000,
           "name": "FileZilla Server >= 0.9.55",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 193,
+          "field_count_hint": 1
         },
         {
           "mode": 16000,
           "name": "Tripcode",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 10,
+          "field_count_hint": 0
         },
         {
           "mode": 17010,
           "name": "GPG (AES-128/AES-256 (SHA-1($pass)))",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 782,
+          "field_count_hint": 12
         },
         {
           "mode": 17020,
           "name": "GPG (AES-128/AES-256 (SHA-512($pass)))",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 1426,
+          "field_count_hint": 12
         },
         {
           "mode": 17030,
           "name": "GPG (AES-128/AES-256 (SHA-256($pass)))",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 1422,
+          "field_count_hint": 12
         },
         {
           "mode": 17040,
@@ -4941,13 +5017,17 @@
           "name": "Android Backup",
           "category": "Catalog Fallback",
           "popularity": 1,
-          "john_format": "AndroidBackup"
+          "john_format": "AndroidBackup",
+          "total_len_hint": 497,
+          "field_count_hint": 6
         },
         {
           "mode": 19500,
           "name": "Ruby on Rails Restful-Authentication",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 73,
+          "field_count_hint": 2
         },
         {
           "mode": 20011,
@@ -4972,80 +5052,106 @@
           "name": "BitLocker",
           "category": "Catalog Fallback",
           "popularity": 1,
-          "john_format": "BitLocker"
+          "john_format": "BitLocker",
+          "total_len_hint": 208,
+          "field_count_hint": 9
         },
         {
           "mode": 23900,
           "name": "BestCrypt v3 Volume Encryption",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 220,
+          "field_count_hint": 5
         },
         {
           "mode": 24000,
           "name": "BestCrypt v4 Volume Encryption",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 252,
+          "field_count_hint": 5
         },
         {
           "mode": 24700,
           "name": "Stuffit5",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 10,
+          "field_count_hint": 0
         },
         {
           "mode": 26200,
           "name": "OpenEdge Progress Encode",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 16,
+          "field_count_hint": 0
         },
         {
           "mode": 26300,
           "name": "FortiGate256 (FortiOS256)",
           "category": "Catalog Fallback",
           "popularity": 1,
-          "john_format": "fortigate256"
+          "john_format": "fortigate256",
+          "total_len_hint": 63,
+          "field_count_hint": 0
         },
         {
           "mode": 26401,
           "name": "AES-128-ECB NOKDF (PT = $salt, key = $pass)",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 65,
+          "field_count_hint": 1
         },
         {
           "mode": 26402,
           "name": "AES-192-ECB NOKDF (PT = $salt, key = $pass)",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 65,
+          "field_count_hint": 1
         },
         {
           "mode": 26403,
           "name": "AES-256-ECB NOKDF (PT = $salt, key = $pass)",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 65,
+          "field_count_hint": 1
         },
         {
           "mode": 26500,
           "name": "iPhone passcode (UID key + System Keybag)",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 166,
+          "field_count_hint": 5
         },
         {
           "mode": 28200,
           "name": "Exodus Desktop Wallet (scrypt)",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 148,
+          "field_count_hint": 7
         },
         {
           "mode": 28300,
           "name": "Teamspeak 3 (channel hash)",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 194,
+          "field_count_hint": 4
         },
         {
           "mode": 29100,
           "name": "Flask Session Cookie ($salt.$salt.$pass)",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 62,
+          "field_count_hint": 0
         },
         {
           "mode": 29511,
@@ -5123,25 +5229,33 @@
           "mode": 29600,
           "name": "Terra Station Wallet (AES256-CBC(PBKDF2($pass)))",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 172,
+          "field_count_hint": 0
         },
         {
           "mode": 30905,
           "name": "Bitcoin raw private key (P2SH(P2WPKH)), compressed",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 34,
+          "field_count_hint": 0
         },
         {
           "mode": 30906,
           "name": "Bitcoin raw private key (P2SH(P2WPKH)), uncompressed",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 34,
+          "field_count_hint": 0
         },
         {
           "mode": 31400,
           "name": "SecureCRT MasterPassphrase v2",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 143,
+          "field_count_hint": 1
         },
         {
           "mode": 31800,
@@ -5153,7 +5267,9 @@
           "mode": 32300,
           "name": "Empire CMS (Admin password)",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 98,
+          "field_count_hint": 2
         },
         {
           "mode": 32500,
@@ -5165,7 +5281,9 @@
           "mode": 32700,
           "name": "Kremlin Encrypt 3.0 w/NewDES",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 62,
+          "field_count_hint": 3
         },
         {
           "mode": 33500,
@@ -5195,37 +5313,49 @@
           "mode": 70000,
           "name": "Argon2id [Bridged: reference implementation + tunings]",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 97,
+          "field_count_hint": 5
         },
         {
           "mode": 70100,
           "name": "scrypt [Bridged: Scrypt-Jane SMix]",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 74,
+          "field_count_hint": 5
         },
         {
           "mode": 70200,
           "name": "scrypt [Bridged: Scrypt-Yescrypt]",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 74,
+          "field_count_hint": 5
         },
         {
           "mode": 72000,
           "name": "Generic Hash [Bridged: Python Interpreter free-threading]",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 81,
+          "field_count_hint": 1
         },
         {
           "mode": 73000,
           "name": "Generic Hash [Bridged: Python Interpreter with GIL]",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 81,
+          "field_count_hint": 1
         },
         {
           "mode": 74000,
           "name": "Generic Hash [Bridged: Rust]",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "total_len_hint": 81,
+          "field_count_hint": 1
         },
         {
           "mode": 99999,

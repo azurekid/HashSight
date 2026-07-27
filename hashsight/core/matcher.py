@@ -76,12 +76,13 @@ def complete_match(hash_value: str, entry: dict[str, Any]) -> HashResult:
     candidates = entry.get("candidates") or []
     hint_terms = _hint_terms_from_context(entry.get("_context_hint"))
     salt_features = _salt_features(hash_value)
+    struct_features = _structural_features(hash_value)
 
     if candidates:
         scored = []
         for candidate in candidates:
             score, hint_matched, structural_matched, strong_match = _candidate_score(
-                candidate, hint_terms, salt_features
+                candidate, hint_terms, salt_features, struct_features
             )
             candidate_copy = dict(candidate)
             candidate_copy["john_format"] = (
@@ -180,10 +181,26 @@ def _salt_features(hash_value: str) -> Optional[dict[str, Any]]:
     return {"len": len(salt), "hex": bool(_HEX_RE.match(salt))}
 
 
+_FIELD_SEPARATORS = (":", "$", "*")
+
+
+def _structural_features(hash_value: str) -> dict[str, Any]:
+    """Coarse whole-string shape features used to disambiguate candidates.
+
+    ``fields`` is the count of the dominant field separator ($, : or *), which is
+    stable across different salts/passwords for a given format.
+    """
+    return {
+        "len": len(hash_value),
+        "fields": max(hash_value.count(sep) for sep in _FIELD_SEPARATORS),
+    }
+
+
 def _candidate_score(
     candidate: dict[str, Any],
     hint_terms: list[str],
     salt_features: Optional[dict[str, Any]] = None,
+    struct_features: Optional[dict[str, Any]] = None,
 ) -> tuple[int, bool, bool, bool]:
 
     base = candidate.get("popularity", 0) * 10
@@ -224,6 +241,26 @@ def _candidate_score(
                 bonus += 5
             else:
                 bonus -= 5
+
+    field_count_hint = candidate.get("field_count_hint")
+    if struct_features is not None and field_count_hint is not None:
+        if struct_features["fields"] == field_count_hint:
+            bonus += 14
+            structural_matched = True
+        else:
+            bonus -= 8
+
+    total_len_hint = candidate.get("total_len_hint")
+    if struct_features is not None and total_len_hint is not None:
+        diff = abs(struct_features["len"] - total_len_hint)
+        if diff == 0:
+            bonus += 12
+            structural_matched = True
+        elif diff <= 4:
+            bonus += 5
+            structural_matched = True
+        elif diff > 24:
+            bonus -= 4
 
     fixed_len = _FIXED_SALT_LEN.get(candidate.get("mode"))
     if fixed_len is not None and salt_features is not None:
