@@ -21,6 +21,14 @@
       "john_format": "md5crypt"
     },
     {
+      "kind": "Regex",
+      "match": "^(\\$md5,rounds=\\d+\\$|\\$md5\\$rounds=\\d+\\$|\\$md5\\$)[a-z0-9/.]{0,16}(\\$|\\$\\$)[a-z0-9/.]{22}$",
+      "mode": 3300,
+      "name": "Sun / Solaris MD5 Crypt",
+      "category": "OS/Unix Crypt",
+      "john_format": "sunmd5"
+    },
+    {
       "kind": "Prefix",
       "match": "$5$",
       "mode": 7400,
@@ -41,28 +49,32 @@
       "match": "$8$",
       "mode": 9200,
       "name": "Cisco-IOS $8$ (PBKDF2-SHA256)",
-      "category": "Networking"
+      "category": "Networking",
+      "john_format": "pbkdf2-hmac-sha256"
     },
     {
       "kind": "Prefix",
       "match": "$9$",
       "mode": 9300,
       "name": "Cisco-IOS $9$ (scrypt)",
-      "category": "Networking"
+      "category": "Networking",
+      "john_format": "scrypt"
     },
     {
       "kind": "Prefix",
       "match": "$ml$",
       "mode": 7100,
       "name": "macOS v10.8+ PBKDF2-SHA512",
-      "category": "OS/Unix Crypt"
+      "category": "OS/Unix Crypt",
+      "john_format": "pbkdf2-hmac-sha512"
     },
     {
       "kind": "Prefix",
       "match": "grub.pbkdf2.sha512.",
       "mode": 7200,
       "name": "GRUB2",
-      "category": "OS/Unix Crypt"
+      "category": "OS/Unix Crypt",
+      "john_format": "pbkdf2-hmac-sha512"
     },
     {
       "kind": "Prefix",
@@ -256,7 +268,8 @@
       "match": "$B$",
       "mode": 3711,
       "name": "MediaWiki B type",
-      "category": "Web Application"
+      "category": "Web Application",
+      "john_format": "mediawiki"
     },
     {
       "kind": "Prefix",
@@ -278,13 +291,22 @@
       "match": "^\\$episerver\\$\\*0\\*",
       "mode": 141,
       "name": "EPiServer 6.x < v4",
-      "category": "Web Application"
+      "category": "Web Application",
+      "john_format": "episerver"
     },
     {
       "kind": "Regex",
       "match": "^\\$episerver\\$\\*1\\*",
       "mode": 1441,
       "name": "EPiServer 6.x >= v4",
+      "category": "Web Application",
+      "john_format": "episerver"
+    },
+    {
+      "kind": "Regex",
+      "match": "^0x[A-Fa-f0-9]{60}\\s0x[A-Fa-f0-9]{40}$",
+      "mode": 123,
+      "name": "EPi",
       "category": "Web Application"
     },
     {
@@ -292,7 +314,8 @@
       "match": "$PHPS$",
       "mode": 2612,
       "name": "PHPS",
-      "category": "Web Application"
+      "category": "Web Application",
+      "john_format": "phps"
     },
     {
       "kind": "Prefix",
@@ -313,14 +336,16 @@
       "match": "{SHA}",
       "mode": 101,
       "name": "LDAP {SHA}",
-      "category": "Directory/LDAP"
+      "category": "Directory/LDAP",
+      "john_format": "nsldap"
     },
     {
       "kind": "Prefix",
       "match": "{SSHA}",
       "mode": 111,
       "name": "LDAP {SSHA}",
-      "category": "Directory/LDAP"
+      "category": "Directory/LDAP",
+      "john_format": "salted-sha1"
     },
     {
       "kind": "Prefix",
@@ -334,7 +359,8 @@
       "match": "{SSHA512}",
       "mode": 1711,
       "name": "LDAP {SSHA512}",
-      "category": "Directory/LDAP"
+      "category": "Directory/LDAP",
+      "john_format": "ssha512"
     },
     {
       "kind": "Prefix",
@@ -348,21 +374,24 @@
       "match": "{PKCS5S2}",
       "mode": 12001,
       "name": "Atlassian (PBKDF2-HMAC-SHA1)",
-      "category": "Directory/LDAP"
+      "category": "Directory/LDAP",
+      "john_format": "pbkdf2-hmac-sha1"
     },
     {
       "kind": "Regex",
       "match": "^\\{x-issha,",
       "mode": 10300,
       "name": "SAP CODVN H (PWDSALTEDHASH) iSSHA-1",
-      "category": "Directory/LDAP"
+      "category": "Directory/LDAP",
+      "john_format": "saph"
     },
     {
       "kind": "Regex",
       "match": "^\\{x-isSHA512,",
       "mode": 35000,
       "name": "SAP CODVN H (PWDSALTEDHASH) iSSHA-512",
-      "category": "Directory/LDAP"
+      "category": "Directory/LDAP",
+      "john_format": "saph"
     },
     {
       "kind": "Prefix",
@@ -531,14 +560,16 @@
       "match": "^\\$krb5pa\\$17\\$",
       "mode": 19800,
       "name": "Kerberos 5, etype 17, PA-ENC-TIMESTAMP pre-auth",
-      "category": "Kerberos"
+      "category": "Kerberos",
+      "john_format": "krb5pa-sha1"
     },
     {
       "kind": "Regex",
       "match": "^\\$krb5pa\\$18\\$",
       "mode": 19900,
       "name": "Kerberos 5, etype 18, PA-ENC-TIMESTAMP pre-auth",
-      "category": "Kerberos"
+      "category": "Kerberos",
+      "john_format": "krb5pa-sha1"
     },
     {
       "kind": "Regex",
@@ -596,7 +627,8 @@
       "match": "$postgres$",
       "mode": 11100,
       "name": "PostgreSQL CRAM (MD5)",
-      "category": "Database"
+      "category": "Database",
+      "john_format": "postgres"
     },
     {
       "kind": "Prefix",
@@ -787,28 +819,32 @@
       "match": "^\\$odf\\$\\*1\\*",
       "mode": 18400,
       "name": "Open Document Format (ODF) 1.2 (SHA-256, AES)",
-      "category": "Office/Document"
+      "category": "Office/Document",
+      "john_format": "odf"
     },
     {
       "kind": "Regex",
       "match": "^\\$odf\\$\\*0\\*",
       "mode": 18600,
       "name": "Open Document Format (ODF) 1.1 (SHA-1, Blowfish)",
-      "category": "Office/Document"
+      "category": "Office/Document",
+      "john_format": "odf"
     },
     {
       "kind": "Regex",
       "match": "^\\$itunes_backup\\$\\*9\\*",
       "mode": 14700,
       "name": "iTunes backup < 10.0",
-      "category": "Mobile"
+      "category": "Mobile",
+      "john_format": "itunes-backup"
     },
     {
       "kind": "Regex",
       "match": "^\\$itunes_backup\\$\\*10\\*",
       "mode": 14800,
       "name": "iTunes backup >= 10.0",
-      "category": "Mobile"
+      "category": "Mobile",
+      "john_format": "itunes-backup"
     },
     {
       "kind": "Prefix",
@@ -844,13 +880,15 @@
           "mode": 23700,
           "name": "RAR3-p (Uncompressed)",
           "category": "Archive",
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "rar"
         },
         {
           "mode": 23800,
           "name": "RAR3-p (Compressed)",
           "category": "Archive",
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "rar"
         }
       ]
     },
@@ -867,21 +905,24 @@
       "match": "^\\$zip3\\$\\*0\\*1\\*128\\*",
       "mode": 23001,
       "name": "SecureZip AES-128",
-      "category": "Archive"
+      "category": "Archive",
+      "john_format": "securezip"
     },
     {
       "kind": "Regex",
       "match": "^\\$zip3\\$\\*0\\*1\\*192\\*",
       "mode": 23002,
       "name": "SecureZip AES-192",
-      "category": "Archive"
+      "category": "Archive",
+      "john_format": "securezip"
     },
     {
       "kind": "Regex",
       "match": "^\\$zip3\\$\\*0\\*1\\*256\\*",
       "mode": 23003,
       "name": "SecureZip AES-256",
-      "category": "Archive"
+      "category": "Archive",
+      "john_format": "securezip"
     },
     {
       "kind": "Prefix",
@@ -963,7 +1004,8 @@
           "mode": 23500,
           "name": "AxCrypt 2 AES-128",
           "category": "Archive",
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "axcrypt"
         },
         {
           "mode": 23600,
@@ -990,7 +1032,8 @@
           "mode": 34300,
           "name": "KeePass Argon2 (KDBX v4)",
           "category": "Password Manager",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "keepass"
         },
         {
           "mode": 34301,
@@ -1091,7 +1134,8 @@
       "match": "^\\$multibit\\$3\\*",
       "mode": 27700,
       "name": "MultiBit Wallet (scrypt)",
-      "category": "Crypto Wallet"
+      "category": "Crypto Wallet",
+      "john_format": "multibit"
     },
     {
       "kind": "Prefix",
@@ -1352,21 +1396,24 @@
       "match": "$iwork$",
       "mode": 23300,
       "name": "Apple iWork",
-      "category": "Office/Document"
+      "category": "Office/Document",
+      "john_format": "iwork"
     },
     {
       "kind": "Prefix",
       "match": "$keychain$",
       "mode": 23100,
       "name": "Apple Keychain",
-      "category": "OS/Unix Crypt"
+      "category": "OS/Unix Crypt",
+      "john_format": "keychain"
     },
     {
       "kind": "Prefix",
       "match": "$xmpp-scram$",
       "mode": 23200,
       "name": "XMPP SCRAM PBKDF2-SHA1",
-      "category": "Network Auth"
+      "category": "Network Auth",
+      "john_format": "xmpp-scram"
     },
     {
       "kind": "Regex",
@@ -1394,7 +1441,8 @@
       "match": "$racf$",
       "mode": 8500,
       "name": "IBM RACF",
-      "category": "Enterprise/Cloud"
+      "category": "Enterprise/Cloud",
+      "john_format": "racf"
     },
     {
       "kind": "Prefix",
@@ -1427,13 +1475,15 @@
           "mode": 15300,
           "name": "DPAPI masterkey v1 (context 3)",
           "category": "Windows/AD",
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "DPAPImk"
         },
         {
           "mode": 15310,
           "name": "DPAPI masterkey v1 (context 1/2)",
           "category": "Windows/AD",
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "DPAPImk"
         }
       ]
     },
@@ -1447,13 +1497,15 @@
           "mode": 15900,
           "name": "DPAPI masterkey v2 (context 3)",
           "category": "Windows/AD",
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "DPAPImk"
         },
         {
           "mode": 15910,
           "name": "DPAPI masterkey v2 (context 1/2)",
           "category": "Windows/AD",
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "DPAPImk"
         }
       ]
     },
@@ -1462,7 +1514,8 @@
       "match": "^\\$fvde\\$1\\$",
       "mode": 16700,
       "name": "FileVault 2",
-      "category": "Disk/Container Encryption"
+      "category": "Disk/Container Encryption",
+      "john_format": "fvde"
     },
     {
       "kind": "Regex",
@@ -1497,42 +1550,48 @@
       "match": "^\\$sshng\\$0\\$",
       "mode": 22911,
       "name": "RSA/DSA/EC/OpenSSH Private Keys ($0$)",
-      "category": "OS/Unix Crypt"
+      "category": "OS/Unix Crypt",
+      "john_format": "ssh"
     },
     {
       "kind": "Regex",
       "match": "^\\$sshng\\$6\\$",
       "mode": 22921,
       "name": "RSA/DSA/EC/OpenSSH Private Keys ($6$)",
-      "category": "OS/Unix Crypt"
+      "category": "OS/Unix Crypt",
+      "john_format": "ssh"
     },
     {
       "kind": "Regex",
       "match": "^\\$sshng\\$[13]\\$",
       "mode": 22931,
       "name": "RSA/DSA/EC/OpenSSH Private Keys ($1$/$3$)",
-      "category": "OS/Unix Crypt"
+      "category": "OS/Unix Crypt",
+      "john_format": "ssh"
     },
     {
       "kind": "Regex",
       "match": "^\\$sshng\\$4\\$",
       "mode": 22941,
       "name": "RSA/DSA/EC/OpenSSH Private Keys ($4$)",
-      "category": "OS/Unix Crypt"
+      "category": "OS/Unix Crypt",
+      "john_format": "ssh"
     },
     {
       "kind": "Regex",
       "match": "^\\$sshng\\$5\\$",
       "mode": 22951,
       "name": "RSA/DSA/EC/OpenSSH Private Keys ($5$)",
-      "category": "OS/Unix Crypt"
+      "category": "OS/Unix Crypt",
+      "john_format": "ssh"
     },
     {
       "kind": "Regex",
       "match": "^\\$PEM\\$1\\$",
       "mode": 24410,
       "name": "PEM (PKCS#1/PKCS#5), MD5/3DES/AES",
-      "category": "Enterprise/Cloud"
+      "category": "Enterprise/Cloud",
+      "john_format": "pem"
     },
     {
       "kind": "Regex",
@@ -1553,21 +1612,24 @@
       "match": "^\\$telegram\\$1\\*",
       "mode": 22600,
       "name": "Telegram Desktop App Passcode (PBKDF2-HMAC-SHA1)",
-      "category": "Mobile"
+      "category": "Mobile",
+      "john_format": "telegram"
     },
     {
       "kind": "Regex",
       "match": "^\\$telegram\\$2\\*",
       "mode": 24500,
       "name": "Telegram Desktop App Passcode (PBKDF2-HMAC-SHA512)",
-      "category": "Mobile"
+      "category": "Mobile",
+      "john_format": "telegram"
     },
     {
       "kind": "Regex",
       "match": "^\\$mozilla\\$.*3DES",
       "mode": 26000,
       "name": "Mozilla key3.db",
-      "category": "OS/Unix Crypt"
+      "category": "OS/Unix Crypt",
+      "john_format": "mozilla"
     },
     {
       "kind": "Regex",
@@ -2306,10 +2368,23 @@
     {
       "kind": "Prefix",
       "match": "SQLCIPHER",
-      "mode": 24600,
-      "name": "SQLCipher",
+      "name": "SQLCipher container",
       "category": "Database",
-      "john_format": "sqlcipher"
+      "candidates": [
+        {
+          "mode": 24600,
+          "name": "SQLCipher",
+          "category": "Database",
+          "popularity": 8,
+          "john_format": "sqlcipher"
+        },
+        {
+          "mode": 24610,
+          "name": "SQLCipher",
+          "category": "Database",
+          "popularity": 6
+        }
+      ]
     },
     {
       "kind": "Regex",
@@ -2511,7 +2586,8 @@
           "category": "Raw Digest",
           "popularity": 5,
           "salt_len_hint": 8,
-          "salt_hex_hint": true
+          "salt_hex_hint": true,
+          "john_format": "crc32"
         },
         {
           "mode": 27900,
@@ -2519,7 +2595,8 @@
           "category": "Raw Digest",
           "popularity": 2,
           "salt_len_hint": 8,
-          "salt_hex_hint": true
+          "salt_hex_hint": true,
+          "john_format": "crc32"
         },
         {
           "mode": 25700,
@@ -2596,7 +2673,8 @@
           "mode": 3500,
           "name": "md5(md5(md5($pass)))",
           "category": "Salted Digest",
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "dynamic_3"
         },
         {
           "mode": 4300,
@@ -2608,7 +2686,8 @@
           "mode": 4400,
           "name": "md5(sha1($pass))",
           "category": "Salted Digest",
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "dynamic_22"
         },
         {
           "mode": 32800,
@@ -2620,13 +2699,15 @@
           "mode": 50,
           "name": "HMAC-MD5 (key = $pass)",
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "hmac-md5"
         },
         {
           "mode": 60,
           "name": "HMAC-MD5 (key = $salt)",
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "hmac-md5"
         },
         {
           "mode": 70,
@@ -2652,7 +2733,8 @@
           "mode": 4800,
           "name": "iSCSI CHAP authentication, MD5(CHAP)",
           "category": "Raw Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "chap"
         },
         {
           "mode": 5300,
@@ -2664,7 +2746,8 @@
           "mode": 6300,
           "name": "AIX {smd5}",
           "category": "Raw Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "aix-smd5"
         },
         {
           "mode": 7350,
@@ -2689,7 +2772,8 @@
           "mode": 24900,
           "name": "Dahua Authentication MD5",
           "category": "Raw Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "dahua"
         },
         {
           "mode": 24901,
@@ -2711,6 +2795,13 @@
           "category": "Raw Digest",
           "popularity": 10,
           "john_format": "raw-sha1"
+        },
+        {
+          "mode": 190,
+          "name": "LinkedIn",
+          "category": "Web Application",
+          "popularity": 2,
+          "john_format": "raw-sha1-linkedin"
         },
         {
           "mode": 6000,
@@ -2742,7 +2833,8 @@
           "mode": 4700,
           "name": "sha1(md5($pass))",
           "category": "Salted Digest",
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "dynamic_23"
         },
         {
           "mode": 18500,
@@ -2760,13 +2852,15 @@
           "mode": 150,
           "name": "HMAC-SHA1 (key = $pass)",
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "hmac-sha1"
         },
         {
           "mode": 160,
           "name": "HMAC-SHA1 (key = $salt)",
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "hmac-sha1"
         },
         {
           "mode": 5400,
@@ -2790,7 +2884,8 @@
           "mode": 6700,
           "name": "AIX {ssha1}",
           "category": "Raw Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "aix-ssha1"
         },
         {
           "mode": 7300,
@@ -2803,7 +2898,8 @@
           "mode": 8100,
           "name": "Citrix NetScaler (SHA1)",
           "category": "Raw Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "citrix_ns10"
         },
         {
           "mode": 14400,
@@ -2815,7 +2911,8 @@
           "mode": 15100,
           "name": "Juniper/NetBSD sha1crypt",
           "category": "Raw Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "sha1crypt"
         },
         {
           "mode": 18100,
@@ -2862,7 +2959,8 @@
           "mode": 34400,
           "name": "sha224(sha224($pass))",
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "dynamic_53"
         },
         {
           "mode": 34500,
@@ -2962,19 +3060,22 @@
           "mode": 21400,
           "name": "sha256(sha256_bin($pass))",
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "dynamic_64"
         },
         {
           "mode": 1450,
           "name": "HMAC-SHA256 (key = $pass)",
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "hmac-sha256"
         },
         {
           "mode": 1460,
           "name": "HMAC-SHA256 (key = $salt)",
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "hmac-sha256"
         },
         {
           "mode": 5700,
@@ -2992,7 +3093,8 @@
           "mode": 6400,
           "name": "AIX {ssha256}",
           "category": "Raw Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "aix-ssha256"
         },
         {
           "mode": 10901,
@@ -3016,7 +3118,8 @@
           "mode": 12800,
           "name": "MS-AzureSync PBKDF2-HMAC-SHA256",
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "azuread"
         },
         {
           "mode": 16501,
@@ -3149,19 +3252,22 @@
           "mode": 1750,
           "name": "HMAC-SHA512 (key = $pass)",
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "hmac-sha512"
         },
         {
           "mode": 1760,
           "name": "HMAC-SHA512 (key = $salt)",
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "hmac-sha512"
         },
         {
           "mode": 6500,
           "name": "AIX {ssha512}",
           "category": "Raw Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "aix-ssha512"
         },
         {
           "mode": 11850,
@@ -3247,12 +3353,20 @@
           "john_format": "dynamic_5"
         },
         {
+          "mode": 3810,
+          "name": "md5($salt.$pass.$salt)",
+          "category": "Salted Digest",
+          "popularity": 2,
+          "john_format": "dynamic_5"
+        },
+        {
           "mode": 3610,
           "name": "md5(md5($salt).$pass)",
           "category": "Salted Digest",
           "popularity": 4,
           "salt_len_hint": 4,
-          "salt_hex_hint": true
+          "salt_hex_hint": true,
+          "john_format": "dynamic_8"
         },
         {
           "mode": 3720,
@@ -3277,6 +3391,12 @@
           "salt_len_hint": 3,
           "salt_hex_hint": true,
           "john_format": "dynamic_7"
+        },
+        {
+          "mode": 3721,
+          "name": "WebEdition CMS",
+          "category": "Web Application",
+          "popularity": 2
         },
         {
           "mode": 2711,
@@ -3304,6 +3424,12 @@
           "salt_len_hint": 2,
           "salt_hex_hint": true,
           "john_format": "dynamic_4"
+        },
+        {
+          "mode": 4210,
+          "name": "md5($username.0.$pass)",
+          "category": "Web Application",
+          "popularity": 1
         },
         {
           "mode": 12,
@@ -3368,7 +3494,8 @@
           "category": "Salted Digest",
           "popularity": 1,
           "salt_len_hint": 6,
-          "salt_hex_hint": true
+          "salt_hex_hint": true,
+          "john_format": "dynamic_13"
         },
         {
           "mode": 4010,
@@ -3376,7 +3503,8 @@
           "category": "Salted Digest",
           "popularity": 1,
           "salt_len_hint": 13,
-          "salt_hex_hint": true
+          "salt_hex_hint": true,
+          "john_format": "dynamic_10"
         },
         {
           "mode": 4110,
@@ -3384,7 +3512,8 @@
           "category": "Salted Digest",
           "popularity": 1,
           "salt_len_hint": 11,
-          "salt_hex_hint": true
+          "salt_hex_hint": true,
+          "john_format": "dynamic_11"
         },
         {
           "mode": 4420,
@@ -3480,7 +3609,8 @@
           "category": "Salted Digest",
           "popularity": 1,
           "salt_len_hint": 17,
-          "salt_hex_hint": false
+          "salt_hex_hint": false,
+          "john_format": "dynamic_16"
         },
         {
           "mode": 33000,
@@ -3506,19 +3636,22 @@
           "mode": 50,
           "name": "HMAC-MD5 (key = $pass)",
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "hmac-md5"
         },
         {
           "mode": 60,
           "name": "HMAC-MD5 (key = $salt)",
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "hmac-md5"
         },
         {
           "mode": 4800,
           "name": "iSCSI CHAP authentication, MD5(CHAP)",
           "category": "Network Auth",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "chap"
         },
         {
           "mode": 6800,
@@ -3543,13 +3676,15 @@
           "mode": 16800,
           "name": "WPA-PMKID-PBKDF2",
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "wpapsk-pmk"
         },
         {
           "mode": 16801,
           "name": "WPA-PMK-PMKID+EAPOL-PBKDF2",
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "wpapsk-pmk"
         },
         {
           "mode": 26401,
@@ -3589,7 +3724,8 @@
           "category": "Salted Digest",
           "popularity": 8,
           "salt_len_hint": 11,
-          "salt_hex_hint": true
+          "salt_hex_hint": true,
+          "john_format": "dynamic_24"
         },
         {
           "mode": 120,
@@ -3597,7 +3733,15 @@
           "category": "Salted Digest",
           "popularity": 7,
           "salt_len_hint": 9,
-          "salt_hex_hint": true
+          "salt_hex_hint": true,
+          "john_format": "dynamic_25"
+        },
+        {
+          "mode": 190,
+          "name": "LinkedIn",
+          "category": "Web Application",
+          "popularity": 2,
+          "john_format": "raw-sha1-linkedin"
         },
         {
           "mode": 4900,
@@ -3731,13 +3875,15 @@
           "mode": 150,
           "name": "HMAC-SHA1 (key = $pass)",
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "hmac-sha1"
         },
         {
           "mode": 160,
           "name": "HMAC-SHA1 (key = $salt)",
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "hmac-sha1"
         },
         {
           "mode": 5800,
@@ -3802,7 +3948,8 @@
           "category": "Salted Digest",
           "popularity": 8,
           "salt_len_hint": 11,
-          "salt_hex_hint": true
+          "salt_hex_hint": true,
+          "john_format": "dynamic_62"
         },
         {
           "mode": 1420,
@@ -3810,7 +3957,8 @@
           "category": "Salted Digest",
           "popularity": 7,
           "salt_len_hint": 8,
-          "salt_hex_hint": true
+          "salt_hex_hint": true,
+          "john_format": "dynamic_61"
         },
         {
           "mode": 20710,
@@ -3818,7 +3966,8 @@
           "category": "Salted Digest",
           "popularity": 3,
           "salt_len_hint": 16,
-          "salt_hex_hint": true
+          "salt_hex_hint": true,
+          "john_format": "dynamic_65"
         },
         {
           "mode": 20720,
@@ -3826,7 +3975,8 @@
           "category": "Salted Digest",
           "popularity": 3,
           "salt_len_hint": 16,
-          "salt_hex_hint": true
+          "salt_hex_hint": true,
+          "john_format": "dynamic_66"
         },
         {
           "mode": 20730,
@@ -3888,13 +4038,15 @@
           "mode": 1450,
           "name": "HMAC-SHA256 (key = $pass)",
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "hmac-sha256"
         },
         {
           "mode": 1460,
           "name": "HMAC-SHA256 (key = $salt)",
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "hmac-sha256"
         },
         {
           "mode": 8200,
@@ -3999,7 +4151,8 @@
           "category": "Salted Digest",
           "popularity": 6,
           "salt_len_hint": 12,
-          "salt_hex_hint": true
+          "salt_hex_hint": true,
+          "john_format": "dynamic_82"
         },
         {
           "mode": 1720,
@@ -4007,7 +4160,8 @@
           "category": "Salted Digest",
           "popularity": 5,
           "salt_len_hint": 3,
-          "salt_hex_hint": true
+          "salt_hex_hint": true,
+          "john_format": "dynamic_81"
         },
         {
           "mode": 1730,
@@ -4031,7 +4185,8 @@
           "category": "Salted Digest",
           "popularity": 1,
           "salt_len_hint": 23,
-          "salt_hex_hint": true
+          "salt_hex_hint": true,
+          "john_format": "dynamic_85"
         },
         {
           "mode": 32420,
@@ -4069,13 +4224,15 @@
           "mode": 1750,
           "name": "HMAC-SHA512 (key = $pass)",
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "hmac-sha512"
         },
         {
           "mode": 1760,
           "name": "HMAC-SHA512 (key = $salt)",
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "hmac-sha512"
         },
         {
           "mode": 15000,
@@ -4123,7 +4280,8 @@
           "mode": 16800,
           "name": "WPA-PMKID-PBKDF2",
           "category": "Wireless",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "wpapsk-pmk"
         },
         {
           "mode": 22000,
@@ -4153,7 +4311,8 @@
           "mode": 16801,
           "name": "WPA-PMKID-PMK",
           "category": "Wireless",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "wpapsk-pmk"
         },
         {
           "mode": 22001,
@@ -4291,7 +4450,8 @@
           "category": "Salted Digest",
           "popularity": 1,
           "salt_len_hint": 44,
-          "salt_hex_hint": true
+          "salt_hex_hint": true,
+          "john_format": "dynamic_52"
         },
         {
           "mode": 1320,
@@ -4299,7 +4459,8 @@
           "category": "Salted Digest",
           "popularity": 1,
           "salt_len_hint": 8,
-          "salt_hex_hint": true
+          "salt_hex_hint": true,
+          "john_format": "dynamic_51"
         }
       ]
     },
@@ -4334,7 +4495,8 @@
           "mode": 22,
           "name": "Juniper NetScreen/SSG (ScreenOS)",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "md5ns"
         },
         {
           "mode": 23,
@@ -4359,7 +4521,8 @@
           "mode": 122,
           "name": "macOS v10.4, macOS v10.5, macOS v10.6",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "xsha"
         },
         {
           "mode": 125,
@@ -4383,13 +4546,15 @@
           "mode": 1421,
           "name": "hMailServer",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "hmailserver"
         },
         {
           "mode": 1722,
           "name": "macOS v10.7",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "xsha512"
         },
         {
           "mode": 2000,
@@ -4428,37 +4593,43 @@
           "mode": 7000,
           "name": "FortiGate (FortiOS)",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "fortigate"
         },
         {
           "mode": 7700,
           "name": "SAP CODVN B (BCODE)",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "sapb"
         },
         {
           "mode": 7701,
           "name": "SAP CODVN B (BCODE) from RFC_READ_TABLE",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "sapb"
         },
         {
           "mode": 7800,
           "name": "SAP CODVN F/G (PASSCODE)",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "sapg"
         },
         {
           "mode": 7801,
           "name": "SAP CODVN F/G (PASSCODE) from RFC_READ_TABLE",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "sapg"
         },
         {
           "mode": 8000,
           "name": "Sybase ASE",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "sybasease"
         },
         {
           "mode": 8200,
@@ -4477,19 +4648,22 @@
           "mode": 8600,
           "name": "Lotus Notes/Domino 5",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "lotus5"
         },
         {
           "mode": 8700,
           "name": "Lotus Notes/Domino 6",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "dominosec"
         },
         {
           "mode": 8800,
           "name": "Android FDE <= 4.3",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "fde"
         },
         {
           "mode": 9000,
@@ -4508,7 +4682,8 @@
           "mode": 9900,
           "name": "Radmin2",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "radmin"
         },
         {
           "mode": 10100,
@@ -4624,7 +4799,8 @@
           "mode": 18900,
           "name": "Android Backup",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "AndroidBackup"
         },
         {
           "mode": 19500,
@@ -4685,7 +4861,8 @@
           "mode": 26300,
           "name": "FortiGate256 (FortiOS256)",
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "fortigate256"
         },
         {
           "mode": 26401,
@@ -4922,7 +5099,8 @@
       "match": "^\\$BLAKE2\\$[A-Fa-f0-9]{128}$",
       "mode": 600,
       "name": "BLAKE2b-512 (hashcat tagged)",
-      "category": "Raw Digest"
+      "category": "Raw Digest",
+      "john_format": "raw-blake2"
     },
     {
       "kind": "Regex",
@@ -4980,13 +5158,15 @@
           "mode": 8600,
           "name": "Lotus Notes/Domino 5",
           "category": "Enterprise/Cloud",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "lotus5"
         },
         {
           "mode": 9900,
           "name": "Radmin2",
           "category": "Network Auth",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "radmin"
         }
       ]
     },
@@ -5013,7 +5193,8 @@
           "mode": 17600,
           "name": "Keccak-512",
           "category": "Raw Digest",
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "raw-sha3"
         },
         {
           "mode": 1770,
@@ -5038,7 +5219,8 @@
           "mode": 18000,
           "name": "Keccak-512",
           "category": "Raw Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "raw-keccak"
         },
         {
           "mode": 21000,
@@ -5071,19 +5253,22 @@
           "mode": 17300,
           "name": "SHA3-224",
           "category": "Raw Digest",
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "dynamic_370"
         },
         {
           "mode": 17700,
           "name": "Keccak-224",
           "category": "Raw Digest",
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "dynamic_430"
         },
         {
           "mode": 34400,
           "name": "SHA3-224",
           "category": "Raw Digest",
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "dynamic_53"
         },
         {
           "mode": 34500,
@@ -5110,13 +5295,15 @@
           "mode": 8600,
           "name": "Lotus Notes/Domino 5",
           "category": "Enterprise/Cloud",
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "lotus5"
         },
         {
           "mode": 9900,
           "name": "Radmin2",
           "category": "Network Auth",
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "radmin"
         },
         {
           "mode": 70,
@@ -5148,7 +5335,8 @@
           "mode": 3500,
           "name": "md5(md5(md5($pass)))",
           "category": "Raw Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "dynamic_3"
         },
         {
           "mode": 4300,
@@ -5160,7 +5348,8 @@
           "mode": 4400,
           "name": "md5(sha1($pass))",
           "category": "Raw Digest",
-          "popularity": 1
+          "popularity": 1,
+          "john_format": "dynamic_22"
         },
         {
           "mode": 20900,

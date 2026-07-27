@@ -57,6 +57,8 @@ Notes:
 - `hs` is available as a shorter alias when the package is installed, but it can collide with Hammerspoon on macOS.
 - Hash input can be piped: `hashsight --hash < hashes.txt`.
 - Use `--json` for machine-readable output.
+- Use `--min-result-certainty N` to ignore whole results below a certainty threshold.
+- Use `--min-certainty N` to hide low-certainty ambiguous candidates within a result.
 
 ## Troubleshooting
 

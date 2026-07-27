@@ -1,0 +1,24 @@
+{
+  "timestamp_utc": "2026-07-27T12:52:36.329031+00:00",
+  "sources": {
+    "hashcat_examples": "https://hashcat.net/wiki/doku.php?id=example_hashes",
+    "john_formats": "https://pentestmonkey.net/cheat-sheet/john-the-ripper-hash-formats",
+    "haiti_prototypes": "https://raw.githubusercontent.com/noraj/haiti/master/data/prototypes.json"
+  },
+  "stats": {
+    "fetched_files": 3,
+    "hashcat_modes_total": 575,
+    "hashcat_modes_in_local_before": 574,
+    "hashcat_modes_in_local_after": 574,
+    "hashcat_modes_missing_before": 1,
+    "hashcat_modes_missing_after": 1,
+    "john_formats_total": 64,
+    "local_john_formats_total": 159,
+    "local_john_formats_not_in_pentestmonkey": 123,
+    "haiti_modes_total": 419,
+    "local_modes_before": 599,
+    "local_modes_after": 599,
+    "added_modes": 0,
+    "john_fields_enriched": 0
+  }
+}

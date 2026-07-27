@@ -36,6 +36,7 @@ from .update_check import get_update_notice
 from .version import __version__
 
 MIN_VISIBLE_CANDIDATE_CERTAINTY = 25
+MIN_RESULT_CERTAINTY = 0
 
 
 def _bounded_percent(value: str) -> int:
@@ -81,7 +82,8 @@ def _cmd_hash(args: argparse.Namespace) -> int:
         return 2
 
     progress_enabled = args.progress if args.progress is not None else not args.json
-    min_certainty = args.min_certainty
+    min_candidate_certainty = args.min_certainty
+    min_result_certainty = args.min_result_certainty
 
     results = []
     for value in values:
@@ -89,6 +91,7 @@ def _cmd_hash(args: argparse.Namespace) -> int:
         result = get_hash(
             value,
             exact_only=args.exact_only,
+            min_certainty=min_result_certainty,
             top=args.top,
             context=args.context,
             full_mode=args.full_mode,
@@ -106,7 +109,7 @@ def _cmd_hash(args: argparse.Namespace) -> int:
             item = asdict(result)
             if item.get("candidates"):
                 certainties = per_candidate_certainties(result, int(certainty.rstrip("%")))
-                visible = visible_candidates(item["candidates"], certainties, min_certainty)
+                visible = visible_candidates(item["candidates"], certainties, min_candidate_certainty)
                 item["candidates"] = []
                 for candidate, cand_certainty in visible:
                     candidate["john_format"] = candidate.get("john_format") or "-"
@@ -132,7 +135,7 @@ def _cmd_hash(args: argparse.Namespace) -> int:
 
         if result.candidates:
             certainties = per_candidate_certainties(result, int(certainty.rstrip("%")))
-            visible = visible_candidates(result.candidates, certainties, min_certainty)
+            visible = visible_candidates(result.candidates, certainties, min_candidate_certainty)
             if not visible:
                 summary_rows.append(
                     [
@@ -140,7 +143,7 @@ def _cmd_hash(args: argparse.Namespace) -> int:
                         "-",
                         "-",
                         str(result.category or "-"),
-                        f"<{min_certainty}% filtered",
+                        f"<{min_candidate_certainty}% filtered",
                         str(len(result.hash)),
                         hash_table,
                     ]
@@ -422,6 +425,12 @@ def build_parser() -> argparse.ArgumentParser:
         type=_bounded_percent,
         default=MIN_VISIBLE_CANDIDATE_CERTAINTY,
         help="Hide ambiguous candidates below this certainty percentage (0-100, default: 25).",
+    )
+    hash_parser.add_argument(
+        "--min-result-certainty",
+        type=_bounded_percent,
+        default=MIN_RESULT_CERTAINTY,
+        help="Ignore whole hash results below this certainty percentage (0-100, default: 0).",
     )
     hash_parser.set_defaults(func=_cmd_hash, progress=None)
 

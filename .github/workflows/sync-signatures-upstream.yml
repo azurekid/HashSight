@@ -1,0 +1,50 @@
+name: Sync Signatures Upstream
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * 1"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run upstream sync
+        run: python scripts/sync_signatures_upstream.py
+
+      - name: Validate signatures file
+        run: python -c "from hashsight.signatures import load_signatures; print(len(load_signatures()))"
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "chore(signatures): sync upstream hashcat john haiti data"
+          title: "chore(signatures): periodic upstream sync"
+          body: |
+            Automated upstream sync for:
+            - hashcat example hashes wiki
+            - pentestmonkey John format reference
+            - haiti prototypes
+
+            This updates signature metadata and appends missing modes when discovered.
+          branch: "chore/signatures-upstream-sync"
+          delete-branch: true
+          labels: |
+            automation
+            data-sync
+          add-paths: |
+            hashsight/data/signatures.json
+            hashsight/data/upstream/*

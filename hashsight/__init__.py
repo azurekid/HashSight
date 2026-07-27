@@ -8,6 +8,7 @@ from __future__ import annotations
 from typing import Any, Optional
 
 from .matcher import HashResult, HashSightIndex, resolve_hash
+from .hash_confidence import confidence_profile
 from .signatures import filter_signatures, load_signatures
 from .version import __version__
 
@@ -27,6 +28,7 @@ def get_hash(
     hash_value: str,
     *,
     exact_only: bool = False,
+    min_certainty: Optional[int] = None,
     top: Optional[int] = None,
     context: Optional[str] = None,
     full_mode: bool = False,
@@ -44,6 +46,8 @@ def get_hash(
 
     :param hash_value: The hash string to identify.
     :param exact_only: If True, return None instead of a non-Exact result.
+    :param min_certainty: If set, return None when the computed certainty percentage
+        is below this threshold.
     :param top: For ambiguous matches, limit ``candidates`` to the top N by popularity.
     :param context: Optional free-text hint (e.g. "windows ad", "linux shadow",
         "wordpress") used to re-rank ambiguous candidates and improve certainty.
@@ -58,6 +62,12 @@ def get_hash(
 
     if exact_only and not result.confidence.startswith("Exact"):
         return None
+
+    if min_certainty is not None:
+        certainty_text, _ = confidence_profile(result)
+        certainty_value = int(certainty_text.rstrip("%"))
+        if certainty_value < min_certainty:
+            return None
 
     return result
 
