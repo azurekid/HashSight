@@ -136,12 +136,33 @@ def load_signature_catalog_info(path: Optional[Path] = None) -> dict[str, Any]:
     source, doc = _load_signature_document(path)
     signatures = doc.get("signatures") or []
 
+    candidate_count = 0
+    mode_reference_count = 0
+    unique_modes: set[int] = set()
+
+    for entry in signatures:
+        entry_mode = entry.get("mode")
+        if isinstance(entry_mode, int):
+            mode_reference_count += 1
+            unique_modes.add(entry_mode)
+
+        candidates = entry.get("candidates") or []
+        candidate_count += len(candidates)
+        for candidate in candidates:
+            candidate_mode = candidate.get("mode")
+            if isinstance(candidate_mode, int):
+                mode_reference_count += 1
+                unique_modes.add(candidate_mode)
+
     return {
         "path": str(source),
         "version": str(doc.get("version", "")).strip(),
         "source": str(doc.get("source", "")).strip() or None,
         "description": str(doc.get("description", "")).strip() or None,
         "signature_count": len(signatures),
+        "candidate_count": candidate_count,
+        "mode_reference_count": mode_reference_count,
+        "unique_mode_count": len(unique_modes),
     }
 
 

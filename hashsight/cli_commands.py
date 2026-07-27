@@ -315,7 +315,10 @@ def _print_catalog_version() -> int:
     """Print bundled signature catalog version metadata and exit."""
     info = get_signature_catalog_info()
     print(f"signatures {info.get('version', '-')}")
-    print(f"count {info.get('signature_count', '-')}")
+    print(f"top_level_signatures {info.get('signature_count', '-')}")
+    print(f"candidate_entries {info.get('candidate_count', '-')}")
+    print(f"mode_references {info.get('mode_reference_count', '-')}")
+    print(f"unique_modes {info.get('unique_mode_count', '-')}")
     source = info.get("source") or "-"
     print(f"source {source}")
     return 0
