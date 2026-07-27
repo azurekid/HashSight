@@ -8,7 +8,7 @@
       "kind": "Prefix",
       "match": "$1$",
       "mode": 500,
-      "name": "md5crypt / Cisco-IOS $1$",
+      "name": "md5crypt, MD5 (Unix), Cisco-IOS $1$ (MD5)",
       "category": "OS/Unix Crypt",
       "john_format": "md5crypt"
     },
@@ -16,7 +16,7 @@
       "kind": "Prefix",
       "match": "$apr1$",
       "mode": 1600,
-      "name": "Apache md5apr1",
+      "name": "Apache $apr1$ MD5, md5apr1, MD5 (APR)",
       "category": "OS/Unix Crypt",
       "john_format": "md5crypt"
     },
@@ -24,7 +24,7 @@
       "kind": "Regex",
       "match": "^(\\$md5,rounds=\\d+\\$|\\$md5\\$rounds=\\d+\\$|\\$md5\\$)[a-z0-9/.]{0,16}(\\$|\\$\\$)[a-z0-9/.]{22}$",
       "mode": 3300,
-      "name": "Sun / Solaris MD5 Crypt",
+      "name": "MD5(Sun)",
       "category": "OS/Unix Crypt",
       "john_format": "sunmd5"
     },
@@ -32,7 +32,7 @@
       "kind": "Prefix",
       "match": "$5$",
       "mode": 7400,
-      "name": "sha256crypt",
+      "name": "sha256crypt $5$, SHA256 (Unix)",
       "category": "OS/Unix Crypt",
       "john_format": "sha256crypt"
     },
@@ -40,7 +40,7 @@
       "kind": "Prefix",
       "match": "$6$",
       "mode": 1800,
-      "name": "sha512crypt",
+      "name": "sha512crypt $6$, SHA512 (Unix)",
       "category": "OS/Unix Crypt",
       "john_format": "sha512crypt"
     },
@@ -64,7 +64,7 @@
       "kind": "Prefix",
       "match": "$ml$",
       "mode": 7100,
-      "name": "macOS v10.8+ PBKDF2-SHA512",
+      "name": "macOS v10.8+ (PBKDF2-SHA512)",
       "category": "OS/Unix Crypt",
       "john_format": "pbkdf2-hmac-sha512"
     },
@@ -72,7 +72,7 @@
       "kind": "Prefix",
       "match": "grub.pbkdf2.sha512.",
       "mode": 7200,
-      "name": "GRUB2",
+      "name": "GRUB 2",
       "category": "OS/Unix Crypt",
       "john_format": "pbkdf2-hmac-sha512"
     },
@@ -80,14 +80,14 @@
       "kind": "Prefix",
       "match": "$sm3$",
       "mode": 35100,
-      "name": "sm3crypt",
+      "name": "sm3crypt $sm3$, SM3 (Unix)",
       "category": "OS/Unix Crypt"
     },
     {
       "kind": "Regex",
       "match": "^[./0-9A-Za-z]{13}$",
       "mode": 1500,
-      "name": "descrypt / DES(Unix)",
+      "name": "descrypt, DES (Unix), Traditional DES",
       "category": "OS/Unix Crypt",
       "john_format": "descrypt"
     },
@@ -102,25 +102,44 @@
     {
       "kind": "Prefix",
       "match": "$2a$",
-      "name": "bcrypt-family container",
+      "name": "bcrypt $2*$ family (Blowfish, structurally identical variants)",
       "category": "OS/Unix Crypt",
       "candidates": [
         {
           "mode": 3200,
-          "name": "bcrypt $2*$",
+          "name": "bcrypt $2*$, Blowfish (Unix)",
           "category": "OS/Unix Crypt",
-          "popularity": 10
+          "popularity": 10,
+          "john_format": "bcrypt"
         },
         {
           "mode": 25600,
-          "name": "bcrypt(md5($pass))",
+          "name": "bcrypt(md5($pass)) / bcryptmd5",
           "category": "Salted Digest",
           "popularity": 3
         },
         {
           "mode": 25800,
-          "name": "bcrypt(sha1($pass))",
+          "name": "bcrypt(sha1($pass)) / bcryptsha1",
           "category": "Salted Digest",
+          "popularity": 2
+        },
+        {
+          "mode": 28400,
+          "name": "bcrypt(sha512($pass)) / bcryptsha512",
+          "category": "Salted Digest",
+          "popularity": 2
+        },
+        {
+          "mode": 30600,
+          "name": "bcrypt(sha256($pass)) / bcryptsha256",
+          "category": "Salted Digest",
+          "popularity": 2
+        },
+        {
+          "mode": 33800,
+          "name": "WBB4 (Woltlab Burning Board) [bcrypt(bcrypt($pass))]",
+          "category": "Web Application",
           "popularity": 2
         }
       ]
@@ -128,39 +147,150 @@
     {
       "kind": "Prefix",
       "match": "$2b$",
-      "mode": 3200,
-      "name": "bcrypt $2*$",
+      "name": "bcrypt $2*$ family (Blowfish, structurally identical variants)",
       "category": "OS/Unix Crypt",
-      "john_format": "bcrypt"
+      "candidates": [
+        {
+          "mode": 3200,
+          "name": "bcrypt $2*$, Blowfish (Unix)",
+          "category": "OS/Unix Crypt",
+          "popularity": 10,
+          "john_format": "bcrypt"
+        },
+        {
+          "mode": 25600,
+          "name": "bcrypt(md5($pass)) / bcryptmd5",
+          "category": "Salted Digest",
+          "popularity": 3
+        },
+        {
+          "mode": 25800,
+          "name": "bcrypt(sha1($pass)) / bcryptsha1",
+          "category": "Salted Digest",
+          "popularity": 2
+        },
+        {
+          "mode": 28400,
+          "name": "bcrypt(sha512($pass)) / bcryptsha512",
+          "category": "Salted Digest",
+          "popularity": 2
+        },
+        {
+          "mode": 30600,
+          "name": "bcrypt(sha256($pass)) / bcryptsha256",
+          "category": "Salted Digest",
+          "popularity": 2
+        },
+        {
+          "mode": 33800,
+          "name": "WBB4 (Woltlab Burning Board) [bcrypt(bcrypt($pass))]",
+          "category": "Web Application",
+          "popularity": 2
+        }
+      ]
     },
     {
       "kind": "Prefix",
       "match": "$2x$",
-      "mode": 3200,
-      "name": "bcrypt $2*$ (legacy PHP quirk)",
+      "name": "bcrypt $2*$ family (Blowfish, legacy variant, structurally identical)",
       "category": "OS/Unix Crypt",
-      "john_format": "bcrypt"
+      "candidates": [
+        {
+          "mode": 3200,
+          "name": "bcrypt $2*$, Blowfish (Unix)",
+          "category": "OS/Unix Crypt",
+          "popularity": 10,
+          "john_format": "bcrypt"
+        },
+        {
+          "mode": 25600,
+          "name": "bcrypt(md5($pass)) / bcryptmd5",
+          "category": "Salted Digest",
+          "popularity": 3
+        },
+        {
+          "mode": 25800,
+          "name": "bcrypt(sha1($pass)) / bcryptsha1",
+          "category": "Salted Digest",
+          "popularity": 2
+        },
+        {
+          "mode": 28400,
+          "name": "bcrypt(sha512($pass)) / bcryptsha512",
+          "category": "Salted Digest",
+          "popularity": 2
+        },
+        {
+          "mode": 30600,
+          "name": "bcrypt(sha256($pass)) / bcryptsha256",
+          "category": "Salted Digest",
+          "popularity": 2
+        },
+        {
+          "mode": 33800,
+          "name": "WBB4 (Woltlab Burning Board) [bcrypt(bcrypt($pass))]",
+          "category": "Web Application",
+          "popularity": 2
+        }
+      ]
     },
     {
       "kind": "Prefix",
       "match": "$2y$",
-      "mode": 3200,
-      "name": "bcrypt $2*$",
+      "name": "bcrypt $2*$ family (Blowfish, structurally identical variants)",
       "category": "OS/Unix Crypt",
-      "john_format": "bcrypt"
+      "candidates": [
+        {
+          "mode": 3200,
+          "name": "bcrypt $2*$, Blowfish (Unix)",
+          "category": "OS/Unix Crypt",
+          "popularity": 10,
+          "john_format": "bcrypt"
+        },
+        {
+          "mode": 25600,
+          "name": "bcrypt(md5($pass)) / bcryptmd5",
+          "category": "Salted Digest",
+          "popularity": 3
+        },
+        {
+          "mode": 25800,
+          "name": "bcrypt(sha1($pass)) / bcryptsha1",
+          "category": "Salted Digest",
+          "popularity": 2
+        },
+        {
+          "mode": 28400,
+          "name": "bcrypt(sha512($pass)) / bcryptsha512",
+          "category": "Salted Digest",
+          "popularity": 2
+        },
+        {
+          "mode": 30600,
+          "name": "bcrypt(sha256($pass)) / bcryptsha256",
+          "category": "Salted Digest",
+          "popularity": 2
+        },
+        {
+          "mode": 33800,
+          "name": "WBB4 (Woltlab Burning Board) [bcrypt(bcrypt($pass))]",
+          "category": "Web Application",
+          "popularity": 2
+        }
+      ]
     },
     {
       "kind": "Prefix",
       "match": "$bcrypt-sha256$",
       "mode": 30601,
-      "name": "bcrypt-sha256 (passlib)",
+      "name": "bcrypt(HMAC-SHA256($pass))",
       "category": "Salted Digest"
     },
     {
       "kind": "Prefix",
       "match": "$P$",
       "mode": 400,
-      "name": "phpass / WordPress / Joomla (MD5)",
+      "name": "phpass, phpBB3 (MD5)",
       "category": "Web Application",
       "candidates": [
         {
@@ -172,7 +302,8 @@
         {
           "mode": 400,
           "category": "Web Application",
-          "popularity": 6
+          "popularity": 6,
+          "name": "phpass, phpBB3 (MD5)"
         }
       ],
       "john_format": "phpass"
@@ -181,7 +312,7 @@
       "kind": "Prefix",
       "match": "$H$",
       "mode": 400,
-      "name": "phpBB3 phpass (MD5)",
+      "name": "phpass, phpBB3 (MD5)",
       "category": "Web Application",
       "candidates": [
         {
@@ -192,7 +323,7 @@
         },
         {
           "mode": 400,
-          "name": "phpBB3 phpass (MD5)",
+          "name": "phpass, phpBB3 (MD5)",
           "category": "Web Application",
           "popularity": 6
         }
@@ -227,14 +358,14 @@
       "kind": "Prefix",
       "match": "sha1$",
       "mode": 124,
-      "name": "Django (SHA1)",
+      "name": "Django (SHA-1)",
       "category": "Web Application"
     },
     {
       "kind": "Regex",
       "match": "^\\$episerver\\$\\*0\\*",
       "mode": 141,
-      "name": "EPiServer 6.x < v4",
+      "name": "Episerver 6.x < .NET 4",
       "category": "Web Application",
       "john_format": "episerver"
     },
@@ -242,7 +373,7 @@
       "kind": "Regex",
       "match": "^\\$episerver\\$\\*1\\*",
       "mode": 1441,
-      "name": "EPiServer 6.x >= v4",
+      "name": "Episerver 6.x >= .NET 4",
       "category": "Web Application",
       "john_format": "episerver"
     },
@@ -265,21 +396,21 @@
       "kind": "Prefix",
       "match": "$shiro1$",
       "mode": 12150,
-      "name": "Apache Shiro 1",
+      "name": "Apache Shiro 1 SHA-512",
       "category": "Web Application"
     },
     {
       "kind": "Regex",
       "match": "^[A-Fa-f0-9]{40}:[A-Fa-f0-9]{32}$",
       "mode": 4521,
-      "name": "Redmine (SHA1 salted)",
+      "name": "Redmine",
       "category": "Web Application"
     },
     {
       "kind": "Prefix",
       "match": "{SHA}",
       "mode": 101,
-      "name": "LDAP {SHA}",
+      "name": "nsldap, SHA-1(Base64), Netscape LDAP SHA",
       "category": "Directory/LDAP",
       "john_format": "nsldap"
     },
@@ -287,7 +418,7 @@
       "kind": "Prefix",
       "match": "{SSHA}",
       "mode": 111,
-      "name": "LDAP {SSHA}",
+      "name": "nsldaps, SSHA-1(Base64), Netscape LDAP SSHA",
       "category": "Directory/LDAP",
       "john_format": "salted-sha1"
     },
@@ -295,14 +426,14 @@
       "kind": "Prefix",
       "match": "{SSHA256}",
       "mode": 1411,
-      "name": "LDAP {SSHA256}",
+      "name": "SSHA-256(Base64), LDAP {SSHA256}",
       "category": "Directory/LDAP"
     },
     {
       "kind": "Prefix",
       "match": "{SSHA512}",
       "mode": 1711,
-      "name": "LDAP {SSHA512}",
+      "name": "SSHA-512(Base64), LDAP {SSHA512}",
       "category": "Directory/LDAP",
       "john_format": "ssha512"
     },
@@ -310,7 +441,7 @@
       "kind": "Prefix",
       "match": "{CRAM-MD5}",
       "mode": 16400,
-      "name": "CRAM-MD5 (Dovecot)",
+      "name": "CRAM-MD5 Dovecot",
       "category": "Directory/LDAP"
     },
     {
@@ -333,7 +464,7 @@
       "kind": "Regex",
       "match": "^\\{x-isSHA512,",
       "mode": 35000,
-      "name": "SAP CODVN H (PWDSALTEDHASH) iSSHA-512",
+      "name": "SAP CODVN H (PWDSALTEDHASH) isSHA512",
       "category": "Directory/LDAP",
       "john_format": "saph"
     },
@@ -360,7 +491,8 @@
         {
           "mode": 2100,
           "category": "Windows/AD",
-          "popularity": 6
+          "popularity": 6,
+          "name": "Domain Cached Credentials 2 (DCC2), MS Cache 2"
         }
       ],
       "john_format": "mscash2"
@@ -384,7 +516,8 @@
         {
           "mode": 5500,
           "category": "Windows/AD",
-          "popularity": 6
+          "popularity": 6,
+          "name": "NetNTLMv1 / NetNTLMv1+ESS"
         }
       ],
       "john_format": "netntlm"
@@ -408,7 +541,8 @@
         {
           "mode": 5600,
           "category": "Windows/AD",
-          "popularity": 6
+          "popularity": 6,
+          "name": "NetNTLMv2"
         }
       ],
       "john_format": "netntlmv2"
@@ -429,7 +563,8 @@
         {
           "mode": 13100,
           "category": "Kerberos",
-          "popularity": 6
+          "popularity": 6,
+          "name": "Kerberos 5, etype 23, TGS-REP"
         }
       ],
       "john_format": "krb5tgs"
@@ -438,14 +573,14 @@
       "kind": "Regex",
       "match": "^\\$krb5tgs\\$17\\$",
       "mode": 19600,
-      "name": "Kerberos 5, etype 17, TGS-REP",
+      "name": "Kerberos 5, etype 17, TGS-REP (AES128-CTS-HMAC-SHA1-96)",
       "category": "Kerberos"
     },
     {
       "kind": "Regex",
       "match": "^\\$krb5tgs\\$18\\$",
       "mode": 19700,
-      "name": "Kerberos 5, etype 18, TGS-REP",
+      "name": "Kerberos 5, etype 18, TGS-REP (AES256-CTS-HMAC-SHA1-96)",
       "category": "Kerberos"
     },
     {
@@ -476,7 +611,8 @@
         {
           "mode": 18200,
           "category": "Kerberos",
-          "popularity": 6
+          "popularity": 6,
+          "name": "Kerberos 5, etype 23, AS-REP"
         }
       ],
       "john_format": "krb5asrep"
@@ -485,7 +621,7 @@
       "kind": "Regex",
       "match": "^\\$krb5pa\\$23\\$",
       "mode": 7500,
-      "name": "Kerberos 5, etype 23, PA-ENC-TIMESTAMP pre-auth",
+      "name": "Kerberos 5, etype 23, AS-REQ Pre-Auth",
       "category": "Kerberos",
       "john_format": "krb5pa-md5"
     },
@@ -493,7 +629,7 @@
       "kind": "Regex",
       "match": "^\\$krb5pa\\$17\\$",
       "mode": 19800,
-      "name": "Kerberos 5, etype 17, PA-ENC-TIMESTAMP pre-auth",
+      "name": "Kerberos 5, etype 17, Pre-Auth",
       "category": "Kerberos",
       "john_format": "krb5pa-sha1"
     },
@@ -501,7 +637,7 @@
       "kind": "Regex",
       "match": "^\\$krb5pa\\$18\\$",
       "mode": 19900,
-      "name": "Kerberos 5, etype 18, PA-ENC-TIMESTAMP pre-auth",
+      "name": "Kerberos 5, etype 18, Pre-Auth",
       "category": "Kerberos",
       "john_format": "krb5pa-sha1"
     },
@@ -553,7 +689,7 @@
       "kind": "Prefix",
       "match": "$mysql$A$",
       "mode": 7401,
-      "name": "MySQL $A$ (sha256crypt-based)",
+      "name": "MySQL $A$ (sha256crypt)",
       "category": "Database"
     },
     {
@@ -568,7 +704,7 @@
       "kind": "Prefix",
       "match": "$mysqlna$",
       "mode": 11200,
-      "name": "MySQL Native Authentication (CRAM SHA1)",
+      "name": "MySQL CRAM (SHA1)",
       "category": "Database"
     },
     {
@@ -620,7 +756,7 @@
       "kind": "Regex",
       "match": "^\\$oldoffice\\$1",
       "mode": 9700,
-      "name": "MS Office <= 2003 MD5+RC4",
+      "name": "MS Office <= 2003 MD5 + RC4, oldoffice$0, oldoffice$1",
       "category": "Office/Document",
       "john_format": "oldoffice"
     },
@@ -628,7 +764,7 @@
       "kind": "Regex",
       "match": "^\\$oldoffice\\$0.*:[A-Fa-f0-9]{10}$",
       "mode": 9720,
-      "name": "MS Office <= 2003 MD5+RC4, collider #2",
+      "name": "MS Office <= 2003 $0/$1, MD5 + RC4, collider #2",
       "category": "Office/Document",
       "john_format": "oldoffice"
     },
@@ -636,7 +772,7 @@
       "kind": "Regex",
       "match": "^\\$oldoffice\\$0",
       "mode": 9710,
-      "name": "MS Office <= 2003 MD5+RC4, collider #1",
+      "name": "MS Office <= 2003 $0/$1, MD5 + RC4, collider #1",
       "category": "Office/Document",
       "john_format": "oldoffice"
     },
@@ -648,21 +784,21 @@
       "candidates": [
         {
           "mode": 9700,
-          "name": "MS Office <= 2003 MD5+RC4, collider #1",
+          "name": "MS Office <= 2003 MD5 + RC4, oldoffice$0, oldoffice$1",
           "category": "Office/Document",
           "popularity": 4,
           "john_format": "oldoffice"
         },
         {
           "mode": 9710,
-          "name": "MS Office <= 2003 MD5+RC4, collider #2",
+          "name": "MS Office <= 2003 $0/$1, MD5 + RC4, collider #1",
           "category": "Office/Document",
           "popularity": 2,
           "john_format": "oldoffice"
         },
         {
           "mode": 9720,
-          "name": "MS Office <= 2003 MD5+RC4, collider #3",
+          "name": "MS Office <= 2003 $0/$1, MD5 + RC4, collider #2",
           "category": "Office/Document",
           "popularity": 1,
           "john_format": "oldoffice"
@@ -673,7 +809,7 @@
       "kind": "Regex",
       "match": "^\\$oldoffice\\$[34].*:[A-Fa-f0-9]{10}$",
       "mode": 9820,
-      "name": "MS Office <= 2003 SHA1+RC4, collider #3",
+      "name": "MS Office <= 2003 $3, SHA1 + RC4, collider #2",
       "category": "Office/Document",
       "john_format": "oldoffice"
     },
@@ -685,21 +821,21 @@
       "candidates": [
         {
           "mode": 9800,
-          "name": "MS Office <= 2003 SHA1+RC4, collider #1",
+          "name": "MS Office <= 2003 SHA1 + RC4, oldoffice$3, oldoffice$4",
           "category": "Office/Document",
           "popularity": 4,
           "john_format": "oldoffice"
         },
         {
           "mode": 9810,
-          "name": "MS Office <= 2003 SHA1+RC4, collider #2",
+          "name": "MS Office <= 2003 $3, SHA1 + RC4, collider #1",
           "category": "Office/Document",
           "popularity": 2,
           "john_format": "oldoffice"
         },
         {
           "mode": 9820,
-          "name": "MS Office <= 2003 SHA1+RC4, collider #3",
+          "name": "MS Office <= 2003 $3, SHA1 + RC4, collider #2",
           "category": "Office/Document",
           "popularity": 1,
           "john_format": "oldoffice"
@@ -710,7 +846,7 @@
       "kind": "Regex",
       "match": "^\\$pdf\\$1\\*2\\*.*:[A-Fa-f0-9]{10}$",
       "mode": 10420,
-      "name": "PDF 1.1-1.3 (Acrobat 2-4), collider #2",
+      "name": "PDF 1.1 - 1.3 (Acrobat 2 - 4), collider #2",
       "category": "Office/Document",
       "john_format": "pdf"
     },
@@ -722,21 +858,21 @@
       "candidates": [
         {
           "mode": 10400,
-          "name": "PDF 1.1-1.3 (Acrobat 2-4)",
+          "name": "PDF 1.1 - 1.3 (Acrobat 2 - 4)",
           "category": "Office/Document",
           "popularity": 4,
           "john_format": "pdf"
         },
         {
           "mode": 10410,
-          "name": "PDF 1.1-1.3 (Acrobat 2-4), collider #1",
+          "name": "PDF 1.1 - 1.3 (Acrobat 2 - 4), collider #1",
           "category": "Office/Document",
           "popularity": 1,
           "john_format": "pdf"
         },
         {
           "mode": 10420,
-          "name": "PDF 1.1-1.3 (Acrobat 2-4), collider #2",
+          "name": "PDF 1.1 - 1.3 (Acrobat 2 - 4), collider #2",
           "category": "Office/Document",
           "popularity": 1,
           "john_format": "pdf"
@@ -747,14 +883,14 @@
       "kind": "Regex",
       "match": "^\\$pdf\\$1\\*3\\*",
       "mode": 10510,
-      "name": "PDF 1.4-1.6 (Acrobat 5-8) - RC4-40",
+      "name": "PDF 1.3 - 1.6 (Acrobat 4 - 8) w/ RC4-40",
       "category": "Office/Document"
     },
     {
       "kind": "Regex",
       "match": "^\\$pdf\\$2\\*3\\*128\\*-3904\\*",
       "mode": 25400,
-      "name": "PDF 1.4-1.6 (Acrobat 5-8) - user and owner pw",
+      "name": "PDF 1.4 - 1.6 (Acrobat 5 - 8) - user and owner pass",
       "category": "Office/Document",
       "john_format": "pdf"
     },
@@ -762,7 +898,7 @@
       "kind": "Regex",
       "match": "^\\$pdf\\$2\\*3\\*128\\*-1028\\*",
       "mode": 10500,
-      "name": "PDF 1.4-1.6 (Acrobat 5-8)",
+      "name": "PDF 1.4 - 1.6 (Acrobat 5 - 8)",
       "category": "Office/Document",
       "john_format": "pdf"
     },
@@ -774,14 +910,14 @@
       "candidates": [
         {
           "mode": 10500,
-          "name": "PDF 1.4-1.6 (Acrobat 5-8)",
+          "name": "PDF 1.4 - 1.6 (Acrobat 5 - 8)",
           "category": "Office/Document",
           "popularity": 4,
           "john_format": "pdf"
         },
         {
           "mode": 25400,
-          "name": "PDF 1.4-1.6 (Acrobat 5-8) - user and owner pw",
+          "name": "PDF 1.4 - 1.6 (Acrobat 5 - 8) - user and owner pass",
           "category": "Office/Document",
           "popularity": 2,
           "john_format": "pdf"
@@ -800,7 +936,7 @@
       "kind": "Regex",
       "match": "^\\$pdf\\$5\\*6\\*",
       "mode": 10700,
-      "name": "PDF 1.7 Level 8 (Acrobat 10-11)",
+      "name": "PDF 1.7 Level 8 (Acrobat 10 - 11)",
       "category": "Office/Document",
       "john_format": "pdf"
     },
@@ -894,7 +1030,7 @@
       "kind": "Regex",
       "match": "^\\$zip3\\$\\*0\\*1\\*128\\*",
       "mode": 23001,
-      "name": "SecureZip AES-128",
+      "name": "SecureZIP AES-128",
       "category": "Archive",
       "john_format": "securezip"
     },
@@ -902,7 +1038,7 @@
       "kind": "Regex",
       "match": "^\\$zip3\\$\\*0\\*1\\*192\\*",
       "mode": 23002,
-      "name": "SecureZip AES-192",
+      "name": "SecureZIP AES-192",
       "category": "Archive",
       "john_format": "securezip"
     },
@@ -910,7 +1046,7 @@
       "kind": "Regex",
       "match": "^\\$zip3\\$\\*0\\*1\\*256\\*",
       "mode": 23003,
-      "name": "SecureZip AES-256",
+      "name": "SecureZIP AES-256",
       "category": "Archive",
       "john_format": "securezip"
     },
@@ -936,7 +1072,7 @@
         },
         {
           "mode": 17220,
-          "name": "PKZIP (Compressed, Multi-File)",
+          "name": "PKZIP (Compressed Multi-File)",
           "category": "Archive",
           "popularity": 2,
           "john_format": "pkzip"
@@ -1009,12 +1145,12 @@
       "kind": "Prefix",
       "match": "$keepass$",
       "mode": 13400,
-      "name": "KeePass 1 (AES/Twofish) and 2 (AES)",
+      "name": "Keepass 2 AES / with keyfile",
       "category": "Password Manager",
       "candidates": [
         {
           "mode": 29700,
-          "name": "KeePass (KDBX v2/v3) - keyfile only",
+          "name": "KeePass 1 (AES/Twofish) and KeePass 2 (AES) - keyfile only mode",
           "category": "Password Manager",
           "popularity": 1
         },
@@ -1034,7 +1170,8 @@
         {
           "mode": 13400,
           "category": "Password Manager",
-          "popularity": 6
+          "popularity": 6,
+          "name": "Keepass 2 AES / with keyfile"
         }
       ],
       "john_format": "keepass"
@@ -1075,7 +1212,7 @@
       "kind": "Prefix",
       "match": "$ethereum$w",
       "mode": 16300,
-      "name": "Ethereum Pre-Sale Wallet",
+      "name": "Ethereum Pre-Sale Wallet, PBKDF2-HMAC-SHA256",
       "category": "Crypto Wallet",
       "john_format": "ethereum-presale"
     },
@@ -1083,7 +1220,7 @@
       "kind": "Regex",
       "match": "^\\$electrum\\$[123]\\*",
       "mode": 16600,
-      "name": "Electrum Wallet (salt-type 1-3)",
+      "name": "Electrum Wallet (Salt-Type 1-3)",
       "category": "Crypto Wallet",
       "john_format": "electrum"
     },
@@ -1091,7 +1228,7 @@
       "kind": "Regex",
       "match": "^\\$electrum\\$4\\*",
       "mode": 21700,
-      "name": "Electrum Wallet (salt-type 4)",
+      "name": "Electrum Wallet (Salt-Type 4)",
       "category": "Crypto Wallet",
       "john_format": "electrum"
     },
@@ -1099,7 +1236,7 @@
       "kind": "Regex",
       "match": "^\\$electrum\\$5\\*",
       "mode": 21800,
-      "name": "Electrum Wallet (salt-type 5)",
+      "name": "Electrum Wallet (Salt-Type 5)",
       "category": "Crypto Wallet",
       "john_format": "electrum"
     },
@@ -1121,7 +1258,7 @@
       "kind": "Regex",
       "match": "^\\$multibit\\$3\\*",
       "mode": 27700,
-      "name": "MultiBit Wallet (scrypt)",
+      "name": "MultiBit Classic .wallet (scrypt)",
       "category": "Crypto Wallet",
       "john_format": "multibit"
     },
@@ -1143,21 +1280,21 @@
       "kind": "Prefix",
       "match": "$metamaskMobile$",
       "mode": 31900,
-      "name": "MetaMask Wallet (Mobile)",
+      "name": "MetaMask Mobile Wallet",
       "category": "Crypto Wallet"
     },
     {
       "kind": "Prefix",
       "match": "$stellar$",
       "mode": 25500,
-      "name": "Stellar Wallet",
+      "name": "Stargazer Stellar Wallet XLM",
       "category": "Crypto Wallet"
     },
     {
       "kind": "Prefix",
       "match": "$bisq$",
       "mode": 29800,
-      "name": "Bisq .wallet",
+      "name": "Bisq .wallet (scrypt)",
       "category": "Crypto Wallet"
     },
     {
@@ -1180,13 +1317,13 @@
         },
         {
           "mode": 30903,
-          "name": "Bitcoin Raw private key (P2WPKH, Bech32), compressed",
+          "name": "Bitcoin raw private key (P2WPKH, Bech32), compressed",
           "category": "Crypto Wallet",
           "popularity": 2
         },
         {
           "mode": 30904,
-          "name": "Bitcoin Raw private key (P2WPKH, Bech32), uncompressed",
+          "name": "Bitcoin raw private key (P2WPKH, Bech32), uncompressed",
           "category": "Crypto Wallet",
           "popularity": 1
         }
@@ -1225,25 +1362,25 @@
         },
         {
           "mode": 30901,
-          "name": "Bitcoin Raw private key (P2PKH), compressed",
+          "name": "Bitcoin raw private key (P2PKH), compressed",
           "category": "Crypto Wallet",
           "popularity": 2
         },
         {
           "mode": 30902,
-          "name": "Bitcoin Raw private key (P2PKH), uncompressed",
+          "name": "Bitcoin raw private key (P2PKH), uncompressed",
           "category": "Crypto Wallet",
           "popularity": 1
         },
         {
           "mode": 30905,
-          "name": "Bitcoin address (P2SH)",
+          "name": "Bitcoin raw private key (P2SH(P2WPKH)), compressed",
           "category": "Crypto Wallet",
           "popularity": 2
         },
         {
           "mode": 30906,
-          "name": "Bitcoin address (P2SH-P2WSH)",
+          "name": "Bitcoin raw private key (P2SH(P2WPKH)), uncompressed",
           "category": "Crypto Wallet",
           "popularity": 2
         }
@@ -1267,7 +1404,7 @@
       "kind": "Prefix",
       "match": "$MSONLINEACCOUNT$",
       "mode": 33700,
-      "name": "Microsoft Online Account (Microsoft Office 365)",
+      "name": "Microsoft Online Account (PBKDF2-HMAC-SHA256 + AES256)",
       "category": "Enterprise/Cloud"
     },
     {
@@ -1302,14 +1439,14 @@
       "kind": "Prefix",
       "match": "$sspr$1$",
       "mode": 32010,
-      "name": "NetIQ SSPR (SHA-1)",
+      "name": "NetIQ SSPR (SHA1)",
       "category": "Enterprise/Cloud"
     },
     {
       "kind": "Prefix",
       "match": "$sspr$2$",
       "mode": 32020,
-      "name": "NetIQ SSPR (SHA-256/512)",
+      "name": "NetIQ SSPR (SHA-1 with Salt)",
       "category": "Enterprise/Cloud"
     },
     {
@@ -1320,13 +1457,13 @@
       "candidates": [
         {
           "mode": 32030,
-          "name": "NetIQ SSPR (Salted-SHA-1)",
+          "name": "NetIQ SSPR (SHA-256 with Salt)",
           "category": "Enterprise/Cloud",
           "popularity": 2
         },
         {
           "mode": 32031,
-          "name": "Adobe AEM (Salted-SHA-1)",
+          "name": "Adobe AEM (SSPR, SHA-256 with Salt)",
           "category": "Enterprise/Cloud",
           "popularity": 2
         }
@@ -1340,13 +1477,13 @@
       "candidates": [
         {
           "mode": 32040,
-          "name": "NetIQ SSPR (Salted-SHA-256/512)",
+          "name": "NetIQ SSPR (SHA-512 with Salt)",
           "category": "Enterprise/Cloud",
           "popularity": 2
         },
         {
           "mode": 32041,
-          "name": "Adobe AEM (Salted-SHA-256/512)",
+          "name": "Adobe AEM (SSPR, SHA-512 with Salt)",
           "category": "Enterprise/Cloud",
           "popularity": 2
         }
@@ -1356,7 +1493,7 @@
       "kind": "Prefix",
       "match": "$vmx$",
       "mode": 27400,
-      "name": "VMware VMX",
+      "name": "VMware VMX (PBKDF2-HMAC-SHA1 + AES-256-CBC)",
       "category": "Enterprise/Cloud"
     },
     {
@@ -1367,13 +1504,13 @@
       "candidates": [
         {
           "mode": 27500,
-          "name": "VirtualBox (PBKDF2-HMAC-SHA256 + AES-128-XTS)",
+          "name": "VirtualBox (PBKDF2-HMAC-SHA256 & AES-128-XTS)",
           "category": "Disk/Container Encryption",
           "popularity": 2
         },
         {
           "mode": 27600,
-          "name": "VirtualBox (PBKDF2-HMAC-SHA256 + AES-256-XTS)",
+          "name": "VirtualBox (PBKDF2-HMAC-SHA256 & AES-256-XTS)",
           "category": "Disk/Container Encryption",
           "popularity": 2
         }
@@ -1407,28 +1544,28 @@
       "kind": "Regex",
       "match": "^\\$mongodb-scram\\$\\*0\\*",
       "mode": 24100,
-      "name": "MongoDB ServerKey SCRAM-SHA1",
+      "name": "MongoDB ServerKey SCRAM-SHA-1",
       "category": "Database"
     },
     {
       "kind": "Regex",
       "match": "^\\$mongodb-scram\\$\\*1\\*",
       "mode": 24200,
-      "name": "MongoDB ServerKey SCRAM-SHA256",
+      "name": "MongoDB ServerKey SCRAM-SHA-256",
       "category": "Database"
     },
     {
       "kind": "Prefix",
       "match": "$racf-kdfaes$",
       "mode": 14200,
-      "name": "IBM RACF - KDFAES",
+      "name": "RACF KDFAES",
       "category": "Enterprise/Cloud"
     },
     {
       "kind": "Prefix",
       "match": "$racf$",
       "mode": 8500,
-      "name": "IBM RACF",
+      "name": "RACF",
       "category": "Enterprise/Cloud",
       "john_format": "racf"
     },
@@ -1436,14 +1573,14 @@
       "kind": "Prefix",
       "match": "$as400$des$",
       "mode": 8501,
-      "name": "IBM AS/400, DES",
+      "name": "AS/400 DES",
       "category": "Enterprise/Cloud"
     },
     {
       "kind": "Prefix",
       "match": "$as400$ssha1$",
       "mode": 35200,
-      "name": "IBM AS/400, SSHA1",
+      "name": "AS/400 SSHA1",
       "category": "Enterprise/Cloud"
     },
     {
@@ -1461,14 +1598,14 @@
       "candidates": [
         {
           "mode": 15300,
-          "name": "DPAPI masterkey v1 (context 3)",
+          "name": "DPAPI masterkey file v1 + local context",
           "category": "Windows/AD",
           "popularity": 3,
           "john_format": "DPAPImk"
         },
         {
           "mode": 15310,
-          "name": "DPAPI masterkey v1 (context 1/2)",
+          "name": "DPAPI masterkey file v1 (context 3)",
           "category": "Windows/AD",
           "popularity": 2,
           "john_format": "DPAPImk"
@@ -1483,14 +1620,14 @@
       "candidates": [
         {
           "mode": 15900,
-          "name": "DPAPI masterkey v2 (context 3)",
+          "name": "DPAPI masterkey file v2 + Active Directory domain context",
           "category": "Windows/AD",
           "popularity": 3,
           "john_format": "DPAPImk"
         },
         {
           "mode": 15910,
-          "name": "DPAPI masterkey v2 (context 1/2)",
+          "name": "DPAPI masterkey file v2 (context 3)",
           "category": "Windows/AD",
           "popularity": 2,
           "john_format": "DPAPImk"
@@ -1553,7 +1690,7 @@
       "kind": "Regex",
       "match": "^\\$sshng\\$[13]\\$",
       "mode": 22931,
-      "name": "RSA/DSA/EC/OpenSSH Private Keys ($1$/$3$)",
+      "name": "RSA/DSA/EC/OpenSSH Private Keys ($1, $3$)",
       "category": "OS/Unix Crypt",
       "john_format": "ssh"
     },
@@ -1577,7 +1714,7 @@
       "kind": "Regex",
       "match": "^\\$PEM\\$1\\$",
       "mode": 24410,
-      "name": "PEM (PKCS#1/PKCS#5), MD5/3DES/AES",
+      "name": "PKCS#8 Private Keys (PBKDF2-HMAC-SHA1 + 3DES/AES)",
       "category": "Enterprise/Cloud",
       "john_format": "pem"
     },
@@ -1585,7 +1722,7 @@
       "kind": "Regex",
       "match": "^\\$PEM\\$2\\$",
       "mode": 24420,
-      "name": "PEM (PKCS#8), PBKDF2-SHA256",
+      "name": "PKCS#8 Private Keys (PBKDF2-HMAC-SHA256 + 3DES/AES)",
       "category": "Enterprise/Cloud"
     },
     {
@@ -1599,7 +1736,7 @@
       "kind": "Regex",
       "match": "^\\$telegram\\$1\\*",
       "mode": 22600,
-      "name": "Telegram Desktop App Passcode (PBKDF2-HMAC-SHA1)",
+      "name": "Telegram Desktop < v2.1.14 (PBKDF2-HMAC-SHA1)",
       "category": "Mobile",
       "john_format": "telegram"
     },
@@ -1607,7 +1744,7 @@
       "kind": "Regex",
       "match": "^\\$telegram\\$2\\*",
       "mode": 24500,
-      "name": "Telegram Desktop App Passcode (PBKDF2-HMAC-SHA512)",
+      "name": "Telegram Desktop >= v2.1.14 (PBKDF2-HMAC-SHA512)",
       "category": "Mobile",
       "john_format": "telegram"
     },
@@ -1669,13 +1806,13 @@
       "candidates": [
         {
           "mode": 29910,
-          "name": "Enpass Password Manager 5 (PBKDF2)",
+          "name": "ENCsecurity Datavault (PBKDF2/no keychain)",
           "category": "Password Manager",
           "popularity": 2
         },
         {
           "mode": 29920,
-          "name": "Enpass Password Manager 6 (PBKDF2)",
+          "name": "ENCsecurity Datavault (PBKDF2/keychain)",
           "category": "Password Manager",
           "popularity": 2
         }
@@ -1689,13 +1826,13 @@
       "candidates": [
         {
           "mode": 29930,
-          "name": "Enpass Password Manager 5 (MD5)",
+          "name": "ENCsecurity Datavault (MD5/no keychain)",
           "category": "Password Manager",
           "popularity": 2
         },
         {
           "mode": 29940,
-          "name": "Enpass Password Manager 6 (MD5)",
+          "name": "ENCsecurity Datavault (MD5/keychain)",
           "category": "Password Manager",
           "popularity": 2
         }
@@ -1705,19 +1842,20 @@
       "kind": "Prefix",
       "match": "$argon2",
       "mode": 34000,
-      "name": "Argon2 (i/d/id)",
+      "name": "Argon2",
       "category": "Generic KDF",
       "candidates": [
         {
           "mode": 70000,
-          "name": "Argon2 (generic alias)",
+          "name": "Argon2id [Bridged: reference implementation + tunings]",
           "category": "Password Hashing",
           "popularity": 2
         },
         {
           "mode": 34000,
           "category": "Generic KDF",
-          "popularity": 6
+          "popularity": 6,
+          "name": "Argon2"
         }
       ]
     },
@@ -1730,20 +1868,21 @@
       "candidates": [
         {
           "mode": 70100,
-          "name": "scrypt (hashlib flavor)",
+          "name": "scrypt [Bridged: Scrypt-Jane SMix]",
           "category": "Password Hashing",
           "popularity": 2
         },
         {
           "mode": 70200,
-          "name": "scrypt (libsodium flavor)",
+          "name": "scrypt [Bridged: Scrypt-Yescrypt]",
           "category": "Password Hashing",
           "popularity": 2
         },
         {
           "mode": 8900,
           "category": "Generic KDF",
-          "popularity": 6
+          "popularity": 6,
+          "name": "scrypt"
         }
       ]
     },
@@ -1751,70 +1890,70 @@
       "kind": "Regex",
       "match": "^\\$BLAKE2\\$[A-Fa-f0-9]{64}$",
       "mode": 31000,
-      "name": "BLAKE2s-256 (hashcat tagged)",
+      "name": "BLAKE2s-256",
       "category": "Raw Digest"
     },
     {
       "kind": "Regex",
       "match": "^\\$SNMPv3\\$0\\$",
       "mode": 25000,
-      "name": "SNMPv3 HMAC-MD5-96",
+      "name": "SNMPv3 HMAC-MD5-96/HMAC-SHA1-96",
       "category": "Networking"
     },
     {
       "kind": "Regex",
       "match": "^\\$SNMPv3\\$1\\$",
       "mode": 25100,
-      "name": "SNMPv3 HMAC-SHA1-96",
+      "name": "SNMPv3 HMAC-MD5-96",
       "category": "Networking"
     },
     {
       "kind": "Regex",
       "match": "^\\$SNMPv3\\$2\\$",
       "mode": 25200,
-      "name": "SNMPv3 HMAC-SHA224-128",
+      "name": "SNMPv3 HMAC-SHA1-96",
       "category": "Networking"
     },
     {
       "kind": "Regex",
       "match": "^\\$SNMPv3\\$3\\$",
       "mode": 26700,
-      "name": "SNMPv3 HMAC-SHA256-192",
+      "name": "SNMPv3 HMAC-SHA224-128",
       "category": "Networking"
     },
     {
       "kind": "Regex",
       "match": "^\\$SNMPv3\\$4\\$",
       "mode": 26800,
-      "name": "SNMPv3 HMAC-SHA384-256",
+      "name": "SNMPv3 HMAC-SHA256-192",
       "category": "Networking"
     },
     {
       "kind": "Regex",
       "match": "^\\$SNMPv3\\$5\\$",
       "mode": 26900,
-      "name": "SNMPv3 HMAC-SHA512-384",
+      "name": "SNMPv3 HMAC-SHA384-256",
       "category": "Networking"
     },
     {
       "kind": "Regex",
       "match": "^\\$SNMPv3\\$6\\$",
       "mode": 27300,
-      "name": "SNMPv3 HMAC-SHA512-384 (alt)",
+      "name": "SNMPv3 HMAC-SHA512-384",
       "category": "Networking"
     },
     {
       "kind": "Prefix",
       "match": "@m@",
       "mode": 19000,
-      "name": "QNX md5",
+      "name": "QNX /etc/shadow (MD5)",
       "category": "OS/Unix Crypt"
     },
     {
       "kind": "Prefix",
       "match": "@s@",
       "mode": 19100,
-      "name": "QNX sha256",
+      "name": "QNX /etc/shadow (SHA256)",
       "category": "OS/Unix Crypt"
     },
     {
@@ -1825,13 +1964,13 @@
       "candidates": [
         {
           "mode": 19200,
-          "name": "QNX sha512",
+          "name": "QNX /etc/shadow (SHA512)",
           "category": "OS/Unix Crypt",
           "popularity": 2
         },
         {
           "mode": 19210,
-          "name": "QNX7 sha512",
+          "name": "QNX 7 /etc/shadow (SHA512)",
           "category": "OS/Unix Crypt",
           "popularity": 2
         }
@@ -1841,115 +1980,115 @@
       "kind": "Prefix",
       "match": "$veracrypt$",
       "mode": 29452,
-      "name": "VeraCrypt (many cipher/hash/XTS combinations exist - mode shown is representative)",
+      "name": "VeraCrypt SHA256 + XTS 1024 bit",
       "category": "Disk/Container Encryption",
       "verified": false,
       "candidates": [
         {
           "mode": 13711,
-          "name": "VeraCrypt RIPEMD160 + XTS 512 bit (legacy)",
+          "name": "VeraCrypt PBKDF2-HMAC-RIPEMD160 + Twofish (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 13712,
-          "name": "VeraCrypt RIPEMD160 + XTS 1024 bit (legacy)",
+          "name": "VeraCrypt PBKDF2-HMAC-RIPEMD160 + Twofish-Serpent (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 13713,
-          "name": "VeraCrypt RIPEMD160 + XTS 1536 bit (legacy)",
+          "name": "VeraCrypt PBKDF2-HMAC-RIPEMD160 + Serpent-Twofish-AES (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 13721,
-          "name": "VeraCrypt SHA512 + XTS 512 bit (legacy)",
+          "name": "VeraCrypt PBKDF2-HMAC-SHA512 + Twofish (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 13722,
-          "name": "VeraCrypt SHA512 + XTS 1024 bit (legacy)",
+          "name": "VeraCrypt PBKDF2-HMAC-SHA512 + Twofish-Serpent (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 13723,
-          "name": "VeraCrypt SHA512 + XTS 1536 bit (legacy)",
+          "name": "VeraCrypt PBKDF2-HMAC-SHA512 + Serpent-Twofish-AES (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 13731,
-          "name": "VeraCrypt Whirlpool + XTS 512 bit (legacy)",
+          "name": "VeraCrypt PBKDF2-HMAC-Whirlpool + Twofish (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 13732,
-          "name": "VeraCrypt Whirlpool + XTS 1024 bit (legacy)",
+          "name": "VeraCrypt PBKDF2-HMAC-Whirlpool + Twofish-Serpent (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 13733,
-          "name": "VeraCrypt Whirlpool + XTS 1536 bit (legacy)",
+          "name": "VeraCrypt PBKDF2-HMAC-Whirlpool + Serpent-Twofish-AES (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 13741,
-          "name": "VeraCrypt RIPEMD160 + XTS 512 bit + boot-mode (legacy)",
+          "name": "VeraCrypt PBKDF2-HMAC-RIPEMD160 + boot-mode + AES (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 13742,
-          "name": "VeraCrypt RIPEMD160 + XTS 1024 bit + boot-mode (legacy)",
+          "name": "VeraCrypt PBKDF2-HMAC-RIPEMD160 + boot-mode + AES-Twofish (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 13743,
-          "name": "VeraCrypt RIPEMD160 + XTS 1536 bit + boot-mode (legacy)",
+          "name": "VeraCrypt PBKDF2-HMAC-RIPEMD160 + boot-mode + AES-Twofish-Serpent (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 13751,
-          "name": "VeraCrypt SHA256 + XTS 512 bit (legacy)",
+          "name": "VeraCrypt PBKDF2-HMAC-SHA256 + Twofish (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 13752,
-          "name": "VeraCrypt SHA256 + XTS 1024 bit (legacy)",
+          "name": "VeraCrypt PBKDF2-HMAC-SHA256 + Twofish-Serpent (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 13753,
-          "name": "VeraCrypt SHA256 + XTS 1536 bit (legacy)",
+          "name": "VeraCrypt PBKDF2-HMAC-SHA256 + Serpent-Twofish-AES (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 13761,
-          "name": "VeraCrypt SHA256 + XTS 512 bit + boot-mode (legacy)",
+          "name": "VeraCrypt PBKDF2-HMAC-SHA256 + boot-mode + PIM + AES (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 13762,
-          "name": "VeraCrypt SHA256 + XTS 1024 bit + boot-mode (legacy)",
+          "name": "VeraCrypt PBKDF2-HMAC-SHA256 + boot-mode + Serpent-AES (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 13763,
-          "name": "VeraCrypt SHA256 + XTS 1536 bit + boot-mode (legacy)",
+          "name": "VeraCrypt PBKDF2-HMAC-SHA256 + boot-mode + Serpent-Twofish-AES (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
@@ -2130,7 +2269,8 @@
         {
           "mode": 29452,
           "category": "Disk/Container Encryption",
-          "popularity": 6
+          "popularity": 6,
+          "name": "VeraCrypt SHA256 + XTS 1024 bit"
         }
       ]
     },
@@ -2138,79 +2278,79 @@
       "kind": "Prefix",
       "match": "$truecrypt$",
       "mode": 29312,
-      "name": "TrueCrypt (many cipher/hash/XTS combinations exist - mode shown is representative)",
+      "name": "TrueCrypt RIPEMD160 + XTS 1024 bit",
       "category": "Disk/Container Encryption",
       "verified": false,
       "candidates": [
         {
           "mode": 6211,
-          "name": "TrueCrypt RIPEMD160 + XTS 512 bit (legacy)",
+          "name": "TrueCrypt 5.0+ PBKDF2-HMAC-RIPEMD160 + Twofish (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 6212,
-          "name": "TrueCrypt RIPEMD160 + XTS 1024 bit (legacy)",
+          "name": "TrueCrypt 5.0+ PBKDF2-HMAC-RIPEMD160 + Twofish-Serpent (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 6213,
-          "name": "TrueCrypt RIPEMD160 + XTS 1536 bit (legacy)",
+          "name": "TrueCrypt 5.0+ PBKDF2-HMAC-RIPEMD160 + Serpent-Twofish-AES (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 6221,
-          "name": "TrueCrypt SHA512 + XTS 512 bit (legacy)",
+          "name": "TrueCrypt 5.0+ SHA512 + Twofish (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 6222,
-          "name": "TrueCrypt SHA512 + XTS 1024 bit (legacy)",
+          "name": "TrueCrypt 5.0+ SHA512 + Twofish-Serpent (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 6223,
-          "name": "TrueCrypt SHA512 + XTS 1536 bit (legacy)",
+          "name": "TrueCrypt 5.0+ SHA512 + Serpent-Twofish-AES (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 6231,
-          "name": "TrueCrypt Whirlpool + XTS 512 bit (legacy)",
+          "name": "TrueCrypt 5.0+ Whirlpool + Twofish (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 6232,
-          "name": "TrueCrypt Whirlpool + XTS 1024 bit (legacy)",
+          "name": "TrueCrypt 5.0+ Whirlpool + Twofish-Serpent (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 6233,
-          "name": "TrueCrypt Whirlpool + XTS 1536 bit (legacy)",
+          "name": "TrueCrypt 5.0+ Whirlpool + Serpent-Twofish-AES (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 6241,
-          "name": "TrueCrypt RIPEMD160 + XTS 512 bit + boot-mode (legacy)",
+          "name": "TrueCrypt 5.0+ PBKDF2-HMAC-RIPEMD160 + Twofish + boot (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 6242,
-          "name": "TrueCrypt RIPEMD160 + XTS 1024 bit + boot-mode (legacy)",
+          "name": "TrueCrypt 5.0+ PBKDF2-HMAC-RIPEMD160 + Twofish-Serpent + boot (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
         {
           "mode": 6243,
-          "name": "TrueCrypt RIPEMD160 + XTS 1536 bit + boot-mode (legacy)",
+          "name": "TrueCrypt 5.0+ PBKDF2-HMAC-RIPEMD160 + Serpent-Twofish-AES + boot (legacy)",
           "category": "Disk/Container Encryption",
           "popularity": 1
         },
@@ -2283,7 +2423,8 @@
         {
           "mode": 29312,
           "category": "Disk/Container Encryption",
-          "popularity": 6
+          "popularity": 6,
+          "name": "TrueCrypt RIPEMD160 + XTS 1024 bit"
         }
       ]
     },
@@ -2298,14 +2439,14 @@
       "kind": "Prefix",
       "match": "$pbkdf2-hmac-sha512$",
       "mode": 32070,
-      "name": "NetIQ SSPR PBKDF2WithHmacSHA512",
+      "name": "NetIQ SSPR (PBKDF2WithHmacSHA512)",
       "category": "Enterprise/Cloud"
     },
     {
       "kind": "Prefix",
       "match": "$pbkdf2-hmac-sha1$",
       "mode": 32050,
-      "name": "NetIQ SSPR PBKDF2WithHmacSHA1",
+      "name": "NetIQ SSPR (PBKDF2WithHmacSHA1)",
       "category": "Enterprise/Cloud"
     },
     {
@@ -2322,7 +2463,7 @@
         },
         {
           "mode": 32060,
-          "name": "NetIQ SSPR PBKDF2WithHmacSHA256",
+          "name": "NetIQ SSPR (PBKDF2WithHmacSHA256)",
           "category": "Enterprise/Cloud",
           "popularity": 3
         }
@@ -2339,14 +2480,14 @@
       "kind": "Prefix",
       "match": "pbkdf2(",
       "mode": 21600,
-      "name": "web2py PBKDF2-HMAC-SHA512",
+      "name": "Web2py pbkdf2-sha512",
       "category": "Web Application"
     },
     {
       "kind": "Prefix",
       "match": "PBKDF1:sha1:",
       "mode": 32900,
-      "name": "PBKDF1-SHA1 (generic)",
+      "name": "PBKDF1-SHA1",
       "category": "Generic KDF"
     },
     {
@@ -2400,12 +2541,14 @@
         {
           "mode": 12700,
           "category": "Crypto Wallet",
-          "popularity": 6
+          "popularity": 6,
+          "name": "Blockchain, My Wallet"
         },
         {
           "mode": 15200,
           "category": "Wallet",
-          "popularity": 3
+          "popularity": 3,
+          "name": "Blockchain, My Wallet, V2"
         }
       ],
       "john_format": "blockchain"
@@ -2421,49 +2564,49 @@
       "kind": "Prefix",
       "match": "md5$",
       "mode": 30000,
-      "name": "Python Werkzeug MD5 (HMAC)",
+      "name": "Python Werkzeug MD5 (HMAC-MD5 (key = $salt))",
       "category": "Web Application"
     },
     {
       "kind": "Prefix",
       "match": "sha256$",
       "mode": 30120,
-      "name": "Python Werkzeug SHA256 (HMAC)",
+      "name": "Python Werkzeug SHA256 (HMAC-SHA256 (key = $salt))",
       "category": "Web Application"
     },
     {
       "kind": "Regex",
       "match": "^sha256:\\d+:",
       "mode": 10900,
-      "name": "PBKDF2-HMAC-SHA256 (generic)",
+      "name": "PBKDF2-HMAC-SHA256",
       "category": "Generic KDF"
     },
     {
       "kind": "Regex",
       "match": "^sha256:[A-Fa-f0-9]{64}:[A-Fa-f0-9]{64}$",
       "mode": 30700,
-      "name": "Anope IRC Services (SHA256)",
+      "name": "Anope IRC Services (enc_sha256)",
       "category": "Network Auth"
     },
     {
       "kind": "Prefix",
       "match": "sha1:",
       "mode": 12000,
-      "name": "PBKDF2-HMAC-SHA1 (generic)",
+      "name": "PBKDF2-HMAC-SHA1",
       "category": "Generic KDF"
     },
     {
       "kind": "Prefix",
       "match": "sha512:",
       "mode": 12100,
-      "name": "PBKDF2-HMAC-SHA512 (generic)",
+      "name": "PBKDF2-HMAC-SHA512",
       "category": "Generic KDF"
     },
     {
       "kind": "Prefix",
       "match": "md5:",
       "mode": 11900,
-      "name": "PBKDF2-HMAC-MD5 (generic)",
+      "name": "PBKDF2-HMAC-MD5",
       "category": "Generic KDF"
     },
     {
@@ -2480,7 +2623,7 @@
         },
         {
           "mode": 34211,
-          "name": "MurmurHash64A (truncated, zero seed)",
+          "name": "MurmurHash64A truncated (zero seed)",
           "category": "Raw Digest",
           "popularity": 2
         }
@@ -2521,7 +2664,7 @@
       "candidates": [
         {
           "mode": 3100,
-          "name": "Oracle H: Type (Oracle 7+), DES",
+          "name": "Oracle H: Type (Oracle 7+)",
           "category": "Database",
           "popularity": 4,
           "salt_len_hint": 10,
@@ -2596,7 +2739,7 @@
         },
         {
           "mode": 14900,
-          "name": "Skip32 (CMAC)",
+          "name": "Skip32 (PT = $salt, key = $pass)",
           "category": "Raw Digest",
           "popularity": 1
         }
@@ -2778,14 +2921,14 @@
         },
         {
           "mode": 190,
-          "name": "LinkedIn",
+          "name": "sha1(LinkedIn)",
           "category": "Web Application",
           "popularity": 2,
           "john_format": "raw-sha1-linkedin"
         },
         {
           "mode": 6000,
-          "name": "RipeMD160",
+          "name": "RIPEMD-160",
           "category": "Raw Digest",
           "popularity": 4,
           "john_format": "ripemd-160"
@@ -2979,7 +3122,7 @@
         },
         {
           "mode": 11700,
-          "name": "GOST R 34.11-2012 (Streebog) 256-bit",
+          "name": "GOST R 34.11-2012 (Streebog) 256-bit, big-endian",
           "category": "Raw Digest",
           "popularity": 2,
           "john_format": "stribog-256"
@@ -3204,7 +3347,7 @@
         },
         {
           "mode": 11800,
-          "name": "GOST R 34.11-2012 (Streebog) 512-bit",
+          "name": "GOST R 34.11-2012 (Streebog) 512-bit, big-endian",
           "category": "Raw Digest",
           "popularity": 2,
           "john_format": "stribog-512"
@@ -3217,7 +3360,7 @@
         },
         {
           "mode": 21000,
-          "name": "BitShares v0.x - sha512(sha512_bin($pass))",
+          "name": "BitShares v0.x - sha512(sha512_bin(pass))",
           "category": "Salted Digest",
           "popularity": 1
         },
@@ -3388,7 +3531,7 @@
         },
         {
           "mode": 2811,
-          "name": "MyBB 1.2+, IPB2+",
+          "name": "MyBB 1.2+, IPB2+ (Invision Power Board)",
           "category": "Web Application",
           "popularity": 3,
           "salt_len_hint": 5,
@@ -3412,7 +3555,7 @@
         },
         {
           "mode": 12,
-          "name": "PostgreSQL (legacy)",
+          "name": "PostgreSQL",
           "category": "Database",
           "popularity": 2,
           "salt_len_hint": 32,
@@ -3461,7 +3604,7 @@
         },
         {
           "mode": 3730,
-          "name": "md5($salt1.strtoupper(md5($salt2.$pass)))",
+          "name": "Dahua NVR/DVR/HVR (md5($salt1.strtoupper(md5($salt2.$pass))))",
           "category": "Salted Digest",
           "popularity": 1,
           "salt_len_hint": 19,
@@ -3641,7 +3784,7 @@
         },
         {
           "mode": 7350,
-          "name": "IPMI2 RAKP HMAC-SHA1",
+          "name": "IPMI2 RAKP HMAC-MD5",
           "category": "Salted Digest",
           "popularity": 1
         },
@@ -3660,32 +3803,32 @@
         },
         {
           "mode": 16801,
-          "name": "WPA-PMK-PMKID+EAPOL-PBKDF2",
+          "name": "WPA-PMKID-PMK",
           "category": "Salted Digest",
           "popularity": 1,
           "john_format": "wpapsk-pmk"
         },
         {
           "mode": 26401,
-          "name": "AES Crypt (SHA256), k=1",
+          "name": "AES-128-ECB NOKDF (PT = $salt, key = $pass)",
           "category": "Salted Digest",
           "popularity": 1
         },
         {
           "mode": 26402,
-          "name": "AES Crypt (SHA256), k=2",
+          "name": "AES-192-ECB NOKDF (PT = $salt, key = $pass)",
           "category": "Salted Digest",
           "popularity": 1
         },
         {
           "mode": 26403,
-          "name": "AES Crypt (SHA256), k=3",
+          "name": "AES-256-ECB NOKDF (PT = $salt, key = $pass)",
           "category": "Salted Digest",
           "popularity": 1
         },
         {
           "mode": 32300,
-          "name": "MurmurHash3 x86 128",
+          "name": "Empire CMS (Admin password)",
           "category": "Salted Digest",
           "popularity": 1
         }
@@ -3717,7 +3860,7 @@
         },
         {
           "mode": 190,
-          "name": "LinkedIn",
+          "name": "sha1(LinkedIn)",
           "category": "Web Application",
           "popularity": 2,
           "john_format": "raw-sha1-linkedin"
@@ -3740,7 +3883,7 @@
         },
         {
           "mode": 8400,
-          "name": "WBB3 (Woltlab Burning Board 3)",
+          "name": "WBB3 (Woltlab Burning Board)",
           "category": "Web Application",
           "popularity": 3,
           "salt_len_hint": 40,
@@ -3781,7 +3924,7 @@
         },
         {
           "mode": 5000,
-          "name": "sha1(sha1($salt.$pass.$salt))",
+          "name": "SHA-3 (Keccak)",
           "category": "Salted Digest",
           "popularity": 1,
           "salt_len_hint": 12,
@@ -3805,7 +3948,7 @@
         },
         {
           "mode": 27200,
-          "name": "Ruby on Rails Restful-Authentication (one round)",
+          "name": "Ruby on Rails Restful Auth (one round, no sitekey)",
           "category": "Web Application",
           "popularity": 1,
           "salt_len_hint": 40,
@@ -3903,13 +4046,13 @@
         },
         {
           "mode": 19500,
-          "name": "Ruby on Rails Restful Authentication",
+          "name": "Ruby on Rails Restful-Authentication",
           "category": "Salted Digest",
           "popularity": 1
         },
         {
           "mode": 21100,
-          "name": "AuthMe sha1",
+          "name": "sha1(md5($pass.$salt))",
           "category": "Salted Digest",
           "popularity": 1
         }
@@ -4056,17 +4199,18 @@
         {
           "mode": 8200,
           "category": "Salted Digest",
-          "popularity": 1
+          "popularity": 1,
+          "name": "1Password, cloudkeychain"
         },
         {
           "mode": 11750,
-          "name": "HMAC-Streebog-256 (key = $pass)",
+          "name": "HMAC-Streebog-256 (key = $pass), big-endian",
           "category": "Salted Digest",
           "popularity": 1
         },
         {
           "mode": 11760,
-          "name": "HMAC-Streebog-256 (key = $salt)",
+          "name": "HMAC-Streebog-256 (key = $salt), big-endian",
           "category": "Salted Digest",
           "popularity": 1
         },
@@ -4084,13 +4228,13 @@
         },
         {
           "mode": 20712,
-          "name": "sha256($salt.sha256_bin($pass).$salt)",
+          "name": "RSA Security Analytics / NetWitness (sha256)",
           "category": "Salted Digest",
           "popularity": 1
         },
         {
           "mode": 33300,
-          "name": "MurmurHash3 x64 128",
+          "name": "HMAC-BLAKE2S (key = $pass)",
           "category": "Salted Digest",
           "popularity": 1
         },
@@ -4245,13 +4389,13 @@
         },
         {
           "mode": 11850,
-          "name": "HMAC-Streebog-512 (key = $pass)",
+          "name": "HMAC-Streebog-512 (key = $pass), big-endian",
           "category": "Salted Digest",
           "popularity": 1
         },
         {
           "mode": 11860,
-          "name": "HMAC-Streebog-512 (key = $salt)",
+          "name": "HMAC-Streebog-512 (key = $salt), big-endian",
           "category": "Salted Digest",
           "popularity": 1
         }
@@ -4261,7 +4405,7 @@
       "kind": "Prefix",
       "match": "$krb5tgs$23$",
       "mode": 13100,
-      "name": "Kerberos 5 TGS-REP etype 23 (RC4)",
+      "name": "Kerberos 5, etype 23, TGS-REP",
       "category": "Kerberos",
       "john_format": "krb5tgs"
     },
@@ -4289,7 +4433,8 @@
         {
           "mode": 22000,
           "category": "Wireless",
-          "popularity": 6
+          "popularity": 6,
+          "name": "WPA-PBKDF2-PMKID+EAPOL"
         }
       ],
       "john_format": "wpapsk"
@@ -4318,12 +4463,14 @@
         {
           "mode": 22001,
           "category": "Wireless",
-          "popularity": 6
+          "popularity": 6,
+          "name": "WPA-PMK-PMKID+EAPOL"
         },
         {
           "mode": 22000,
           "category": "WiFi",
-          "popularity": 4
+          "popularity": 4,
+          "name": "WPA-PBKDF2-PMKID+EAPOL"
         }
       ],
       "john_format": "wpapsk-pmk"
@@ -4354,7 +4501,7 @@
       "kind": "Regex",
       "match": "^::[^:]+:[0-9a-fA-F]{32}:[0-9a-fA-F]{48}:[0-9a-fA-F]{16}$",
       "mode": 5500,
-      "name": "NetNTLMv1 / NetNTLMv1+ESS (anonymous user form)",
+      "name": "NetNTLMv1 / NetNTLMv1+ESS",
       "category": "Windows/AD",
       "candidates": [
         {
@@ -4367,7 +4514,8 @@
         {
           "mode": 5500,
           "category": "Windows/AD",
-          "popularity": 6
+          "popularity": 6,
+          "name": "NetNTLMv1 / NetNTLMv1+ESS"
         }
       ],
       "john_format": "netntlm"
@@ -4376,14 +4524,14 @@
       "kind": "Prefix",
       "match": "$cryptoapi$",
       "mode": 14500,
-      "name": "CryptoAPI (Common Key Derivation Function)",
+      "name": "Linux Kernel Crypto API (2.4)",
       "category": "Container/Volume"
     },
     {
       "kind": "Regex",
       "match": "^https://hashcat\\.net/misc/example_hashes/hashcat_luks_testfiles\\.7z$",
       "mode": 14600,
-      "name": "LUKS testfile marker (hashcat example placeholder)",
+      "name": "LUKS v1 (legacy)",
       "category": "Container/Volume"
     },
     {
@@ -4395,14 +4543,15 @@
       "candidates": [
         {
           "mode": 29100,
-          "name": "JWT (HMAC-SHA256)",
+          "name": "Flask Session Cookie ($salt.$salt.$pass)",
           "category": "Web/Auth",
           "popularity": 3
         },
         {
           "mode": 16500,
           "category": "Token",
-          "popularity": 6
+          "popularity": 6,
+          "name": "JWT (JSON Web Token)"
         }
       ]
     },
@@ -4466,13 +4615,13 @@
       "candidates": [
         {
           "mode": 33650,
-          "name": "RIPEMD-320(HMAC) (key = $pass)",
+          "name": "HMAC-RIPEMD320 (key = $pass)",
           "category": "Salted Digest",
           "popularity": 1
         },
         {
           "mode": 33660,
-          "name": "RIPEMD-320(HMAC) (key = $salt)",
+          "name": "HMAC-RIPEMD320 (key = $salt)",
           "category": "Salted Digest",
           "popularity": 1
         }
@@ -4572,7 +4721,8 @@
         {
           "mode": 6600,
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "name": "1Password, agilekeychain"
         },
         {
           "mode": 6800,
@@ -4626,12 +4776,14 @@
         {
           "mode": 8200,
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "name": "1Password, cloudkeychain"
         },
         {
           "mode": 8300,
           "category": "Catalog Fallback",
-          "popularity": 1
+          "popularity": 1,
+          "name": "DNSSEC (NSEC3)"
         },
         {
           "mode": 8600,
@@ -4799,19 +4951,19 @@
         },
         {
           "mode": 20011,
-          "name": "DiskCryptor SHA512 + XTS 512 bit",
+          "name": "DiskCryptor SHA512 + XTS 512 bit (Serpent)",
           "category": "Catalog Fallback",
           "popularity": 1
         },
         {
           "mode": 20012,
-          "name": "DiskCryptor SHA512 + XTS 1024 bit",
+          "name": "DiskCryptor SHA512 + XTS 1024 bit (Serpent-AES)",
           "category": "Catalog Fallback",
           "popularity": 1
         },
         {
           "mode": 20013,
-          "name": "DiskCryptor SHA512 + XTS 1536 bit",
+          "name": "DiskCryptor SHA512 + XTS 1536 bit (AES-Twofish-Serpent)",
           "category": "Catalog Fallback",
           "popularity": 1
         },
@@ -5087,7 +5239,7 @@
       "kind": "Regex",
       "match": "^\\$BLAKE2\\$[A-Fa-f0-9]{128}$",
       "mode": 600,
-      "name": "BLAKE2b-512 (hashcat tagged)",
+      "name": "BLAKE2b-512",
       "category": "Raw Digest",
       "john_format": "raw-blake2"
     },
@@ -5139,7 +5291,7 @@
         },
         {
           "mode": 34201,
-          "name": "MurmurHash3 x86 32",
+          "name": "MurmurHash64A (zero seed)",
           "category": "Raw Digest",
           "popularity": 1
         },
@@ -5174,20 +5326,20 @@
         },
         {
           "mode": 5720,
-          "name": "Cisco-IOS SHA256",
+          "name": "Cisco-ISE Hashed Password (SHA256)",
           "category": "Network Auth",
           "popularity": 2
         },
         {
           "mode": 17600,
-          "name": "Keccak-512",
+          "name": "SHA3-512",
           "category": "Raw Digest",
           "popularity": 2,
           "john_format": "raw-sha3"
         },
         {
           "mode": 1770,
-          "name": "sha512($pass.$salt)",
+          "name": "sha512(utf16le($pass))",
           "category": "Salted Digest",
           "popularity": 1
         },
@@ -5200,7 +5352,7 @@
         },
         {
           "mode": 11800,
-          "name": "Streebog-512",
+          "name": "GOST R 34.11-2012 (Streebog) 512-bit, big-endian",
           "category": "Raw Digest",
           "popularity": 1
         },
@@ -5234,7 +5386,7 @@
         },
         {
           "mode": 30420,
-          "name": "MurmurHash3 x64 32",
+          "name": "DANE RFC7929/RFC8162 SHA2-256",
           "category": "Raw Digest",
           "popularity": 2
         },
@@ -5254,14 +5406,14 @@
         },
         {
           "mode": 34400,
-          "name": "SHA3-224",
+          "name": "sha224(sha224($pass))",
           "category": "Raw Digest",
           "popularity": 2,
           "john_format": "dynamic_53"
         },
         {
           "mode": 34500,
-          "name": "Keccak-224",
+          "name": "sha224(sha1($pass))",
           "category": "Raw Digest",
           "popularity": 2
         }
@@ -5348,7 +5500,7 @@
         },
         {
           "mode": 32800,
-          "name": "MurmurHash3 x64 128",
+          "name": "md5(sha1(md5($pass)))",
           "category": "Raw Digest",
           "popularity": 1
         }
@@ -5364,7 +5516,8 @@
         {
           "mode": 13100,
           "category": "Windows/AD",
-          "popularity": 6
+          "popularity": 6,
+          "name": "Kerberos 5, etype 23, TGS-REP"
         },
         {
           "mode": 35300,
