@@ -47,6 +47,15 @@ def signature_search_rows(
     all_entries = get_signature()
     rows: list[dict[str, Any]] = []
 
+    def _source_rank(*, is_top_level: bool, is_fallback: bool) -> int:
+        # Prefer canonical top-level signatures, then non-fallback candidates,
+        # and only then catalog fallback rows.
+        if is_top_level:
+            return 3
+        if is_fallback:
+            return 1
+        return 2
+
     for entry in all_entries:
         entry_candidates = entry.get("candidates") or []
 
@@ -54,6 +63,7 @@ def signature_search_rows(
             entry_mode = entry.get("mode")
             entry_name = str(entry.get("name") or "")
             entry_category = str(entry.get("category") or "-")
+            entry_fallback = bool(entry.get("fallback") is True)
 
             if mode is not None and entry_mode != mode:
                 continue
@@ -73,10 +83,12 @@ def signature_search_rows(
                     or "-",
                     "category": entry_category,
                     "certainty": certainty,
+                    "_source_rank": _source_rank(is_top_level=True, is_fallback=entry_fallback),
                 }
             )
             continue
 
+        entry_fallback = bool(entry.get("fallback") is True)
         for candidate in entry_candidates:
             cand_mode = candidate.get("mode")
             cand_name = str(candidate.get("name") or "")
@@ -101,14 +113,31 @@ def signature_search_rows(
                     or "-",
                     "category": cand_category,
                     "certainty": certainty,
+                    "_source_rank": _source_rank(is_top_level=False, is_fallback=entry_fallback),
                 }
             )
 
     best: dict[tuple[Any, ...], dict[str, Any]] = {}
     for row in rows:
-        key = (row["name"], row["mode"], row["john"], row["category"])
+        mode_value = row.get("mode")
+        if mode_value is not None:
+            key = ("mode", mode_value)
+        else:
+            key = ("nomode", row["name"], row["john"], row["category"])
         existing = best.get(key)
-        if existing is None or row["certainty"] > existing["certainty"]:
+        if existing is None:
+            best[key] = row
+            continue
+
+        row_priority = (row["certainty"], row.get("_source_rank", 0))
+        existing_priority = (existing["certainty"], existing.get("_source_rank", 0))
+        if row_priority > existing_priority:
             best[key] = row
 
-    return sorted(best.values(), key=lambda r: (r["certainty"], str(r["name"]).lower()), reverse=True)
+    result = []
+    for row in best.values():
+        row = dict(row)
+        row.pop("_source_rank", None)
+        result.append(row)
+
+    return sorted(result, key=lambda r: (r["certainty"], str(r["name"]).lower()), reverse=True)
