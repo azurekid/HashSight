@@ -1,6 +1,5 @@
-<img width="399" height="136" alt="image" src="https://github.com/user-attachments/assets/13575c66-882d-4869-b167-b686d2ec246e" />
+<img width="1020" height="355" alt="image" src="https://github.com/user-attachments/assets/13575c66-882d-4869-b167-b686d2ec246e" />
 
-# HashSight
 
 Hash signature intelligence for hashcat mode identification.
 
