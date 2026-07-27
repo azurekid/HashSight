@@ -38,6 +38,7 @@ hashsight hash '<hash>'
 hashsight --hash '<hash>'
 hashsight signature --name 'Keccak'
 hashsight --version
+hashsight --catalog-version
 hs --hash '<hash>'
 ```
 

@@ -5,7 +5,11 @@
   "type": "object",
   "required": ["version", "signatures"],
   "properties": {
-    "version": { "type": "string" },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$",
+      "description": "Signature catalog semantic version (e.g. 1.4.0)."
+    },
     "source": { "type": "string" },
     "description": { "type": "string" },
     "signatures": {

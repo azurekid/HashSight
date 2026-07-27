@@ -9,18 +9,25 @@ from typing import Any, Optional
 
 from .matcher import HashResult, HashSightIndex, resolve_hash
 from .hash_confidence import confidence_profile
-from .signatures import filter_signatures, load_signatures
+from .signatures import (
+    filter_signatures,
+    load_signature_catalog_info,
+    load_signatures,
+)
 from .version import __version__
 
 __all__ = [
     "HashResult",
     "get_hash",
     "get_signature",
+    "get_signature_catalog_info",
+    "get_signature_catalog_version",
     "load_signatures",
     "__version__",
 ]
 
 _signatures: list[dict[str, Any]] = load_signatures()
+_signature_catalog_info: dict[str, Any] = load_signature_catalog_info()
 _index = HashSightIndex(_signatures)
 
 
@@ -85,3 +92,13 @@ def get_signature(
     :param name: Filter to entries whose name contains this text (case-insensitive).
     """
     return filter_signatures(_signatures, mode=mode, category=category, name=name)
+
+
+def get_signature_catalog_info() -> dict[str, Any]:
+    """Return cached metadata describing the bundled signatures catalog."""
+    return dict(_signature_catalog_info)
+
+
+def get_signature_catalog_version() -> str:
+    """Return the cached semantic version of the bundled signatures catalog."""
+    return str(_signature_catalog_info.get("version", ""))

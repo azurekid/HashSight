@@ -2,12 +2,49 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Any, Iterable, Optional
 
 
+_CATALOG_VERSION_RE = re.compile(
+    r"^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$"
+)
+
+
 def _default_data_path() -> Path:
     return Path(__file__).resolve().parent / "data" / "signatures.json"
+
+
+def _load_signature_document(path: Optional[Path] = None) -> tuple[Path, dict[str, Any]]:
+    """Load and validate the raw signature catalog document."""
+    source = Path(path) if path is not None else _default_data_path()
+
+    if not source.exists():
+        raise FileNotFoundError(f"HashSight: signature file not found at '{source}'.")
+
+    try:
+        raw = source.read_text(encoding="utf-8")
+        doc = json.loads(raw)
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError(f"HashSight: failed to parse signature file '{source}': {exc}") from exc
+
+    version = str(doc.get("version", "")).strip()
+    if not version:
+        raise ValueError(f"HashSight: signature file '{source}' is missing required 'version'.")
+    if not _CATALOG_VERSION_RE.match(version):
+        raise ValueError(
+            "HashSight: invalid signature catalog version "
+            f"'{version}' in '{source}'. Expected semantic version (e.g. 1.2.3)."
+        )
+
+    signatures = doc.get("signatures")
+    if not signatures:
+        raise ValueError(f"HashSight: signature file '{source}' does not contain a 'signatures' array.")
+
+    _validate_signatures(signatures, source)
+
+    return source, doc
 
 
 def _validate_signatures(signatures: list[dict[str, Any]], source: Path) -> None:
@@ -87,25 +124,31 @@ def load_signatures(path: Optional[Path] = None) -> list[dict[str, Any]]:
     Defaults to the bundled ``hashsight/data/signatures.json``. Raises ``FileNotFoundError``
     or ``ValueError`` (both prefixed with "HashSight:") on missing/invalid input.
     """
-    source = Path(path) if path is not None else _default_data_path()
-
-    if not source.exists():
-        raise FileNotFoundError(f"HashSight: signature file not found at '{source}'.")
-
-    try:
-        raw = source.read_text(encoding="utf-8")
-        doc = json.loads(raw)
-    except (OSError, json.JSONDecodeError) as exc:
-        raise ValueError(f"HashSight: failed to parse signature file '{source}': {exc}") from exc
-
-    signatures = doc.get("signatures")
-    if not signatures:
-        raise ValueError(f"HashSight: signature file '{source}' does not contain a 'signatures' array.")
-
-    _validate_signatures(signatures, source)
+    _, doc = _load_signature_document(path)
+    signatures = doc["signatures"]
     _hydrate_candidate_metadata(signatures)
 
     return signatures
+
+
+def load_signature_catalog_info(path: Optional[Path] = None) -> dict[str, Any]:
+    """Return top-level signature catalog metadata used for update/version checks."""
+    source, doc = _load_signature_document(path)
+    signatures = doc.get("signatures") or []
+
+    return {
+        "path": str(source),
+        "version": str(doc.get("version", "")).strip(),
+        "source": str(doc.get("source", "")).strip() or None,
+        "description": str(doc.get("description", "")).strip() or None,
+        "signature_count": len(signatures),
+    }
+
+
+def signature_catalog_version(path: Optional[Path] = None) -> str:
+    """Return the semantic version of the loaded signature catalog."""
+    info = load_signature_catalog_info(path)
+    return str(info["version"])
 
 
 def filter_signatures(
