@@ -122,52 +122,16 @@
           "name": "bcrypt(sha1($pass))",
           "category": "Salted Digest",
           "popularity": 2
-        },
-        {
-          "mode": 28400,
-          "name": "bcrypt(sha512($pass))",
-          "category": "Salted Digest",
-          "popularity": 2
-        },
-        {
-          "mode": 33800,
-          "name": "WBB4 (Woltlab Burning Board 4.x, Double bcrypt)",
-          "category": "Web Application",
-          "popularity": 2
-        },
-        {
-          "mode": 30600,
-          "name": "bcrypt(sha256($pass))",
-          "category": "OS/Unix Crypt",
-          "popularity": 1
         }
       ]
     },
     {
       "kind": "Prefix",
       "match": "$2b$",
-      "name": "bcrypt-family container",
+      "mode": 3200,
+      "name": "bcrypt $2*$",
       "category": "OS/Unix Crypt",
-      "candidates": [
-        {
-          "mode": 3200,
-          "name": "bcrypt $2*$",
-          "category": "OS/Unix Crypt",
-          "popularity": 10
-        },
-        {
-          "mode": 33800,
-          "name": "WBB4 (Double bcrypt)",
-          "category": "Web Application",
-          "popularity": 2
-        },
-        {
-          "mode": 30600,
-          "name": "bcrypt, $2b$ (Blowfish)",
-          "category": "Password Hashing",
-          "popularity": 3
-        }
-      ]
+      "john_format": "bcrypt"
     },
     {
       "kind": "Prefix",
@@ -183,20 +147,6 @@
       "mode": 3200,
       "name": "bcrypt $2*$",
       "category": "OS/Unix Crypt",
-      "candidates": [
-        {
-          "mode": 35500,
-          "name": "Wordpress bcrypt(hmac-sha384($pass))",
-          "category": "OS/Unix Crypt",
-          "popularity": 1
-        },
-        {
-          "mode": 3200,
-          "name": "bcrypt $2*$",
-          "category": "OS/Unix Crypt",
-          "popularity": 6
-        }
-      ],
       "john_format": "bcrypt"
     },
     {
