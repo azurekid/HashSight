@@ -242,9 +242,14 @@ def _looks_hashlike(value: str) -> bool:
         return False
     if any(ch in value for ch in ("$", ":", "*")):
         return True
-    if _HEX_RE.match(value) and len(value) >= 16:
+    # Avoid broad fallback fan-out on extremely long raw-hex blobs.
+    # This often happens when '$'-prefixed hashes are shell-expanded
+    # (e.g. double-quoted `$krb5...`) and prefixes are stripped.
+    if _HEX_RE.match(value) and 16 <= len(value) <= 256:
         return True
     if _BASE64ISH_RE.match(value):
+        if _HEX_RE.match(value):
+            return False
         has_digit = any(ch.isdigit() for ch in value)
         has_symbol = any(ch in "+/=_-" for ch in value)
         return has_digit or has_symbol
