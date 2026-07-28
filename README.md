@@ -10,10 +10,17 @@ Requires Python 3.9+.
 ```bash
 git clone https://github.com/azurekid/HashSight.git
 cd HashSight
-python3 -m pip install --user .
+python3 -m pip install --user --upgrade .
 export PATH="$(python3 -m site --user-base)/bin:$PATH"
 hash -r
 hashsight --help
+```
+
+If you are developing from a local clone and want the installed commands to always
+reflect the working tree, use editable mode instead:
+
+```bash
+python3 -m pip install --user -e .
 ```
 
 For the shorter alias, use `hs --help`. If your system already has Hammerspoon installed, `hs` may already be taken there, so `hashsight` remains the safer fallback.

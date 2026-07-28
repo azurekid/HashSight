@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1",
+  "version": "1.0.2",
   "source": "https://hashcat.net/wiki/doku.php?id=example_hashes",
   "description": "HashSight hash-signature database. Every entry is derived from hashcat's own published example hashes. Community contributions welcome via pull request - see CONTRIBUTING.md.",
   "modes": {
@@ -694,7 +694,8 @@
     },
     "5600": {
       "name": "NetNTLMv2",
-      "category": "Windows/AD"
+      "category": "Windows/AD",
+      "john_format": "netntlmv2"
     },
     "5700": {
       "name": "Cisco-IOS type 4 (SHA256)",
@@ -946,7 +947,8 @@
     },
     "8900": {
       "name": "scrypt",
-      "category": "Generic KDF"
+      "category": "Generic KDF",
+      "john_format": "scrypt"
     },
     "9000": {
       "name": "Password Safe v2",
@@ -1110,7 +1112,8 @@
     },
     "10900": {
       "name": "PBKDF2-HMAC-SHA256",
-      "category": "Generic KDF"
+      "category": "Generic KDF",
+      "john_format": "pbkdf2-hmac-sha256"
     },
     "10901": {
       "name": "RedHat 389-DS LDAP (PBKDF2-HMAC-SHA256)",
@@ -1182,11 +1185,13 @@
     },
     "11900": {
       "name": "PBKDF2-HMAC-MD5",
-      "category": "Generic KDF"
+      "category": "Generic KDF",
+      "john_format": "pbkdf2-hmac-md5"
     },
     "12000": {
       "name": "PBKDF2-HMAC-SHA1",
-      "category": "Generic KDF"
+      "category": "Generic KDF",
+      "john_format": "pbkdf2-hmac-sha1"
     },
     "12001": {
       "name": "Atlassian (PBKDF2-HMAC-SHA1)",
@@ -1195,7 +1200,8 @@
     },
     "12100": {
       "name": "PBKDF2-HMAC-SHA512",
-      "category": "Generic KDF"
+      "category": "Generic KDF",
+      "john_format": "pbkdf2-hmac-sha512"
     },
     "12150": {
       "name": "Apache Shiro 1 SHA-512",
@@ -1204,6 +1210,7 @@
     "12200": {
       "name": "eCryptfs",
       "category": "Catalog Fallback",
+      "john_format": "ecryptfs",
       "total_len_hint": 47,
       "field_count_hint": 5
     },
@@ -1491,6 +1498,7 @@
     "16000": {
       "name": "Tripcode",
       "category": "Catalog Fallback",
+      "john_format": "tripcode",
       "total_len_hint": 10,
       "field_count_hint": 0
     },
@@ -2792,7 +2800,8 @@
     },
     "34000": {
       "name": "Argon2",
-      "category": "Generic KDF"
+      "category": "Generic KDF",
+      "john_format": "argon2"
     },
     "34100": {
       "name": "LUKS v2 argon2 + SHA-256 + AES",
@@ -2924,7 +2933,8 @@
     },
     "99999": {
       "name": "Plaintext",
-      "category": "Catalog Fallback"
+      "category": "Catalog Fallback",
+      "john_format": "plaintext"
     }
   },
   "signatures": [
