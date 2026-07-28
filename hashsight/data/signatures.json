@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "source": "https://hashcat.net/wiki/doku.php?id=example_hashes",
   "description": "HashSight hash-signature database. Every entry is derived from hashcat's own published example hashes. Community contributions welcome via pull request - see CONTRIBUTING.md.",
   "modes": {
