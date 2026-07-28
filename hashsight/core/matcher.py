@@ -221,8 +221,14 @@ def _candidate_score(
             ]
         )
         for term in hint_terms:
-            if term in haystack:
-                bonus += 18
+            direction_term = term in {"pass", "salt"}
+            matches = (
+                term in str(candidate.get("name", "")).lower()
+                if direction_term
+                else term in haystack
+            )
+            if matches:
+                bonus += 80
                 hint_matched = True
 
     salt_len_hint = candidate.get("salt_len_hint")
