@@ -7,7 +7,7 @@
   },
   "hash": {
     "_comment": "Defaults for the 'hash' command. CLI flags always override these.",
-    "min_candidate_certainty": 35,
+    "min_candidate_certainty": 0,
     "min_overall_certainty": 0,
     "full_mode": false,
     "progress": null,

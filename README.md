@@ -76,7 +76,7 @@ Example:
 		"no_update_check": false
 	},
 	"hash": {
-		"min_candidate_certainty": 35,
+		"min_candidate_certainty": 0,
 		"min_overall_certainty": 20,
 		"full_mode": true,
 		"progress": true

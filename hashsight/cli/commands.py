@@ -33,7 +33,7 @@ from ..ui.terminal import (
 from ..catalog.update_check import get_signature_update_notice, get_update_notice
 from ..version import __version__
 
-MIN_VISIBLE_CANDIDATE_CERTAINTY = 35
+MIN_VISIBLE_CANDIDATE_CERTAINTY = 0
 MIN_RESULT_CERTAINTY = 0
 
 
