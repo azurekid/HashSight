@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.upstream.sync_signatures_upstream import _validate_signature_shape
+from scripts.upstream.sync_signatures_upstream import _collect_local_john_formats, _validate_signature_shape
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -66,3 +66,20 @@ def test_validate_signature_shape_rejects_boolean_scalar_candidates() -> None:
             ],
             {},
         )
+
+
+def test_collect_local_john_formats_skips_integer_candidate_references() -> None:
+    values = _collect_local_john_formats(
+        [
+            {
+                "kind": "Prefix",
+                "match": "$x$",
+                "name": "Example",
+                "category": "Example",
+                "john_format": "Raw-MD5",
+                "candidates": [35700, {"mode": 1000, "john_format": "Raw-SHA1"}],
+            }
+        ]
+    )
+
+    assert values == {"raw-md5", "raw-sha1"}
