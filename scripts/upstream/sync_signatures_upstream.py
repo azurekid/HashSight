@@ -293,7 +293,7 @@ def _validate_signature_shape(signatures: list[dict[str, Any]], mode_catalog: di
             else:
                 raise ValueError(f"signatures[{idx}].candidates[{c_idx}] missing integer mode")
 
-            if not isinstance(candidate_mode, int):
+            if not isinstance(candidate_mode, int) or isinstance(candidate_mode, bool):
                 raise ValueError(f"signatures[{idx}].candidates[{c_idx}] missing integer mode")
 
             candidate_meta = _catalog_meta_for_mode(mode_catalog, candidate_mode)

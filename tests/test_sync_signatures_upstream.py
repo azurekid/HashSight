@@ -19,3 +19,19 @@ def test_validate_signature_shape_accepts_normalized_catalog_document() -> None:
 def test_validate_signature_shape_requires_resolvable_name_metadata() -> None:
     with pytest.raises(ValueError, match=r"signatures\[0\] missing/invalid name"):
         _validate_signature_shape([{"kind": "Prefix", "match": "$x$", "mode": 1}], {})
+
+
+def test_validate_signature_shape_rejects_boolean_candidate_modes() -> None:
+    with pytest.raises(ValueError, match=r"signatures\[0\]\.candidates\[0\] missing integer mode"):
+        _validate_signature_shape(
+            [
+                {
+                    "kind": "Prefix",
+                    "match": "$x$",
+                    "name": "Example",
+                    "category": "Example",
+                    "candidates": [{"mode": True}],
+                }
+            ],
+            {},
+        )
