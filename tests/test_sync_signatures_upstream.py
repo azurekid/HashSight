@@ -50,3 +50,19 @@ def test_validate_signature_shape_rejects_boolean_candidate_modes() -> None:
             ],
             {},
         )
+
+
+def test_validate_signature_shape_rejects_boolean_scalar_candidates() -> None:
+    with pytest.raises(ValueError, match=r"signatures\[0\]\.candidates\[0\] missing integer mode"):
+        _validate_signature_shape(
+            [
+                {
+                    "kind": "Prefix",
+                    "match": "$x$",
+                    "name": "Example",
+                    "category": "Example",
+                    "candidates": [True],
+                }
+            ],
+            {},
+        )
