@@ -439,8 +439,7 @@
     },
     "2500": {
       "name": "WPA-EAPOL-PBKDF2",
-      "category": "Wireless",
-      "john_format": "wpapsk"
+      "category": "Wireless"
     },
     "2501": {
       "name": "WPA-EAPOL-PMK",
