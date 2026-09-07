@@ -67,9 +67,10 @@ def _local_mode_set(signatures: list[dict[str, Any]]) -> set[int]:
         if isinstance(mode, int):
             modes.add(mode)
         for candidate in entry.get("candidates") or []:
-            c_mode = candidate.get("mode")
-            if isinstance(c_mode, int):
-                modes.add(c_mode)
+            if isinstance(candidate, dict):
+                c_mode = candidate.get("mode")
+                if isinstance(c_mode, int):
+                    modes.add(c_mode)
     return modes
 
 
@@ -184,12 +185,13 @@ def _enrich_existing_john_formats(signatures: list[dict[str, Any]], haiti_record
                 updated += 1
 
         for candidate in entry.get("candidates") or []:
-            c_mode = candidate.get("mode")
-            if isinstance(c_mode, int) and not candidate.get("john_format"):
-                john = haiti_records.get(c_mode, {}).get("john")
-                if john:
-                    candidate["john_format"] = john
-                    updated += 1
+            if isinstance(candidate, dict):
+                c_mode = candidate.get("mode")
+                if isinstance(c_mode, int) and not candidate.get("john_format"):
+                    john = haiti_records.get(c_mode, {}).get("john")
+                    if john:
+                        candidate["john_format"] = john
+                        updated += 1
 
     return updated
 
