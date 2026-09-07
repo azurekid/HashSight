@@ -460,6 +460,44 @@ def _repair_mode_catalog(
     return repaired
 
 
+def _canonicalize_mode_catalog(signatures_doc: dict[str, Any]) -> None:
+    mode_catalog = signatures_doc.get("modes")
+    if mode_catalog is None:
+        signatures_doc["modes"] = {}
+        return
+    if not isinstance(mode_catalog, dict):
+        raise ValueError("signatures.json does not contain a valid modes object")
+
+    merged_numeric: dict[int, dict[str, Any]] = {}
+    non_numeric: list[tuple[str, dict[str, Any]]] = []
+
+    for key, value in mode_catalog.items():
+        if not isinstance(value, dict):
+            value = {}
+        try:
+            mode = int(str(key))
+        except (TypeError, ValueError):
+            non_numeric.append((str(key), dict(value)))
+            continue
+
+        existing = merged_numeric.get(mode)
+        if existing is None:
+            merged_numeric[mode] = dict(value)
+            continue
+
+        for field, field_value in value.items():
+            if existing.get(field) in (None, "") and field_value not in (None, ""):
+                existing[field] = field_value
+
+    canonical_modes: dict[str, dict[str, Any]] = {
+        str(mode): merged_numeric[mode] for mode in sorted(merged_numeric)
+    }
+    for key, value in sorted(non_numeric, key=lambda item: item[0]):
+        canonical_modes[key] = value
+
+    signatures_doc["modes"] = canonical_modes
+
+
 def main() -> int:
     UPSTREAM_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -510,6 +548,7 @@ def main() -> int:
         hashcat_modes,
         haiti_records,
     )
+    _canonicalize_mode_catalog(signatures_doc)
 
     _validate_signature_shape(signatures, signatures_doc.get("modes"))
 

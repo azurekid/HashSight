@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 
 from scripts.upstream.sync_signatures_upstream import (
+    _canonicalize_mode_catalog,
     _collect_local_john_formats,
     _load_text_source,
     _parse_hashcat_mode_names,
@@ -152,3 +153,22 @@ def test_repair_mode_catalog_restores_missing_compact_mode_metadata() -> None:
     }
 
     _validate_signature_shape(doc["signatures"], doc["modes"])
+
+
+def test_canonicalize_mode_catalog_sorts_and_merges_numeric_keys() -> None:
+    doc = {
+        "modes": {
+            "400": {"name": "phpass, phpBB3 (MD5)", "category": "Web Application"},
+            "501": {"name": "Juniper IVE", "category": "Catalog Fallback"},
+            "0500": {"john_format": "md5crypt"},
+            "500": {"name": "md5crypt, MD5 (Unix), Cisco-IOS $1$ (MD5)"},
+        }
+    }
+
+    _canonicalize_mode_catalog(doc)
+
+    assert list(doc["modes"].keys())[:3] == ["400", "500", "501"]
+    assert doc["modes"]["500"] == {
+        "john_format": "md5crypt",
+        "name": "md5crypt, MD5 (Unix), Cisco-IOS $1$ (MD5)",
+    }

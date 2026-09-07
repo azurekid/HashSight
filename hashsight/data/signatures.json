@@ -218,6 +218,11 @@
       "category": "Web Application",
       "john_format": "phpass"
     },
+    "500": {
+      "name": "md5crypt, MD5 (Unix), Cisco-IOS $1$ (MD5)",
+      "category": "OS/Unix Crypt",
+      "john_format": "md5crypt"
+    },
     "501": {
       "name": "Juniper IVE",
       "category": "Catalog Fallback",
@@ -2934,11 +2939,6 @@
       "name": "Plaintext",
       "category": "Catalog Fallback",
       "john_format": "plaintext"
-    },
-    "500": {
-      "name": "md5crypt, MD5 (Unix), Cisco-IOS $1$ (MD5)",
-      "category": "OS/Unix Crypt",
-      "john_format": "md5crypt"
     }
   },
   "signatures": [
