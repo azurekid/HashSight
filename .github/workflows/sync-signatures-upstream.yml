@@ -26,7 +26,7 @@ jobs:
         run: python scripts/upstream/sync_signatures_upstream.py
 
       - name: Validate signatures file
-        run: python -c "from hashsight.signatures import load_signatures; print(len(load_signatures()))"
+        run: python -c "from hashsight import load_signatures; print(len(load_signatures()))"
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v7
