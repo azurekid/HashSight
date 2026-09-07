@@ -232,18 +232,34 @@ def _collect_local_john_formats(signatures: list[dict[str, Any]]) -> set[str]:
     return values
 
 
-def _validate_signature_shape(signatures: list[dict[str, Any]]) -> None:
+def _catalog_meta_for_mode(mode_catalog: dict[str, Any] | None, mode: Any) -> dict[str, Any]:
+    if not isinstance(mode_catalog, dict) or not isinstance(mode, int) or isinstance(mode, bool):
+        return {}
+    meta = mode_catalog.get(str(mode))
+    return meta if isinstance(meta, dict) else {}
+
+
+def _has_nonempty_string(value: Any) -> bool:
+    return isinstance(value, str) and bool(value.strip())
+
+
+def _validate_signature_shape(signatures: list[dict[str, Any]], mode_catalog: dict[str, Any] | None = None) -> None:
     """Fail fast on malformed entries before writing signatures.json."""
     for idx, entry in enumerate(signatures):
+        if not isinstance(entry, dict):
+            raise ValueError(f"signatures[{idx}] must be an object")
+
         kind = entry.get("kind")
         name = entry.get("name")
         category = entry.get("category")
+        entry_mode = entry.get("mode")
+        entry_meta = _catalog_meta_for_mode(mode_catalog, entry_mode)
 
         if kind not in {"Prefix", "Regex", "Hex"}:
             raise ValueError(f"signatures[{idx}] invalid kind: {kind!r}")
-        if not isinstance(name, str) or not name.strip():
+        if not (_has_nonempty_string(name) or _has_nonempty_string(entry_meta.get("name"))):
             raise ValueError(f"signatures[{idx}] missing/invalid name")
-        if not isinstance(category, str) or not category.strip():
+        if not (_has_nonempty_string(category) or _has_nonempty_string(entry_meta.get("category"))):
             raise ValueError(f"signatures[{idx}] missing/invalid category")
 
         if kind in {"Prefix", "Regex"} and not isinstance(entry.get("match"), str):
@@ -251,19 +267,40 @@ def _validate_signature_shape(signatures: list[dict[str, Any]]) -> None:
         if kind == "Hex" and not isinstance(entry.get("length"), int):
             raise ValueError(f"signatures[{idx}] kind=Hex missing integer length")
 
-        has_mode = isinstance(entry.get("mode"), int)
-        candidates = entry.get("candidates") or []
+        raw_candidates = entry.get("candidates")
+        if raw_candidates is not None and not isinstance(raw_candidates, list):
+            raise ValueError(f"signatures[{idx}] candidates must be an array")
+
+        has_mode = isinstance(entry_mode, int) and not isinstance(entry_mode, bool)
+        candidates = raw_candidates or []
         has_candidates = isinstance(candidates, list) and len(candidates) > 0
 
         if not (has_mode or has_candidates):
             raise ValueError(f"signatures[{idx}] requires mode or candidates")
 
         for c_idx, candidate in enumerate(candidates):
-            if not isinstance(candidate.get("mode"), int):
+            if isinstance(candidate, bool):
                 raise ValueError(f"signatures[{idx}].candidates[{c_idx}] missing integer mode")
-            if not isinstance(candidate.get("name"), str) or not candidate["name"].strip():
+
+            if isinstance(candidate, int):
+                candidate_mode = candidate
+                candidate_name = None
+                candidate_category = None
+            elif isinstance(candidate, dict):
+                candidate_mode = candidate.get("mode")
+                candidate_name = candidate.get("name")
+                candidate_category = candidate.get("category")
+            else:
+                raise ValueError(f"signatures[{idx}].candidates[{c_idx}] missing integer mode")
+
+            if not isinstance(candidate_mode, int):
+                raise ValueError(f"signatures[{idx}].candidates[{c_idx}] missing integer mode")
+
+            candidate_meta = _catalog_meta_for_mode(mode_catalog, candidate_mode)
+
+            if not (_has_nonempty_string(candidate_name) or _has_nonempty_string(candidate_meta.get("name"))):
                 raise ValueError(f"signatures[{idx}].candidates[{c_idx}] missing/invalid name")
-            if not isinstance(candidate.get("category"), str) or not candidate["category"].strip():
+            if not (_has_nonempty_string(candidate_category) or _has_nonempty_string(candidate_meta.get("category"))):
                 raise ValueError(f"signatures[{idx}].candidates[{c_idx}] missing/invalid category")
 
 
@@ -307,7 +344,7 @@ def main() -> int:
     stats.john_fields_enriched = _enrich_existing_john_formats(signatures, haiti_records)
     stats.added_modes = _append_missing_modes(signatures, haiti_records)
 
-    _validate_signature_shape(signatures)
+    _validate_signature_shape(signatures, signatures_doc.get("modes"))
 
     stats.local_modes_after = len(_local_mode_set(signatures))
     local_modes_after_set = _local_mode_set(signatures)
