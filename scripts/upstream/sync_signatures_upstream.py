@@ -227,7 +227,8 @@ def _collect_local_john_formats(signatures: list[dict[str, Any]]) -> set[str]:
     for entry in signatures:
         add(entry.get("john_format"))
         for candidate in entry.get("candidates") or []:
-            add(candidate.get("john_format"))
+            if isinstance(candidate, dict):
+                add(candidate.get("john_format"))
 
     return values
 
