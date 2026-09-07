@@ -215,7 +215,8 @@
     },
     "400": {
       "name": "phpass, phpBB3 (MD5)",
-      "category": "Web Application"
+      "category": "Web Application",
+      "john_format": "phpass"
     },
     "501": {
       "name": "Juniper IVE",
@@ -420,7 +421,8 @@
     },
     "2100": {
       "name": "Domain Cached Credentials 2 (DCC2), MS Cache 2",
-      "category": "Windows/AD"
+      "category": "Windows/AD",
+      "john_format": "mscash2"
     },
     "2400": {
       "name": "Cisco-PIX MD5",
@@ -684,7 +686,8 @@
     },
     "5500": {
       "name": "NetNTLMv1 / NetNTLMv1+ESS",
-      "category": "Windows/AD"
+      "category": "Windows/AD",
+      "john_format": "netntlm / netntlm-naive"
     },
     "5600": {
       "name": "NetNTLMv2",
@@ -1267,7 +1270,8 @@
     },
     "13400": {
       "name": "Keepass 2 AES / with keyfile",
-      "category": "Password Manager"
+      "category": "Password Manager",
+      "john_format": "keepass"
     },
     "13500": {
       "name": "PeopleSoft PS_TOKEN",
@@ -1645,7 +1649,8 @@
     },
     "18200": {
       "name": "Kerberos 5, etype 23, AS-REP",
-      "category": "Kerberos"
+      "category": "Kerberos",
+      "john_format": "krb5asrep"
     },
     "18300": {
       "name": "Apple File System (APFS)",
@@ -2929,6 +2934,11 @@
       "name": "Plaintext",
       "category": "Catalog Fallback",
       "john_format": "plaintext"
+    },
+    "500": {
+      "name": "md5crypt, MD5 (Unix), Cisco-IOS $1$ (MD5)",
+      "category": "OS/Unix Crypt",
+      "john_format": "md5crypt"
     }
   },
   "signatures": [

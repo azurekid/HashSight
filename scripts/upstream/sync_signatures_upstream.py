@@ -129,7 +129,9 @@ def _parse_hashcat_mode_names(page_html: str) -> dict[int, str]:
             continue
 
         raw_mode = _strip_tags(cells[0])
-        raw_name = _strip_tags(cells[1])
+        raw_name = _strip_tags(
+            re.sub(r"<sup\b[^>]*>.*?</sup>", "", cells[1], flags=re.IGNORECASE | re.DOTALL)
+        )
 
         if not raw_mode.isdigit() or not raw_name:
             continue
@@ -300,6 +302,33 @@ def _collect_mode_metadata(signatures: list[dict[str, Any]]) -> dict[int, dict[s
     return values
 
 
+def _modes_requiring_catalog(signatures: list[dict[str, Any]]) -> set[int]:
+    modes: set[int] = set()
+
+    for entry in signatures:
+        mode = entry.get("mode")
+        if isinstance(mode, int) and not isinstance(mode, bool):
+            if any(
+                not _has_nonempty_string(entry.get(field))
+                for field in ("name", "category", "john_format")
+            ):
+                modes.add(mode)
+
+        for candidate in entry.get("candidates") or []:
+            if isinstance(candidate, dict):
+                candidate_mode = candidate.get("mode")
+                if isinstance(candidate_mode, int) and not isinstance(candidate_mode, bool):
+                    if any(
+                        not _has_nonempty_string(candidate.get(field))
+                        for field in ("name", "category", "john_format")
+                    ):
+                        modes.add(candidate_mode)
+            elif isinstance(candidate, int) and not isinstance(candidate, bool):
+                modes.add(candidate)
+
+    return modes
+
+
 def _catalog_meta_for_mode(mode_catalog: dict[str, Any] | None, mode: Any) -> dict[str, Any]:
     if not isinstance(mode_catalog, dict) or not isinstance(mode, int) or isinstance(mode, bool):
         return {}
@@ -393,7 +422,7 @@ def _repair_mode_catalog(
     local_meta = _collect_mode_metadata(signatures)
     repaired = 0
 
-    for mode in sorted(_local_mode_set(signatures)):
+    for mode in sorted(_modes_requiring_catalog(signatures)):
         current = mode_catalog.get(str(mode))
         meta = dict(current) if isinstance(current, dict) else {}
         previous = dict(meta)

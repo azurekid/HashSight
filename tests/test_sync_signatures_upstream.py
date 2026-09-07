@@ -7,6 +7,7 @@ import pytest
 from scripts.upstream.sync_signatures_upstream import (
     _collect_local_john_formats,
     _load_text_source,
+    _parse_hashcat_mode_names,
     _repair_mode_catalog,
     _validate_signature_shape,
 )
@@ -107,6 +108,21 @@ def test_load_text_source_uses_cache_when_fetch_fails(
 
     assert text == "cached payload"
     assert fetched is False
+
+
+def test_parse_hashcat_mode_names_strips_superscript_footnotes() -> None:
+    html = """
+    <table>
+      <tr>
+        <td>500</td>
+        <td>md5crypt, MD5 (Unix), Cisco-IOS $1$ (MD5) <sup>2</sup></td>
+      </tr>
+    </table>
+    """
+
+    assert _parse_hashcat_mode_names(html) == {
+        500: "md5crypt, MD5 (Unix), Cisco-IOS $1$ (MD5)"
+    }
 
 
 def test_repair_mode_catalog_restores_missing_compact_mode_metadata() -> None:
