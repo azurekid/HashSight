@@ -2941,52 +2941,62 @@
     {
       "kind": "Prefix",
       "match": "$1$",
-      "mode": 500
+      "mode": 500,
+      "john_format": "md5crypt"
     },
     {
       "kind": "Prefix",
       "match": "$apr1$",
-      "mode": 1600
+      "mode": 1600,
+      "john_format": "md5crypt-long"
     },
     {
       "kind": "Regex",
       "match": "^(\\$md5,rounds=\\d+\\$|\\$md5\\$rounds=\\d+\\$|\\$md5\\$)[a-z0-9/.]{0,16}(\\$|\\$\\$)[a-z0-9/.]{22}$",
-      "mode": 3300
+      "mode": 3300,
+      "john_format": "sunmd5"
     },
     {
       "kind": "Prefix",
       "match": "$5$",
-      "mode": 7400
+      "mode": 7400,
+      "john_format": "sha256crypt"
     },
     {
       "kind": "Prefix",
       "match": "$6$",
-      "mode": 1800
+      "mode": 1800,
+      "john_format": "sha512crypt"
     },
     {
       "kind": "Prefix",
       "match": "$sha1$",
-      "mode": 15100
+      "mode": 15100,
+      "john_format": "sha1crypt"
     },
     {
       "kind": "Prefix",
       "match": "$8$",
-      "mode": 9200
+      "mode": 9200,
+      "john_format": "pbkdf2-hmac-sha256"
     },
     {
       "kind": "Prefix",
       "match": "$9$",
-      "mode": 9300
+      "mode": 9300,
+      "john_format": "scrypt"
     },
     {
       "kind": "Prefix",
       "match": "$ml$",
-      "mode": 7100
+      "mode": 7100,
+      "john_format": "pbkdf2-hmac-sha512"
     },
     {
       "kind": "Prefix",
       "match": "grub.pbkdf2.sha512.",
-      "mode": 7200
+      "mode": 7200,
+      "john_format": "pbkdf2-hmac-sha512"
     },
     {
       "kind": "Prefix",
@@ -2996,12 +3006,14 @@
     {
       "kind": "Regex",
       "match": "^[./0-9A-Za-z]{13}$",
-      "mode": 1500
+      "mode": 1500,
+      "john_format": "descrypt"
     },
     {
       "kind": "Regex",
       "match": "^[./0-9A-Za-z]{16}:[0-9]{2}$",
-      "mode": 2410
+      "mode": 2410,
+      "john_format": "asa-md5"
     },
     {
       "kind": "Regex",
@@ -3011,12 +3023,14 @@
     {
       "kind": "Regex",
       "match": "^(?=.*[A-Z])(?=.*[0-9])[./0-9A-Za-z]{16}$",
-      "mode": 2400
+      "mode": 2400,
+      "john_format": "pix-md5"
     },
     {
       "kind": "Prefix",
       "match": "_",
-      "mode": 12400
+      "mode": 12400,
+      "john_format": "bsdicrypt"
     },
     {
       "kind": "Prefix",
@@ -3026,7 +3040,8 @@
       "candidates": [
         {
           "mode": 3200,
-          "popularity": 10
+          "popularity": 10,
+          "john_format": "bcrypt"
         },
         {
           "mode": 25600,
@@ -3058,7 +3073,8 @@
       "candidates": [
         {
           "mode": 3200,
-          "popularity": 10
+          "popularity": 10,
+          "john_format": "bcrypt"
         },
         {
           "mode": 25600,
@@ -3090,7 +3106,8 @@
       "candidates": [
         {
           "mode": 3200,
-          "popularity": 10
+          "popularity": 10,
+          "john_format": "bcrypt"
         },
         {
           "mode": 25600,
@@ -3122,7 +3139,8 @@
       "candidates": [
         {
           "mode": 3200,
-          "popularity": 10
+          "popularity": 10,
+          "john_format": "bcrypt"
         },
         {
           "mode": 25600,
@@ -3161,9 +3179,11 @@
         35700,
         {
           "mode": 400,
-          "popularity": 6
+          "popularity": 6,
+          "john_format": "phpass"
         }
-      ]
+      ],
+      "john_format": "phpass"
     },
     {
       "kind": "Prefix",
@@ -3178,24 +3198,29 @@
         },
         {
           "mode": 400,
-          "popularity": 6
+          "popularity": 6,
+          "john_format": "phpass"
         }
-      ]
+      ],
+      "john_format": "phpass"
     },
     {
       "kind": "Prefix",
       "match": "$S$",
-      "mode": 7900
+      "mode": 7900,
+      "john_format": "drupal7"
     },
     {
       "kind": "Prefix",
       "match": "$B$",
-      "mode": 3711
+      "mode": 3711,
+      "john_format": "mediawiki"
     },
     {
       "kind": "Prefix",
       "match": "pbkdf2_sha256$",
-      "mode": 10000
+      "mode": 10000,
+      "john_format": "django"
     },
     {
       "kind": "Prefix",
@@ -3205,12 +3230,14 @@
     {
       "kind": "Regex",
       "match": "^\\$episerver\\$\\*0\\*",
-      "mode": 141
+      "mode": 141,
+      "john_format": "episerver"
     },
     {
       "kind": "Regex",
       "match": "^\\$episerver\\$\\*1\\*",
-      "mode": 1441
+      "mode": 1441,
+      "john_format": "episerver"
     },
     {
       "kind": "Regex",
@@ -3220,7 +3247,8 @@
     {
       "kind": "Prefix",
       "match": "$PHPS$",
-      "mode": 2612
+      "mode": 2612,
+      "john_format": "phps"
     },
     {
       "kind": "Prefix",
@@ -3235,12 +3263,14 @@
     {
       "kind": "Prefix",
       "match": "{SHA}",
-      "mode": 101
+      "mode": 101,
+      "john_format": "nsldap"
     },
     {
       "kind": "Prefix",
       "match": "{SSHA}",
-      "mode": 111
+      "mode": 111,
+      "john_format": "salted-sha1"
     },
     {
       "kind": "Prefix",
@@ -3250,7 +3280,8 @@
     {
       "kind": "Prefix",
       "match": "{SSHA512}",
-      "mode": 1711
+      "mode": 1711,
+      "john_format": "ssha512"
     },
     {
       "kind": "Prefix",
@@ -3260,27 +3291,32 @@
     {
       "kind": "Prefix",
       "match": "{PKCS5S2}",
-      "mode": 12001
+      "mode": 12001,
+      "john_format": "pbkdf2-hmac-sha1"
     },
     {
       "kind": "Regex",
       "match": "^\\{smd5\\}[./0-9A-Za-z$]{31}$",
-      "mode": 6300
+      "mode": 6300,
+      "john_format": "aix-smd5"
     },
     {
       "kind": "Regex",
       "match": "^\\{ssha1\\}[0-9]{2}\\$[./0-9A-Za-z$]{44}$",
-      "mode": 6700
+      "mode": 6700,
+      "john_format": "aix-ssha1"
     },
     {
       "kind": "Regex",
       "match": "^\\{ssha256\\}[0-9]{2}\\$[./0-9A-Za-z$]{60}$",
-      "mode": 6400
+      "mode": 6400,
+      "john_format": "aix-ssha256"
     },
     {
       "kind": "Regex",
       "match": "^\\{ssha512\\}[0-9]{2}\\$[./0-9A-Za-z]{16,48}\\$[./0-9A-Za-z]{86}$",
-      "mode": 6500
+      "mode": 6500,
+      "john_format": "aix-ssha512"
     },
     {
       "kind": "Regex",
@@ -3290,7 +3326,8 @@
     {
       "kind": "Regex",
       "match": "^[A-Za-z0-9+/]{46}=$",
-      "mode": 7000
+      "mode": 7000,
+      "john_format": "fortigate"
     },
     {
       "kind": "Regex",
@@ -3300,11 +3337,13 @@
       "candidates": [
         {
           "mode": 7700,
-          "popularity": 5
+          "popularity": 5,
+          "john_format": "sapb"
         },
         {
           "mode": 7701,
-          "popularity": 4
+          "popularity": 4,
+          "john_format": "sapb"
         }
       ]
     },
@@ -3316,23 +3355,27 @@
       "candidates": [
         {
           "mode": 7800,
-          "popularity": 5
+          "popularity": 5,
+          "john_format": "sapg"
         },
         {
           "mode": 7801,
-          "popularity": 4
+          "popularity": 4,
+          "john_format": "sapg"
         }
       ]
     },
     {
       "kind": "Regex",
       "match": "^0x[A-Fa-f0-9]{84}$",
-      "mode": 8000
+      "mode": 8000,
+      "john_format": "sybasease"
     },
     {
       "kind": "Regex",
       "match": "^[A-Fa-f0-9]{49}$",
-      "mode": 8100
+      "mode": 8100,
+      "john_format": "citrix_ns10"
     },
     {
       "kind": "Regex",
@@ -3352,7 +3395,8 @@
     {
       "kind": "Regex",
       "match": "^\\$sip\\$\\*[^*]{0,512}\\*[^*]{0,512}\\*[^*]{0,116}\\*[^*]{0,116}\\*[^*]{0,246}\\*[^*]{0,245}\\*[^*]{0,246}\\*[^*]{0,245}\\*[^*]{1,1024}\\*[^*]{0,1024}\\*[^*]{0,1024}\\*[^*]{0,1024}\\*[^*]{3}\\*[A-Fa-f0-9]{32}$",
-      "mode": 11400
+      "mode": 11400,
+      "john_format": "sip"
     },
     {
       "kind": "Regex",
@@ -3362,17 +3406,20 @@
     {
       "kind": "Regex",
       "match": "^v1;PPH1_MD4,[A-Fa-f0-9]{20},[0-9]{1,6},[A-Fa-f0-9]{64};?$",
-      "mode": 12800
+      "mode": 12800,
+      "john_format": "azuread"
     },
     {
       "kind": "Regex",
       "match": "^[A-Fa-f0-9]{32}[*:][A-Fa-f0-9]{12}[*:][A-Fa-f0-9]{12}$",
-      "mode": 16801
+      "mode": 16801,
+      "john_format": "wpapsk-pmk"
     },
     {
       "kind": "Regex",
       "match": "^[A-Fa-f0-9]{32}[*:][A-Fa-f0-9]{12}[*:][A-Fa-f0-9]{12}[*:][A-Fa-f0-9]{1,64}$",
-      "mode": 16800
+      "mode": 16800,
+      "john_format": "wpapsk-pmk"
     },
     {
       "kind": "Regex",
@@ -3392,12 +3439,14 @@
     {
       "kind": "Regex",
       "match": "^\\{x-issha,",
-      "mode": 10300
+      "mode": 10300,
+      "john_format": "saph"
     },
     {
       "kind": "Regex",
       "match": "^\\{x-isSHA512,",
-      "mode": 35000
+      "mode": 35000,
+      "john_format": "saph"
     },
     {
       "kind": "Prefix",
@@ -3414,9 +3463,11 @@
         31600,
         {
           "mode": 2100,
-          "popularity": 6
+          "popularity": 6,
+          "john_format": "mscash2"
         }
-      ]
+      ],
+      "john_format": "mscash2"
     },
     {
       "kind": "Regex",
@@ -3428,9 +3479,11 @@
         27000,
         {
           "mode": 5500,
-          "popularity": 6
+          "popularity": 6,
+          "john_format": "netntlm / netntlm-naive"
         }
-      ]
+      ],
+      "john_format": "netntlm / netntlm-naive"
     },
     {
       "kind": "Regex",
@@ -3442,9 +3495,11 @@
         27100,
         {
           "mode": 5600,
-          "popularity": 6
+          "popularity": 6,
+          "john_format": "netntlmv2"
         }
-      ]
+      ],
+      "john_format": "netntlmv2"
     },
     {
       "kind": "Regex",
@@ -3456,9 +3511,11 @@
         35300,
         {
           "mode": 13100,
-          "popularity": 6
+          "popularity": 6,
+          "john_format": "krb5tgs"
         }
-      ]
+      ],
+      "john_format": "krb5tgs"
     },
     {
       "kind": "Regex",
@@ -3482,24 +3539,29 @@
         35400,
         {
           "mode": 18200,
-          "popularity": 6
+          "popularity": 6,
+          "john_format": "krb5asrep"
         }
-      ]
+      ],
+      "john_format": "krb5asrep"
     },
     {
       "kind": "Regex",
       "match": "^\\$krb5pa\\$23\\$",
-      "mode": 7500
+      "mode": 7500,
+      "john_format": "krb5pa-md5"
     },
     {
       "kind": "Regex",
       "match": "^\\$krb5pa\\$17\\$",
-      "mode": 19800
+      "mode": 19800,
+      "john_format": "krb5pa-sha1"
     },
     {
       "kind": "Regex",
       "match": "^\\$krb5pa\\$18\\$",
-      "mode": 19900
+      "mode": 19900,
+      "john_format": "krb5pa-sha1"
     },
     {
       "kind": "Regex",
@@ -3514,7 +3576,8 @@
     {
       "kind": "Regex",
       "match": "^0x0200",
-      "mode": 1731
+      "mode": 1731,
+      "john_format": "mssql12"
     },
     {
       "kind": "Regex",
@@ -3524,11 +3587,13 @@
       "candidates": [
         {
           "mode": 131,
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "mssql"
         },
         {
           "mode": 132,
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "mssql05"
         }
       ]
     },
@@ -3540,7 +3605,8 @@
     {
       "kind": "Prefix",
       "match": "$postgres$",
-      "mode": 11100
+      "mode": 11100,
+      "john_format": "postgres"
     },
     {
       "kind": "Prefix",
@@ -3560,17 +3626,20 @@
     {
       "kind": "Regex",
       "match": "^\\$office\\$\\*2007\\*",
-      "mode": 9400
+      "mode": 9400,
+      "john_format": "office"
     },
     {
       "kind": "Regex",
       "match": "^\\$office\\$\\*2010\\*",
-      "mode": 9500
+      "mode": 9500,
+      "john_format": "office"
     },
     {
       "kind": "Regex",
       "match": "^\\$office\\$\\*2013\\*",
-      "mode": 9600
+      "mode": 9600,
+      "john_format": "office"
     },
     {
       "kind": "Prefix",
@@ -3580,17 +3649,20 @@
     {
       "kind": "Regex",
       "match": "^\\$oldoffice\\$1",
-      "mode": 9700
+      "mode": 9700,
+      "john_format": "oldoffice"
     },
     {
       "kind": "Regex",
       "match": "^\\$oldoffice\\$0.*:[A-Fa-f0-9]{10}$",
-      "mode": 9720
+      "mode": 9720,
+      "john_format": "oldoffice"
     },
     {
       "kind": "Regex",
       "match": "^\\$oldoffice\\$0",
-      "mode": 9710
+      "mode": 9710,
+      "john_format": "oldoffice"
     },
     {
       "kind": "Regex",
@@ -3600,11 +3672,13 @@
       "candidates": [
         {
           "mode": 9700,
-          "popularity": 4
+          "popularity": 4,
+          "john_format": "oldoffice"
         },
         {
           "mode": 9710,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "oldoffice"
         },
         9720
       ]
@@ -3612,7 +3686,8 @@
     {
       "kind": "Regex",
       "match": "^\\$oldoffice\\$[34].*:[A-Fa-f0-9]{10}$",
-      "mode": 9820
+      "mode": 9820,
+      "john_format": "oldoffice"
     },
     {
       "kind": "Regex",
@@ -3622,11 +3697,13 @@
       "candidates": [
         {
           "mode": 9800,
-          "popularity": 4
+          "popularity": 4,
+          "john_format": "oldoffice"
         },
         {
           "mode": 9810,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "oldoffice"
         },
         9820
       ]
@@ -3634,7 +3711,8 @@
     {
       "kind": "Regex",
       "match": "^\\$pdf\\$1\\*2\\*.*:[A-Fa-f0-9]{10}$",
-      "mode": 10420
+      "mode": 10420,
+      "john_format": "pdf"
     },
     {
       "kind": "Regex",
@@ -3644,7 +3722,8 @@
       "candidates": [
         {
           "mode": 10400,
-          "popularity": 4
+          "popularity": 4,
+          "john_format": "pdf"
         },
         10410,
         10420
@@ -3658,12 +3737,14 @@
     {
       "kind": "Regex",
       "match": "^\\$pdf\\$2\\*3\\*128\\*-3904\\*",
-      "mode": 25400
+      "mode": 25400,
+      "john_format": "pdf"
     },
     {
       "kind": "Regex",
       "match": "^\\$pdf\\$2\\*3\\*128\\*-1028\\*",
-      "mode": 10500
+      "mode": 10500,
+      "john_format": "pdf"
     },
     {
       "kind": "Regex",
@@ -3673,58 +3754,69 @@
       "candidates": [
         {
           "mode": 10500,
-          "popularity": 4
+          "popularity": 4,
+          "john_format": "pdf"
         },
         {
           "mode": 25400,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "pdf"
         }
       ]
     },
     {
       "kind": "Regex",
       "match": "^\\$pdf\\$5\\*5\\*",
-      "mode": 10600
+      "mode": 10600,
+      "john_format": "pdf"
     },
     {
       "kind": "Regex",
       "match": "^\\$pdf\\$5\\*6\\*",
-      "mode": 10700
+      "mode": 10700,
+      "john_format": "pdf"
     },
     {
       "kind": "Regex",
       "match": "^\\$odf\\$\\*1\\*",
-      "mode": 18400
+      "mode": 18400,
+      "john_format": "odf"
     },
     {
       "kind": "Regex",
       "match": "^\\$odf\\$\\*0\\*",
-      "mode": 18600
+      "mode": 18600,
+      "john_format": "odf"
     },
     {
       "kind": "Regex",
       "match": "^\\$itunes_backup\\$\\*9\\*",
-      "mode": 14700
+      "mode": 14700,
+      "john_format": "itunes-backup"
     },
     {
       "kind": "Regex",
       "match": "^\\$itunes_backup\\$\\*10\\*",
-      "mode": 14800
+      "mode": 14800,
+      "john_format": "itunes-backup"
     },
     {
       "kind": "Prefix",
       "match": "$7z$",
-      "mode": 11600
+      "mode": 11600,
+      "john_format": "7z"
     },
     {
       "kind": "Prefix",
       "match": "$rar5$",
-      "mode": 13000
+      "mode": 13000,
+      "john_format": "rar5"
     },
     {
       "kind": "Regex",
       "match": "^\\$RAR3\\$\\*0\\*",
-      "mode": 12500
+      "mode": 12500,
+      "john_format": "rar"
     },
     {
       "kind": "Regex",
@@ -3734,58 +3826,69 @@
       "candidates": [
         {
           "mode": 23700,
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "rar"
         },
         {
           "mode": 23800,
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "rar"
         }
       ]
     },
     {
       "kind": "Prefix",
       "match": "$zip2$",
-      "mode": 13600
+      "mode": 13600,
+      "john_format": "zip"
     },
     {
       "kind": "Regex",
       "match": "^\\$zip3\\$\\*0\\*1\\*128\\*",
-      "mode": 23001
+      "mode": 23001,
+      "john_format": "securezip"
     },
     {
       "kind": "Regex",
       "match": "^\\$zip3\\$\\*0\\*1\\*192\\*",
-      "mode": 23002
+      "mode": 23002,
+      "john_format": "securezip"
     },
     {
       "kind": "Regex",
       "match": "^\\$zip3\\$\\*0\\*1\\*256\\*",
-      "mode": 23003
+      "mode": 23003,
+      "john_format": "securezip"
     },
     {
       "kind": "Regex",
       "match": "^\\$pkzip2\\$1\\*1\\*2\\*0\\*[A-Fa-f0-9]+\\*[A-Fa-f0-9]+\\*[A-Fa-f0-9]+\\*0\\*[A-Fa-f0-9]+\\*8\\*[A-Fa-f0-9]+\\*[A-Fa-f0-9]+\\*[A-Fa-f0-9]+\\*[A-Fa-f0-9]+\\*\\$/pkzip2\\$$",
-      "mode": 17200
+      "mode": 17200,
+      "john_format": "pkzip"
     },
     {
       "kind": "Regex",
       "match": "^\\$pkzip2\\$1\\*1\\*2\\*0\\*[A-Fa-f0-9]+\\*[A-Fa-f0-9]+\\*[A-Fa-f0-9]+\\*0\\*[A-Fa-f0-9]+\\*0\\*[A-Fa-f0-9]+\\*[A-Fa-f0-9]+\\*[A-Fa-f0-9]+\\*[A-Fa-f0-9]+\\*\\$/pkzip2\\$$",
-      "mode": 17210
+      "mode": 17210,
+      "john_format": "pkzip"
     },
     {
       "kind": "Regex",
       "match": "^\\$pkzip2\\$3\\*1\\*1\\*0\\*8\\*",
-      "mode": 17220
+      "mode": 17220,
+      "john_format": "pkzip"
     },
     {
       "kind": "Regex",
       "match": "^\\$pkzip2\\$3\\*1\\*1\\*0\\*0\\*",
-      "mode": 17225
+      "mode": 17225,
+      "john_format": "pkzip"
     },
     {
       "kind": "Regex",
       "match": "^\\$pkzip2\\$8\\*1\\*1\\*0\\*8\\*",
-      "mode": 17230
+      "mode": 17230,
+      "john_format": "pkzip"
     },
     {
       "kind": "Regex",
@@ -3795,19 +3898,23 @@
       "candidates": [
         {
           "mode": 17200,
-          "popularity": 4
+          "popularity": 4,
+          "john_format": "pkzip"
         },
         {
           "mode": 17210,
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "pkzip"
         },
         {
           "mode": 17220,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "pkzip"
         },
         {
           "mode": 17225,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "pkzip"
         },
         17230,
         20500,
@@ -3832,7 +3939,8 @@
       "candidates": [
         {
           "mode": 23500,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "axcrypt"
         },
         {
           "mode": 23600,
@@ -3852,34 +3960,41 @@
         34301,
         {
           "mode": 13400,
-          "popularity": 6
+          "popularity": 6,
+          "john_format": "keepass"
         }
-      ]
+      ],
+      "john_format": "keepass"
     },
     {
       "kind": "Prefix",
       "match": "$bitwarden$",
-      "mode": 23400
+      "mode": 23400,
+      "john_format": "bitwarden"
     },
     {
       "kind": "Prefix",
       "match": "$bitcoin$",
-      "mode": 11300
+      "mode": 11300,
+      "john_format": "bitcoin"
     },
     {
       "kind": "Prefix",
       "match": "$ethereum$p",
-      "mode": 15600
+      "mode": 15600,
+      "john_format": "ethereum"
     },
     {
       "kind": "Prefix",
       "match": "$ethereum$s",
-      "mode": 15700
+      "mode": 15700,
+      "john_format": "ethereum"
     },
     {
       "kind": "Prefix",
       "match": "$ethereum$w",
-      "mode": 16300
+      "mode": 16300,
+      "john_format": "ethereum"
     },
     {
       "kind": "Regex",
@@ -3909,7 +4024,8 @@
     {
       "kind": "Regex",
       "match": "^\\$multibit\\$3\\*",
-      "mode": 27700
+      "mode": 27700,
+      "john_format": "multibit"
     },
     {
       "kind": "Prefix",
@@ -4093,17 +4209,20 @@
     {
       "kind": "Prefix",
       "match": "$iwork$",
-      "mode": 23300
+      "mode": 23300,
+      "john_format": "iwork"
     },
     {
       "kind": "Prefix",
       "match": "$keychain$",
-      "mode": 23100
+      "mode": 23100,
+      "john_format": "keychain"
     },
     {
       "kind": "Prefix",
       "match": "$xmpp-scram$",
-      "mode": 23200
+      "mode": 23200,
+      "john_format": "xmpp-scram"
     },
     {
       "kind": "Regex",
@@ -4123,7 +4242,8 @@
     {
       "kind": "Prefix",
       "match": "$racf$",
-      "mode": 8500
+      "mode": 8500,
+      "john_format": "racf"
     },
     {
       "kind": "Prefix",
@@ -4148,11 +4268,13 @@
       "candidates": [
         {
           "mode": 15300,
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "DPAPImk"
         },
         {
           "mode": 15310,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "DPAPImk"
         }
       ]
     },
@@ -4164,18 +4286,21 @@
       "candidates": [
         {
           "mode": 15900,
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "DPAPImk"
         },
         {
           "mode": 15910,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "DPAPImk"
         }
       ]
     },
     {
       "kind": "Regex",
       "match": "^\\$fvde\\$1\\$",
-      "mode": 16700
+      "mode": 16700,
+      "john_format": "fvde"
     },
     {
       "kind": "Regex",
@@ -4200,32 +4325,38 @@
     {
       "kind": "Regex",
       "match": "^\\$sshng\\$0\\$",
-      "mode": 22911
+      "mode": 22911,
+      "john_format": "ssh"
     },
     {
       "kind": "Regex",
       "match": "^\\$sshng\\$6\\$",
-      "mode": 22921
+      "mode": 22921,
+      "john_format": "ssh"
     },
     {
       "kind": "Regex",
       "match": "^\\$sshng\\$[13]\\$",
-      "mode": 22931
+      "mode": 22931,
+      "john_format": "ssh"
     },
     {
       "kind": "Regex",
       "match": "^\\$sshng\\$4\\$",
-      "mode": 22941
+      "mode": 22941,
+      "john_format": "ssh"
     },
     {
       "kind": "Regex",
       "match": "^\\$sshng\\$5\\$",
-      "mode": 22951
+      "mode": 22951,
+      "john_format": "ssh"
     },
     {
       "kind": "Regex",
       "match": "^\\$PEM\\$1\\$",
-      "mode": 24410
+      "mode": 24410,
+      "john_format": "pem"
     },
     {
       "kind": "Regex",
@@ -4240,17 +4371,20 @@
     {
       "kind": "Regex",
       "match": "^\\$telegram\\$1\\*",
-      "mode": 22600
+      "mode": 22600,
+      "john_format": "telegram"
     },
     {
       "kind": "Regex",
       "match": "^\\$telegram\\$2\\*",
-      "mode": 24500
+      "mode": 24500,
+      "john_format": "telegram"
     },
     {
       "kind": "Regex",
       "match": "^\\$mozilla\\$.*3DES",
-      "mode": 26000
+      "mode": 26000,
+      "john_format": "mozilla"
     },
     {
       "kind": "Regex",
@@ -4677,7 +4811,8 @@
       "candidates": [
         {
           "mode": 200,
-          "popularity": 5
+          "popularity": 5,
+          "john_format": "mysql"
         },
         {
           "mode": 5100,
@@ -4721,11 +4856,13 @@
       "candidates": [
         {
           "mode": 11500,
-          "popularity": 5
+          "popularity": 5,
+          "john_format": "crc32"
         },
         {
           "mode": 27900,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "crc32"
         },
         {
           "mode": 25700,
@@ -4751,19 +4888,23 @@
       "candidates": [
         {
           "mode": 0,
-          "popularity": 10
+          "popularity": 10,
+          "john_format": "raw-md5"
         },
         {
           "mode": 1000,
-          "popularity": 9
+          "popularity": 9,
+          "john_format": "nt"
         },
         {
           "mode": 900,
-          "popularity": 6
+          "popularity": 6,
+          "john_format": "raw-md4"
         },
         {
           "mode": 3000,
-          "popularity": 4
+          "popularity": 4,
+          "john_format": "lm"
         },
         {
           "mode": 2600,
@@ -4771,7 +4912,8 @@
         },
         {
           "mode": 3500,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "dynamic_3"
         },
         {
           "mode": 4300,
@@ -4779,7 +4921,8 @@
         },
         {
           "mode": 4400,
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "dynamic_22"
         },
         32800,
         50,
@@ -4805,19 +4948,23 @@
       "candidates": [
         {
           "mode": 100,
-          "popularity": 10
+          "popularity": 10,
+          "john_format": "raw-sha1"
         },
         {
           "mode": 190,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "raw-sha1-linkedin"
         },
         {
           "mode": 6000,
-          "popularity": 4
+          "popularity": 4,
+          "john_format": "ripemd-160"
         },
         {
           "mode": 300,
-          "popularity": 4
+          "popularity": 4,
+          "john_format": "mysql-sha1"
         },
         {
           "mode": 4500,
@@ -4826,7 +4973,8 @@
         4600,
         {
           "mode": 4700,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "dynamic_23"
         },
         18500,
         {
@@ -4855,15 +5003,18 @@
       "candidates": [
         {
           "mode": 1300,
-          "popularity": 6
+          "popularity": 6,
+          "john_format": "raw-sha224"
         },
         {
           "mode": 17300,
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "dynamic_370"
         },
         {
           "mode": 17700,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "dynamic_430"
         },
         34400,
         34500
@@ -4877,15 +5028,18 @@
       "candidates": [
         {
           "mode": 1400,
-          "popularity": 9
+          "popularity": 9,
+          "john_format": "raw-sha256"
         },
         {
           "mode": 17400,
-          "popularity": 4
+          "popularity": 4,
+          "john_format": "dynamic_380"
         },
         {
           "mode": 17800,
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "raw-keccak-256"
         },
         {
           "mode": 11700,
@@ -4893,7 +5047,8 @@
         },
         {
           "mode": 6900,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "gost"
         },
         {
           "mode": 31100,
@@ -4939,15 +5094,18 @@
       "candidates": [
         {
           "mode": 10800,
-          "popularity": 6
+          "popularity": 6,
+          "john_format": "raw-sha384"
         },
         {
           "mode": 17500,
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "dynamic_390"
         },
         {
           "mode": 17900,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "dynamic_440"
         },
         10870
       ]
@@ -4960,19 +5118,23 @@
       "candidates": [
         {
           "mode": 1700,
-          "popularity": 8
+          "popularity": 8,
+          "john_format": "raw-sha512"
         },
         {
           "mode": 6100,
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "whirlpool"
         },
         {
           "mode": 17600,
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "raw-sha3"
         },
         {
           "mode": 18000,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "raw-keccak"
         },
         {
           "mode": 11800,
@@ -4999,19 +5161,23 @@
       "candidates": [
         {
           "mode": 10,
-          "popularity": 9
+          "popularity": 9,
+          "john_format": "dynamic_1"
         },
         {
           "mode": 20,
-          "popularity": 8
+          "popularity": 8,
+          "john_format": "dynamic_4"
         },
         {
           "mode": 1100,
-          "popularity": 7
+          "popularity": 7,
+          "john_format": "mscash"
         },
         {
           "mode": 3710,
-          "popularity": 5
+          "popularity": 5,
+          "john_format": "dynamic_9"
         },
         {
           "mode": 3800,
@@ -5019,11 +5185,13 @@
         },
         {
           "mode": 3810,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "dynamic_5"
         },
         {
           "mode": 3610,
-          "popularity": 4
+          "popularity": 4,
+          "john_format": "dynamic_8"
         },
         {
           "mode": 3720,
@@ -5107,15 +5275,18 @@
       "candidates": [
         {
           "mode": 110,
-          "popularity": 8
+          "popularity": 8,
+          "john_format": "dynamic_24"
         },
         {
           "mode": 120,
-          "popularity": 7
+          "popularity": 7,
+          "john_format": "dynamic_25"
         },
         {
           "mode": 190,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "raw-sha1-linkedin"
         },
         {
           "mode": 4900,
@@ -5127,7 +5298,8 @@
         },
         {
           "mode": 8400,
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "wbb3"
         },
         {
           "mode": 4510,
@@ -5192,19 +5364,23 @@
       "candidates": [
         {
           "mode": 1410,
-          "popularity": 8
+          "popularity": 8,
+          "john_format": "dynamic_62"
         },
         {
           "mode": 1420,
-          "popularity": 7
+          "popularity": 7,
+          "john_format": "dynamic_61"
         },
         {
           "mode": 20710,
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "dynamic_65"
         },
         {
           "mode": 20720,
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "dynamic_66"
         },
         {
           "mode": 20730,
@@ -5266,11 +5442,13 @@
       "candidates": [
         {
           "mode": 1710,
-          "popularity": 6
+          "popularity": 6,
+          "john_format": "dynamic_82"
         },
         {
           "mode": 1720,
-          "popularity": 5
+          "popularity": 5,
+          "john_format": "dynamic_81"
         },
         {
           "mode": 1730,
@@ -5295,7 +5473,8 @@
     {
       "kind": "Prefix",
       "match": "$krb5tgs$23$",
-      "mode": 13100
+      "mode": 13100,
+      "john_format": "krb5tgs"
     },
     {
       "kind": "Regex",
@@ -5357,9 +5536,11 @@
         27000,
         {
           "mode": 5500,
-          "popularity": 6
+          "popularity": 6,
+          "john_format": "netntlm / netntlm-naive"
         }
-      ]
+      ],
+      "john_format": "netntlm / netntlm-naive"
     },
     {
       "kind": "Prefix",
@@ -5422,7 +5603,8 @@
     {
       "kind": "Regex",
       "match": "^\\$BLAKE2\\$[A-Fa-f0-9]{128}$",
-      "mode": 600
+      "mode": 600,
+      "john_format": "raw-blake2"
     },
     {
       "kind": "Regex",
@@ -5443,7 +5625,8 @@
     {
       "kind": "Regex",
       "match": "^\\([A-Za-z0-9/+]{20}\\)$",
-      "mode": 8700
+      "mode": 8700,
+      "john_format": "dominosec"
     },
     {
       "kind": "Regex",
@@ -5458,7 +5641,8 @@
       "candidates": [
         {
           "mode": 3000,
-          "popularity": 3
+          "popularity": 3,
+          "john_format": "lm"
         },
         {
           "mode": 5100,
@@ -5478,7 +5662,8 @@
       "candidates": [
         {
           "mode": 1700,
-          "popularity": 7
+          "popularity": 7,
+          "john_format": "raw-sha512"
         },
         {
           "mode": 5720,
@@ -5486,7 +5671,8 @@
         },
         {
           "mode": 17600,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "raw-sha3"
         },
         1770,
         6100,
@@ -5503,7 +5689,8 @@
       "candidates": [
         {
           "mode": 1300,
-          "popularity": 5
+          "popularity": 5,
+          "john_format": "raw-sha224"
         },
         {
           "mode": 30420,
@@ -5511,15 +5698,18 @@
         },
         {
           "mode": 17300,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "dynamic_370"
         },
         {
           "mode": 17700,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "dynamic_430"
         },
         {
           "mode": 34400,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "dynamic_53"
         },
         {
           "mode": 34500,
@@ -5535,21 +5725,25 @@
       "candidates": [
         {
           "mode": 0,
-          "popularity": 10
+          "popularity": 10,
+          "john_format": "raw-md5"
         },
         {
           "mode": 8600,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "lotus5"
         },
         {
           "mode": 9900,
-          "popularity": 2
+          "popularity": 2,
+          "john_format": "radmin"
         },
         70,
         900,
         {
           "mode": 1000,
-          "popularity": 9
+          "popularity": 9,
+          "john_format": "nt"
         },
         2600,
         3500,
@@ -5568,13 +5762,1214 @@
       "candidates": [
         {
           "mode": 13100,
-          "popularity": 6
+          "popularity": 6,
+          "john_format": "krb5tgs"
         },
         {
           "mode": 35300,
           "popularity": 6
         }
       ]
+    },
+    {
+      "kind": "Regex",
+      "match": "^(.+\\$)?[a-z0-9\\/.+]{30}(:.+)?$",
+      "mode": 22,
+      "name": "Juniper Netscreen/SSG (ScreenOS)",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "md5ns"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}(?::.+)?$",
+      "mode": 23,
+      "name": "Skype",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}(?::.+)?$",
+      "mode": 30,
+      "name": "md5(unicode($pass).$salt)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}(?::.+)?$",
+      "mode": 40,
+      "name": "md5($salt.unicode($pass))",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}(?::.+)?$",
+      "mode": 50,
+      "name": "HMAC-MD5 (key = $pass)",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "hmac-md5"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}(?::.+)?$",
+      "mode": 60,
+      "name": "HMAC-MD5 (key = $salt)",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "hmac-md5"
+    },
+    {
+      "kind": "Regex",
+      "match": "^(S:)?[a-f0-9]{40}(:)?[a-f0-9]{20}$",
+      "mode": 112,
+      "name": "Oracle 11g/12c",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "oracle11"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{48}$",
+      "mode": 122,
+      "name": "OSX v10.4",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "xsha"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{40}(:[^:]+)?$",
+      "mode": 130,
+      "name": "sha1(unicode($pass).$salt)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-z0-9\\/+]{27}=$",
+      "mode": 133,
+      "name": "PeopleSoft",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{40}(:[^:]+)?$",
+      "mode": 140,
+      "name": "sha1($salt.unicode($pass))",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{40}(:[^:]+)?$",
+      "mode": 150,
+      "name": "HMAC-SHA1 (key = $pass)",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "hmac-sha1"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{40}(:[^:]+)?$",
+      "mode": 160,
+      "name": "HMAC-SHA1 (key = $salt)",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "hmac-sha1"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{56}(?::.+)?$",
+      "mode": 1310,
+      "name": "sha224($pass.$salt)",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "dynamic_52"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{56}(?::.+)?$",
+      "mode": 1320,
+      "name": "sha224($salt.$pass)",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "dynamic_51"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{70}$",
+      "mode": 1421,
+      "name": "hMailServer",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "hmailserver"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{64}(:.+)?$",
+      "mode": 1430,
+      "name": "sha256(unicode($pass).$salt)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{64}(:.+)?$",
+      "mode": 1440,
+      "name": "sha256($salt.unicode($pass))",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{64}(:.+)?$",
+      "mode": 1450,
+      "name": "HMAC-SHA256 (key = $pass)",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "hmac-sha256"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{64}(:.+)?$",
+      "mode": 1460,
+      "name": "HMAC-SHA256 (key = $salt)",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "hmac-sha256"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{136}$",
+      "mode": 1722,
+      "name": "OSX v10.7",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "xsha512"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{128}(:.+)?$",
+      "mode": 1750,
+      "name": "HMAC-SHA512 (key = $pass)",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "hmac-sha512"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{128}(:.+)?$",
+      "mode": 1760,
+      "name": "HMAC-SHA512 (key = $salt)",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "hmac-sha512"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}(?::.+)?$",
+      "mode": 2630,
+      "name": "md5(md5($pass.$salt))",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}(?::.+)?$",
+      "mode": 3730,
+      "name": "md5($salt1.strtoupper(md5($salt2.$pass)))",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}(?::.+)?$",
+      "mode": 3910,
+      "name": "md5(md5($pass).md5($salt))",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "dynamic_13"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}(?::.+)?$",
+      "mode": 4010,
+      "name": "md5($salt.md5($salt.$pass))",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "dynamic_10"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}(?::.+)?$",
+      "mode": 4110,
+      "name": "md5($salt.md5($pass.$salt))",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "dynamic_11"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}(?::.+)?$",
+      "mode": 4210,
+      "name": "md5($username.0.$pass)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}(?::.+)?$",
+      "mode": 4420,
+      "name": "md5(sha1($pass.$salt))",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}(?::.+)?$",
+      "mode": 4430,
+      "name": "md5(sha1($salt.$pass))",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{40}(:[^:]+)?$",
+      "mode": 4600,
+      "name": "sha1(sha1(sha1($pass)))",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^(\\$chap\\$0\\*)?[a-f0-9]{32}[\\*:][a-f0-9]{32}(:\\d{2})?$",
+      "mode": 4800,
+      "name": "MD5(Chap)",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "chap"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{256}:[a-f0-9]{256}:[a-f0-9]{16}:[a-f0-9]{16}:[a-f0-9]{320}:[a-f0-9]{16}:[a-f0-9]{40}:[a-f0-9]{40}:[a-f0-9]{32}$",
+      "mode": 5300,
+      "name": "IKE-PSK MD5",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{256}:[a-f0-9]{256}:[a-f0-9]{16}:[a-f0-9]{16}:[a-f0-9]{320}:[a-f0-9]{16}:[a-f0-9]{40}:[a-f0-9]{40}:[a-f0-9]{40}$",
+      "mode": 5400,
+      "name": "IKE-PSK SHA1",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{40}:[a-f0-9]{16}$",
+      "mode": 5800,
+      "name": "Android PIN",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 6211,
+      "name": "TrueCrypt RIPEMD160 + XTS 512 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 6212,
+      "name": "TrueCrypt RIPEMD160 + XTS 1024 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 6213,
+      "name": "TrueCrypt RIPEMD160 + XTS 1536 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 6221,
+      "name": "TrueCrypt SHA512 + XTS 512 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 6222,
+      "name": "TrueCrypt SHA512 + XTS 1024 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 6223,
+      "name": "TrueCrypt SHA512 + XTS 1536 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 6231,
+      "name": "TrueCrypt Whirlpool + XTS 512 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 6232,
+      "name": "TrueCrypt Whirlpool + XTS 1024 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 6233,
+      "name": "TrueCrypt Whirlpool + XTS 1536 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 6241,
+      "name": "TrueCrypt RIPEMD160 + XTS 512 bit + boot-mode (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 6242,
+      "name": "TrueCrypt RIPEMD160 + XTS 1024 bit + boot-mode (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 6243,
+      "name": "TrueCrypt RIPEMD160 + XTS 1536 bit + boot-mode (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32,64}:\\d{1,6}:[a-z0-9_.+\\-]+@[a-z0-9\\-]+\\.[a-z0-9\\-.]+(?::[a-f0-9]{32})?$",
+      "mode": 6800,
+      "name": "LastPass / LastPass sniffed",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}(:[a-f0-9]{116,148})?$",
+      "mode": 7350,
+      "name": "IPMI 2.0 RAKP HMAC-MD5",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$fde\\$\\d{2}\\$[a-f0-9]{32}\\$\\d{2}\\$[a-f0-9]{32}\\$[a-f0-9]{3072}$",
+      "mode": 8800,
+      "name": "Android FDE ≤ 4.3",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "fde"
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$pdf\\$1\\*2\\*\\d{2}\\*[-0-9]{1,6}\\*\\d\\*\\d{2}\\*[a-f0-9]{32}\\*\\d{2}\\*[a-f0-9]{64}\\*\\d{2}\\*[a-f0-9]{64}$",
+      "mode": 10410,
+      "name": "PDF 1.1 - 1.3 (Acrobat 2 - 4), collider #1",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "pdf"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}:.{56}$",
+      "mode": 11000,
+      "name": "PrestaShop",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13711,
+      "name": "VeraCrypt RIPEMD160 + XTS 512 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13712,
+      "name": "VeraCrypt RIPEMD160 + XTS 1024 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13713,
+      "name": "VeraCrypt RIPEMD160 + XTS 1536 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13721,
+      "name": "VeraCrypt SHA512 + XTS 512 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13722,
+      "name": "VeraCrypt SHA512 + XTS 1024 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13723,
+      "name": "VeraCrypt SHA512 + XTS 1536 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13731,
+      "name": "VeraCrypt Whirlpool + XTS 512 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13732,
+      "name": "VeraCrypt Whirlpool + XTS 1024 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13733,
+      "name": "VeraCrypt Whirlpool + XTS 1536 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13741,
+      "name": "VeraCrypt RIPEMD160 + XTS 512 bit + boot-mode (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13742,
+      "name": "VeraCrypt RIPEMD160 + XTS 1024 bit + boot-mode (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13743,
+      "name": "VeraCrypt RIPEMD160 + XTS 1536 bit + boot-mode (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13751,
+      "name": "VeraCrypt SHA256 + XTS 512 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13752,
+      "name": "VeraCrypt SHA256 + XTS 1024 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13753,
+      "name": "VeraCrypt SHA256 + XTS 1536 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13761,
+      "name": "VeraCrypt SHA256 + XTS 512 bit + boot-mode (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13762,
+      "name": "VeraCrypt SHA256 + XTS 1024 bit + boot-mode (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13763,
+      "name": "VeraCrypt SHA256 + XTS 1536 bit + boot-mode (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13771,
+      "name": "VeraCrypt Streebog-512 + XTS 512 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13772,
+      "name": "VeraCrypt Streebog-512 + XTS 1024 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13773,
+      "name": "VeraCrypt Streebog-512 + XTS 1536 bit (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13781,
+      "name": "VeraCrypt Streebog-512 + XTS 512 bit + boot-mode (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13782,
+      "name": "VeraCrypt Streebog-512 + XTS 1024 bit + boot-mode (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{1024}$",
+      "mode": 13783,
+      "name": "VeraCrypt Streebog-512 + XTS 1536 bit + boot-mode (legacy)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-z0-9=+\\/]{80}$",
+      "mode": 18800,
+      "name": "Blockchain, My Wallet, Second Password (SHA256)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$ab\\$\\d{1}\\*\\d{1}\\*\\d{1,6}\\*[a-f0-9]{128}\\*[a-f0-9]{128}\\*[a-f0-9]{32}\\*[a-f0-9]{192}$",
+      "mode": 18900,
+      "name": "Android Backup",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "AndroidBackup"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{24}$",
+      "mode": 20500,
+      "name": "PKZIP Master Key",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{24}$",
+      "mode": 20510,
+      "name": "PKZIP Master Key (6 byte optimization)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}(?::.+)?$",
+      "mode": 21310,
+      "name": "md5($salt1.sha1($salt2.$pass))",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{64}(:.+)?$",
+      "mode": 21400,
+      "name": "sha256(sha256_raw($pass))",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "dynamic_64"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}(?::.+)?$",
+      "mode": 21900,
+      "name": "md5(md5(md5($pass.$salt1)).$salt2)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$bitlocker\\$\\d\\$\\d{2}\\$[a-f0-9]{32}\\$\\d{7}\\$\\d{2}\\$[a-f0-9]{24}\\$\\d{2}\\$[a-f0-9]{120}$",
+      "mode": 22100,
+      "name": "BitLocker",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "bitlocker"
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$bcve\\$\\d\\$[a-f0-9]{2}\\$[a-f0-9]{16}\\$[a-f0-9]{192}$",
+      "mode": 23900,
+      "name": "Jetico BestCrypt v3 Volume Encryption",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{40}(:[^:]+)?$",
+      "mode": 24300,
+      "name": "sha1($salt.sha1($pass.$salt))",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{10}$",
+      "mode": 24700,
+      "name": "Stuffit5",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^(?=.{28})(?:[a-z0-9+\\/]{4})*(?:|(?:[a-z0-9+\\/]{3}=)|(?:[a-z0-9+\\/]{2}==)|(?:[a-z0-9+\\/]{1}===))$",
+      "mode": 24800,
+      "name": "Umbraco HMAC-SHA1",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^(?:\\$dahua\\$)?[a-z0-9]{8}$",
+      "mode": 24900,
+      "name": "Dahua (MD5 Authentication)",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "dahua"
+    },
+    {
+      "kind": "Regex",
+      "match": "^SH2(?=.{60})(?:[a-z0-9+/]{4})*(?:|(?:[a-z0-9+/]{3}=)|(?:[a-z0-9+/]{2}==)|(?:[a-z0-9+/]{1}===))$",
+      "mode": 26300,
+      "name": "FortiGate256 (FortiOS256)",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "fortigate256"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}:.+$",
+      "mode": 26401,
+      "name": "AES-128-ECB NOKDF (PT = $salt, key = $pass)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}:.+$",
+      "mode": 26402,
+      "name": "AES-192-ECB NOKDF (PT = $salt, key = $pass)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}:.+$",
+      "mode": 26403,
+      "name": "AES-256-ECB NOKDF (PT = $salt, key = $pass)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$uido\\$[a-f0-9]{32}\\$[a-f0-9]{40}\\$\\d{1,7}\\$[a-f0-9]{80}$",
+      "mode": 26500,
+      "name": "iPhone passcode (UID key + System Keybag)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[^\\/:*?\"<>|]{0,60}::[^\\/:*?\"<>|]{0,45}:[a-f0-9]{0,48}:[a-f0-9]{48}:[a-f0-9]{16}$",
+      "mode": 27000,
+      "name": "NetNTLMv1 / NetNTLMv1+ESS (NT)",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "netntlm / netntlm-naive"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[^\\/:*?\"<>|]{0,60}::[^\\/:*?\"<>|]{0,45}:[a-f0-9]{16}:[a-f0-9]{32}:[a-f0-9]{2,1024}$",
+      "mode": 27100,
+      "name": "NetNTLMv2 (NT)",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "netntlmv2"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{40}(:[^:]+)?$",
+      "mode": 27200,
+      "name": "Ruby on Rails Restful Auth (one round, no sitekey)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^EXODUS:\\d{1,6}:\\d{1,6}:\\d{1,6}:(?=[^:]{44})(?:[a-z0-9+/]{4})*(?:|(?:[a-z0-9+/]{3}=)|(?:[a-z0-9+/]{2}==)|(?:[a-z0-9+/]{1}===)):(?=[^:]{16})(?:[a-z0-9+/]{4})*(?:|(?:[a-z0-9+/]{3}=)|(?:[a-z0-9+/]{2}==)|(?:[a-z0-9+/]{1}===)):(?=[^:]{44})(?:[a-z0-9+/]{4})*(?:|(?:[a-z0-9+/]{3}=)|(?:[a-z0-9+/]{2}==)|(?:[a-z0-9+/]{1}===)):(?=[^:]{24})(?:[a-z0-9+/]{4})*(?:|(?:[a-z0-9+/]{3}=)|(?:[a-z0-9+/]{2}==)|(?:[a-z0-9+/]{1}===))$",
+      "mode": 28200,
+      "name": "Exodus Desktop Wallet (scrypt)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$teamspeak\\$3\\$(?=[^$]{28}\\$)(?:[a-z0-9+/]{4})*(?:|(?:[a-z0-9+/]{3}=)|(?:[a-z0-9+/]{2}==)|(?:[a-z0-9+/]{1}===))\\$(?=[^$]{152}$)(?:[a-z0-9+/]{4})*(?:|(?:[a-z0-9+/]{3}=)|(?:[a-z0-9+/]{2}==)|(?:[a-z0-9+/]{1}===))$",
+      "mode": 28300,
+      "name": "Teamspeak 3 (channel hash)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-z0-9]{34}$",
+      "mode": 28506,
+      "name": "Bitcoin WIF private key (P2SH(P2WPKH)), uncompressed",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{40}:[a-f0-9]+:[a-f0-9]+$",
+      "mode": 29000,
+      "name": "sha1($salt.sha1(utf16le($username).':'.utf16le($pass)))",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$truecrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29311,
+      "name": "TrueCrypt RIPEMD160 + XTS 512 bit",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$truecrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29313,
+      "name": "TrueCrypt RIPEMD160 + XTS 1536 bit",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$truecrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29321,
+      "name": "TrueCrypt SHA512 + XTS 512 bit",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$truecrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29322,
+      "name": "TrueCrypt SHA512 + XTS 1024 bit",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$truecrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29323,
+      "name": "TrueCrypt SHA512 + XTS 1536 bit",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$truecrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29331,
+      "name": "TrueCrypt Whirlpool + XTS 512 bit",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$truecrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29332,
+      "name": "TrueCrypt Whirlpool + XTS 1024 bit",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$truecrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29333,
+      "name": "TrueCrypt Whirlpool + XTS 1536 bit",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$truecrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29341,
+      "name": "TrueCrypt RIPEMD160 + XTS 512 bit + boot-mode",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$truecrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29342,
+      "name": "TrueCrypt RIPEMD160 + XTS 1024 bit + boot-mode",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$truecrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29343,
+      "name": "TrueCrypt RIPEMD160 + XTS 1536 bit + boot-mode",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$veracrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29411,
+      "name": "VeraCrypt RIPEMD160 + XTS 512 bit",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$veracrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29412,
+      "name": "VeraCrypt RIPEMD160 + XTS 1024 bit",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$veracrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29413,
+      "name": "VeraCrypt RIPEMD160 + XTS 1536 bit",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$veracrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29421,
+      "name": "VeraCrypt SHA512 + XTS 512 bit",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$veracrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29422,
+      "name": "VeraCrypt SHA512 + XTS 1024 bit",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$veracrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29431,
+      "name": "VeraCrypt Whirlpool + XTS 512 bit",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$veracrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29432,
+      "name": "VeraCrypt Whirlpool + XTS 1024 bit",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$veracrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29433,
+      "name": "VeraCrypt Whirlpool + XTS 1536 bit",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$veracrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29441,
+      "name": "VeraCrypt RIPEMD160 + XTS 512 bit + boot-mode",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$veracrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29442,
+      "name": "VeraCrypt RIPEMD160 + XTS 1024 bit + boot-mode",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$veracrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29453,
+      "name": "VeraCrypt SHA256 + XTS 1536 bit",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$veracrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29461,
+      "name": "VeraCrypt SHA256 + XTS 512 bit + boot-mode",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$veracrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29462,
+      "name": "VeraCrypt SHA256 + XTS 1024 bit + boot-mode",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$veracrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29463,
+      "name": "VeraCrypt SHA256 + XTS 1536 bit + boot-mode",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$veracrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29471,
+      "name": "VeraCrypt Streebog-512 + XTS 512 bit",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$veracrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29472,
+      "name": "VeraCrypt Streebog-512 + XTS 1024 bit",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$veracrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29473,
+      "name": "VeraCrypt Streebog-512 + XTS 1536 bit",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$veracrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29481,
+      "name": "VeraCrypt Streebog-512 + XTS 512 bit + boot-mode",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$veracrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29482,
+      "name": "VeraCrypt Streebog-512 + XTS 1024 bit + boot-mode",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$veracrypt\\$[a-f0-9]{128}\\$[a-f0-9]{896}$",
+      "mode": 29483,
+      "name": "VeraCrypt Streebog-512 + XTS 1536 bit + boot-mode",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}[a-f0-9]{32}(?=[^$]{108}$)(?:[a-z0-9+/]{4})*(?:|(?:[a-z0-9+/]{3}=)|(?:[a-z0-9+/]{2}==)|(?:[a-z0-9+/]{1}===))$",
+      "mode": 29600,
+      "name": "Terra Station Wallet (AES256-CBC(PBKDF2($pass)))",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}(?::.+)?$",
+      "mode": 30500,
+      "name": "md5(md5($salt).md5(md5($pass)))",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}(?::.+)?$",
+      "mode": 31700,
+      "name": "md5(md5(md5($pass).$salt1).$salt2)",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "dynamic_16"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{128}(:.+)?$",
+      "mode": 32410,
+      "name": "sha512(sha512($pass).$salt)",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "dynamic_85"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{128}(:.+)?$",
+      "mode": 32420,
+      "name": "sha512(sha512_bin($pass).$salt)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}(?::.+)?$",
+      "mode": 32800,
+      "name": "md5(sha1(md5($pass)))",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}(?::.+)?$",
+      "mode": 33000,
+      "name": "md5($salt1.$pass.$salt2)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{32}(?::.+)?$",
+      "mode": 33100,
+      "name": "md5($salt.md5($pass).$salt)",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "dynamic_14"
+    },
+    {
+      "kind": "Regex",
+      "match": "^(?:.+:)?\\$keepass\\$\\*4\\*\\d{1,5}\\*ef636ddf\\*\\d{3,12}\\*\\d{1,3}\\*\\d{1,3}\\*[a-f0-9]{64}\\*[a-f0-9]{64}\\*[a-f0-9]+\\*[a-f0-9]{64}$",
+      "mode": 34300,
+      "name": "KeePass 2 (KDBX 4) / AES-Twofish-ChaCha20 256 enc. / Argon2d KDF / without keyfile",
+      "category": "Imported/Haiti",
+      "verified": false,
+      "john_format": "keepass"
+    },
+    {
+      "kind": "Regex",
+      "match": "^[a-f0-9]{64}(:.+)?$",
+      "mode": 34600,
+      "name": "MD6-256",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$blockchain\\$\\d{1,6}\\$[a-f0-9]{144,65536}$",
+      "mode": 34700,
+      "name": "Blockchain, My Wallet, Legacy Wallets",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$BLAKE2\\$[a-f0-9]{64}:.+$",
+      "mode": 34810,
+      "name": "BLAKE2-256($pass.$salt) (blake2b)",
+      "category": "Imported/Haiti",
+      "verified": false
+    },
+    {
+      "kind": "Regex",
+      "match": "^\\$BLAKE2\\$[a-f0-9]{64}:.+$",
+      "mode": 34820,
+      "name": "BLAKE2-256($salt.$pass) (blake2b)",
+      "category": "Imported/Haiti",
+      "verified": false
     }
   ]
 }
