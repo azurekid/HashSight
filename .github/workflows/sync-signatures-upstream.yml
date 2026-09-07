@@ -28,7 +28,41 @@ jobs:
       - name: Validate signatures file
         run: python -c "from hashsight import load_signatures; print(len(load_signatures()))"
 
+      - name: Check pull request permission
+        id: pr_permission
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          can_create_pr = False
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          url = f"https://api.github.com/repos/{repo}/actions/permissions/workflow"
+          req = urllib.request.Request(
+              url,
+              headers={
+                  "Authorization": "Bearer " + token,
+                  "Accept": "application/vnd.github+json",
+              },
+          )
+
+          try:
+              with urllib.request.urlopen(req) as response:
+                  payload = json.load(response)
+              can_create_pr = bool(payload.get("can_approve_pull_request_reviews", False))
+          except Exception as exc:
+              print(f"Unable to verify pull request permission: {exc}")
+
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"can_create_pr={'true' if can_create_pr else 'false'}\n")
+          PY
+
       - name: Create pull request
+        if: steps.pr_permission.outputs.can_create_pr == 'true'
         uses: peter-evans/create-pull-request@v7
         with:
           commit-message: "chore(signatures): sync upstream hashcat john haiti data"
@@ -48,3 +82,8 @@ jobs:
           add-paths: |
             hashsight/data/signatures.json
             hashsight/data/upstream/*
+
+      - name: Skip pull request creation when restricted
+        if: steps.pr_permission.outputs.can_create_pr != 'true'
+        run: |
+          echo "::warning::Repository settings currently prevent GitHub Actions from creating pull requests. Upstream sync changes were pushed to branch 'chore/signatures-upstream-sync'."
