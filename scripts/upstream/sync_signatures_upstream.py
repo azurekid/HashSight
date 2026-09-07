@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import json
 import re
+import urllib.error
 import urllib.request
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -35,6 +36,7 @@ HAITI_PROTOTYPES_URL = "https://raw.githubusercontent.com/noraj/haiti/master/dat
 @dataclass
 class SyncStats:
     fetched_files: int = 0
+    cached_files_reused: int = 0
     hashcat_modes_total: int = 0
     hashcat_modes_in_local_before: int = 0
     hashcat_modes_in_local_after: int = 0
@@ -47,6 +49,7 @@ class SyncStats:
     local_modes_before: int = 0
     local_modes_after: int = 0
     added_modes: int = 0
+    mode_catalog_entries_repaired: int = 0
     john_fields_enriched: int = 0
 
 
@@ -58,6 +61,35 @@ def _fetch_text(url: str) -> str:
 
 def _fetch_json(url: str) -> Any:
     return json.loads(_fetch_text(url))
+
+
+def _load_text_source(url: str, cache_path: Path) -> tuple[str, bool]:
+    try:
+        text = _fetch_text(url)
+    except (urllib.error.URLError, OSError, TimeoutError) as exc:
+        if not cache_path.is_file():
+            raise
+        print(f"warning: failed to fetch {url}; using cached {cache_path.name}: {exc}")
+        return cache_path.read_text(encoding="utf-8"), False
+
+    cache_path.write_text(text, encoding="utf-8")
+    return text, True
+
+
+def _load_json_source(url: str, cache_path: Path) -> tuple[Any, bool]:
+    try:
+        payload = _fetch_json(url)
+    except (urllib.error.URLError, OSError, TimeoutError) as exc:
+        if not cache_path.is_file():
+            raise
+        print(f"warning: failed to fetch {url}; using cached {cache_path.name}: {exc}")
+        return json.loads(cache_path.read_text(encoding="utf-8")), False
+
+    cache_path.write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    return payload, True
 
 
 def _local_mode_set(signatures: list[dict[str, Any]]) -> set[int]:
@@ -233,6 +265,41 @@ def _collect_local_john_formats(signatures: list[dict[str, Any]]) -> set[str]:
     return values
 
 
+def _collect_mode_metadata(signatures: list[dict[str, Any]]) -> dict[int, dict[str, str]]:
+    values: dict[int, dict[str, str]] = {}
+
+    def add(mode: Any, *, name: Any, category: Any, john_format: Any) -> None:
+        if not isinstance(mode, int) or isinstance(mode, bool):
+            return
+
+        meta = values.setdefault(mode, {})
+        if _has_nonempty_string(name) and "name" not in meta:
+            meta["name"] = name.strip()
+        if _has_nonempty_string(category) and "category" not in meta:
+            meta["category"] = category.strip()
+        if _has_nonempty_string(john_format) and "john_format" not in meta:
+            meta["john_format"] = john_format.strip()
+
+    for entry in signatures:
+        add(
+            entry.get("mode"),
+            name=entry.get("name"),
+            category=entry.get("category"),
+            john_format=entry.get("john_format"),
+        )
+        for candidate in entry.get("candidates") or []:
+            if not isinstance(candidate, dict):
+                continue
+            add(
+                candidate.get("mode"),
+                name=candidate.get("name"),
+                category=candidate.get("category"),
+                john_format=candidate.get("john_format"),
+            )
+
+    return values
+
+
 def _catalog_meta_for_mode(mode_catalog: dict[str, Any] | None, mode: Any) -> dict[str, Any]:
     if not isinstance(mode_catalog, dict) or not isinstance(mode, int) or isinstance(mode, bool):
         return {}
@@ -310,25 +377,85 @@ def _validate_signature_shape(signatures: list[dict[str, Any]], mode_catalog: di
                 raise ValueError(f"signatures[{idx}].candidates[{c_idx}] missing/invalid category")
 
 
+def _repair_mode_catalog(
+    signatures_doc: dict[str, Any],
+    hashcat_modes: dict[int, str],
+    haiti_records: dict[int, dict[str, Any]],
+) -> int:
+    signatures = signatures_doc.get("signatures") or []
+    mode_catalog = signatures_doc.get("modes")
+    if mode_catalog is None:
+        mode_catalog = {}
+        signatures_doc["modes"] = mode_catalog
+    if not isinstance(mode_catalog, dict):
+        raise ValueError("signatures.json does not contain a valid modes object")
+
+    local_meta = _collect_mode_metadata(signatures)
+    repaired = 0
+
+    for mode in sorted(_local_mode_set(signatures)):
+        current = mode_catalog.get(str(mode))
+        meta = dict(current) if isinstance(current, dict) else {}
+        previous = dict(meta)
+
+        if not _has_nonempty_string(meta.get("name")):
+            for candidate in (
+                local_meta.get(mode, {}).get("name"),
+                hashcat_modes.get(mode),
+                haiti_records.get(mode, {}).get("name"),
+            ):
+                if _has_nonempty_string(candidate):
+                    meta["name"] = candidate.strip()
+                    break
+
+        if not _has_nonempty_string(meta.get("category")):
+            category = local_meta.get(mode, {}).get("category")
+            if _has_nonempty_string(category):
+                meta["category"] = category.strip()
+            elif _has_nonempty_string(meta.get("name")):
+                meta["category"] = "Catalog Fallback"
+
+        if not _has_nonempty_string(meta.get("john_format")):
+            for candidate in (
+                local_meta.get(mode, {}).get("john_format"),
+                haiti_records.get(mode, {}).get("john"),
+            ):
+                if _has_nonempty_string(candidate):
+                    meta["john_format"] = candidate.strip()
+                    break
+
+        if meta != previous or not isinstance(current, dict):
+            mode_catalog[str(mode)] = meta
+            repaired += 1
+
+    return repaired
+
+
 def main() -> int:
     UPSTREAM_DIR.mkdir(parents=True, exist_ok=True)
 
     stats = SyncStats()
 
-    hashcat_page = _fetch_text(HASHCAT_EXAMPLES_URL)
-    (UPSTREAM_DIR / "hashcat-example-hashes.html").write_text(hashcat_page, encoding="utf-8")
-    stats.fetched_files += 1
-
-    john_page = _fetch_text(JOHN_FORMATS_URL)
-    (UPSTREAM_DIR / "john-pentestmonkey.html").write_text(john_page, encoding="utf-8")
-    stats.fetched_files += 1
-
-    haiti_prototypes = _fetch_json(HAITI_PROTOTYPES_URL)
-    (UPSTREAM_DIR / "haiti-prototypes.json").write_text(
-        json.dumps(haiti_prototypes, indent=2, ensure_ascii=False) + "\n",
-        encoding="utf-8",
+    hashcat_page, hashcat_fetched = _load_text_source(
+        HASHCAT_EXAMPLES_URL,
+        UPSTREAM_DIR / "hashcat-example-hashes.html",
     )
-    stats.fetched_files += 1
+    stats.fetched_files += int(hashcat_fetched)
+    stats.cached_files_reused += int(not hashcat_fetched)
+
+    john_page, john_fetched = _load_text_source(
+        JOHN_FORMATS_URL,
+        UPSTREAM_DIR / "john-pentestmonkey.html",
+    )
+    stats.fetched_files += int(john_fetched)
+    stats.cached_files_reused += int(not john_fetched)
+
+    haiti_prototypes, haiti_fetched = _load_json_source(
+        HAITI_PROTOTYPES_URL,
+        UPSTREAM_DIR / "haiti-prototypes.json",
+    )
+    stats.fetched_files += int(haiti_fetched)
+    stats.cached_files_reused += int(not haiti_fetched)
 
     signatures_doc = json.loads(SIGNATURES_PATH.read_text(encoding="utf-8"))
     signatures = signatures_doc.get("signatures") or []
@@ -349,6 +476,11 @@ def main() -> int:
 
     stats.john_fields_enriched = _enrich_existing_john_formats(signatures, haiti_records)
     stats.added_modes = _append_missing_modes(signatures, haiti_records)
+    stats.mode_catalog_entries_repaired = _repair_mode_catalog(
+        signatures_doc,
+        hashcat_modes,
+        haiti_records,
+    )
 
     _validate_signature_shape(signatures, signatures_doc.get("modes"))
 
@@ -377,6 +509,7 @@ def main() -> int:
         },
         "stats": {
             "fetched_files": stats.fetched_files,
+            "cached_files_reused": stats.cached_files_reused,
             "hashcat_modes_total": stats.hashcat_modes_total,
             "hashcat_modes_in_local_before": stats.hashcat_modes_in_local_before,
             "hashcat_modes_in_local_after": stats.hashcat_modes_in_local_after,
@@ -389,6 +522,7 @@ def main() -> int:
             "local_modes_before": stats.local_modes_before,
             "local_modes_after": stats.local_modes_after,
             "added_modes": stats.added_modes,
+            "mode_catalog_entries_repaired": stats.mode_catalog_entries_repaired,
             "john_fields_enriched": stats.john_fields_enriched,
         },
     }
