@@ -244,7 +244,12 @@ def _has_nonempty_string(value: Any) -> bool:
 
 
 def _validate_signature_shape(signatures: list[dict[str, Any]], mode_catalog: dict[str, Any] | None = None) -> None:
-    """Fail fast on malformed entries before writing signatures.json."""
+    """Fail fast on malformed entries before writing signatures.json.
+
+    Candidate references may be stored either as bare integer modes or as objects
+    that override catalog metadata while still resolving missing fields from the
+    top-level ``modes`` catalog.
+    """
     for idx, entry in enumerate(signatures):
         if not isinstance(entry, dict):
             raise ValueError(f"signatures[{idx}] must be an object")

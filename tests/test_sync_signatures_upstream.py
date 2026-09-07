@@ -16,6 +16,21 @@ def test_validate_signature_shape_accepts_normalized_catalog_document() -> None:
     _validate_signature_shape(doc["signatures"], doc.get("modes"))
 
 
+def test_validate_signature_shape_accepts_integer_candidate_references() -> None:
+    _validate_signature_shape(
+        [
+            {
+                "kind": "Prefix",
+                "match": "$P$",
+                "name": "phpass, phpBB3 (MD5)",
+                "category": "Web Application",
+                "candidates": [35700],
+            }
+        ],
+        {"35700": {"name": "md5(sha1($pass))", "category": "Salted Digest"}},
+    )
+
+
 def test_validate_signature_shape_requires_resolvable_name_metadata() -> None:
     with pytest.raises(ValueError, match=r"signatures\[0\] missing/invalid name"):
         _validate_signature_shape([{"kind": "Prefix", "match": "$x$", "mode": 1}], {})
