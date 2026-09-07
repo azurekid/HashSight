@@ -29,6 +29,8 @@ jobs:
         run: python -c "from hashsight import load_signatures; print(len(load_signatures()))"
 
       - name: Create pull request
+        id: create_pr
+        continue-on-error: true
         uses: peter-evans/create-pull-request@v7
         with:
           commit-message: "chore(signatures): sync upstream hashcat john haiti data"
@@ -48,3 +50,8 @@ jobs:
           add-paths: |
             hashsight/data/signatures.json
             hashsight/data/upstream/*
+
+      - name: Skip pull request creation when restricted
+        if: steps.create_pr.outcome == 'failure'
+        run: |
+          echo "::warning::Pull request creation failed. If repository settings disallow GitHub Actions PR creation, create the PR manually from branch 'chore/signatures-upstream-sync'."
