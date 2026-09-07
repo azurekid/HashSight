@@ -1,9 +1,16 @@
 import json
+import urllib.error
 from pathlib import Path
 
 import pytest
 
-from scripts.upstream.sync_signatures_upstream import _collect_local_john_formats, _validate_signature_shape
+from scripts.upstream.sync_signatures_upstream import (
+    _collect_local_john_formats,
+    _load_text_source,
+    _parse_hashcat_mode_names,
+    _repair_mode_catalog,
+    _validate_signature_shape,
+)
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -83,3 +90,65 @@ def test_collect_local_john_formats_skips_integer_candidate_references() -> None
     )
 
     assert values == {"raw-md5", "raw-sha1"}
+
+
+def test_load_text_source_uses_cache_when_fetch_fails(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    cache_path = tmp_path / "john-pentestmonkey.html"
+    cache_path.write_text("cached payload", encoding="utf-8")
+
+    def fail_fetch(_: str) -> str:
+        raise urllib.error.URLError("network down")
+
+    monkeypatch.setattr("scripts.upstream.sync_signatures_upstream._fetch_text", fail_fetch)
+
+    text, fetched = _load_text_source("https://example.test/john", cache_path)
+
+    assert text == "cached payload"
+    assert fetched is False
+
+
+def test_parse_hashcat_mode_names_strips_superscript_footnotes() -> None:
+    html = """
+    <table>
+      <tr>
+        <td>500</td>
+        <td>md5crypt, MD5 (Unix), Cisco-IOS $1$ (MD5) <sup>2</sup></td>
+      </tr>
+    </table>
+    """
+
+    assert _parse_hashcat_mode_names(html) == {
+        500: "md5crypt, MD5 (Unix), Cisco-IOS $1$ (MD5)"
+    }
+
+
+def test_repair_mode_catalog_restores_missing_compact_mode_metadata() -> None:
+    doc = {
+        "modes": {},
+        "signatures": [
+            {
+                "kind": "Prefix",
+                "match": "$1$",
+                "mode": 500,
+                "john_format": "md5crypt",
+            }
+        ],
+    }
+
+    repaired = _repair_mode_catalog(
+        doc,
+        {500: "md5crypt, MD5 (Unix), Cisco-IOS $1$ (MD5)"},
+        {500: {"name": "MD5 Crypt", "john": "md5crypt"}},
+    )
+
+    assert repaired == 1
+    assert doc["modes"]["500"] == {
+        "name": "md5crypt, MD5 (Unix), Cisco-IOS $1$ (MD5)",
+        "category": "Catalog Fallback",
+        "john_format": "md5crypt",
+    }
+
+    _validate_signature_shape(doc["signatures"], doc["modes"])
