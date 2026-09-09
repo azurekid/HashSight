@@ -1,5 +1,5 @@
 {
-  "timestamp_utc": "2026-09-07T14:23:20.991375+00:00",
+  "timestamp_utc": "2026-09-09T12:58:27.044436+00:00",
   "sources": {
     "hashcat_examples": "https://hashcat.net/wiki/doku.php?id=example_hashes",
     "john_formats": "https://pentestmonkey.net/cheat-sheet/john-the-ripper-hash-formats",
