@@ -4,6 +4,7 @@
  lang="en" dir="ltr">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>
     example_hashes    [hashcat wiki]
   </title>
@@ -16,15 +17,19 @@
 <link rel="manifest" href="/wiki/lib/exe/manifest.php" crossorigin="use-credentials"/>
 <link rel="alternate" type="text/html" title="Plain HTML" href="/wiki/doku.php?do=export_xhtml&amp;id=example_hashes"/>
 <link rel="canonical" href="https://hashcat.net/wiki/doku.php?id=example_hashes"/>
-<link rel="stylesheet" href="/wiki/lib/exe/css.php?t=hashcat&amp;tseed=54a13b3b1776db14543e4c79e854d858"/>
+<link rel="stylesheet" href="/wiki/lib/exe/css.php?t=hashcat&amp;tseed=f9a63232019b7e73afa41bc164927164"/>
 <script >var NS='';var JSINFO = {"plugins":{"tablelayout":{"features_active_by_default":0}},"toc":{"initial_state":1},"id":"example_hashes","namespace":"","ACT":"show","useHeadingNavigation":0,"useHeadingContent":0};(function(H){H.className=H.className.replace(/\bno-js\b/,'js')})(document.documentElement);</script>
-<script src="/wiki/lib/exe/jquery.php?tseed=8faf3dc90234d51a499f4f428a0eae43"></script>
-<script src="/wiki/lib/exe/js.php?t=hashcat&amp;tseed=54a13b3b1776db14543e4c79e854d858"></script>
+<script src="/wiki/lib/exe/jquery.php?tseed=8faf3dc90234d51a499f4f428a0eae43" defer="defer"></script>
+<script src="/wiki/lib/exe/js.php?t=hashcat&amp;tseed=f9a63232019b7e73afa41bc164927164" defer="defer"></script>
 
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-  <link media="screen" type="text/css" href="/s/wiki.css" rel="StyleSheet" />
+  <link media="screen" type="text/css" href="/s/wiki.css?v=20260927a" rel="StyleSheet" />
+    <link media="screen" type="text/css" href="/s/type.css?v=6" rel="StyleSheet" />
 
-  </head>
+  
+  <script>try{var t=localStorage.getItem("hashcat-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+  <script src="/s/theme.js?v=8" defer></script>
+</head>
 
 <body>
 <div id="container">
@@ -41,8 +46,7 @@
 				<li><a href="/hashcat/" title="hashcat">hashcat</a></li>
 				<li><a href="/forum/" title="Forums">Forums</a></li>
 				<li class="open"><a href="/wiki/" title="Wiki">Wiki</a></li>
-				<li><a href="/tools/" title="Tools">Tools</a></li>
-				<li><a href="/events/" title="Events">Events</a></li>
+				<li><a href="/cap2hashcat/" title="Converter">Converter</a></li>
 			</ul>
 
 			<div class="clear">
@@ -84,6 +88,7 @@
     
     
   </div>
+  
   
   
   <div class="page">
@@ -1813,7 +1818,7 @@ Joomla (MD5) </td><td class="col2"> $P$9d2OMJEOHyPg11MeSv46hashcatG.F1 </td>
 		<td class="col0"> 33300 </td><td class="col1"> HMAC-BLAKE2S (key = $pass) </td><td class="col2"> 0d541ae24d30aff2627c4d1a910f766088a64809edb46a05d29649a9b944da6c:1234 </td>
 	</tr>
 	<tr class="row551">
-		<td class="col0"> 33400 </td><td class="col1"> mega.nz password-protected link (PBKDF2-HMAC-SHA512) </td><td class="col2"> P!AgD<em class="u"></em><em class="u"></em>U2XVjJi1vxkJgMPf5rkQYUn1H_6WI_sKtiic69mqBKP<em class="u"></em><em class="u"></em><em class="u"></em><em class="u"></em><em class="u"></em>_O_PDG0Om7BSapL1QoRAgUrz9vzaZmrYnU8t-Au6hteg </td>
+		<td class="col0"> 33400 </td><td class="col1"> mega.nz password-protected link (PBKDF2-HMAC-SHA512) </td><td class="col2"> P!AgD______<em class="u">U2XVjJi1vxkJgMPf5rkQYUn1H_6WI_sKtiic69mqBKP</em>___________________O_PDG0Om7BSapL1QoRAgUrz9vzaZmrYnU8t-Au6hteg </td>
 	</tr>
 	<tr class="row552">
 		<td class="col0"> 33600 </td><td class="col1"> RIPEMD-320 </td><td class="col2"> 8339009b816d4e4c2a6be3c6e1daac6aca69a7670ecdc583adfca0db17cc8f08ce35d6c759b038ab </td>
@@ -1904,7 +1909,7 @@ Joomla (MD5) </td><td class="col2"> $P$9d2OMJEOHyPg11MeSv46hashcatG.F1 </td>
 
 <sup>3</sup> Same format as in <sup>2</sup> but the number of rounds <strong>must</strong> be specified<br/>
 
-<sup>4</sup> The hash used here is <strong>not</strong> the one sent via e.g. the web interface to LastPass servers (pbkdf2_sha256_hex (pbkdf2_sha256 ($pass, $email, $iterations), $pass, 1) but instead the one stored (by e.g. your browser or the pocket version) to disk. For instance, Opera and Chrome store the hash in local SQLite databases; Firefox uses files ending with “lpall.slps” - for Linux: 2nd line is interesting / base64 decode it; for Windows, see <a href="https://hashcat.net/forum/thread-2701-post-16111.html#pid16111" class="urlextern" title="https://hashcat.net/forum/thread-2701-post-16111.html#pid16111" rel="ugc nofollow">here</a> - and_key.itr<br/>
+<sup>4</sup> This is not the hash sent to LastPass through its web interface. It is the hash stored on disk by some clients, including browsers and the Pocket version. The web-interface hash is pbkdf2_sha256_hex (pbkdf2_sha256 ($pass, $email, $iterations), $pass, 1). For instance, Opera and Chrome store the hash in local SQLite databases; Firefox uses files ending with “lpall.slps” - for Linux: 2nd line is interesting / base64 decode it; for Windows, see <a href="https://hashcat.net/forum/thread-2701-post-16111.html#pid16111" class="urlextern" title="https://hashcat.net/forum/thread-2701-post-16111.html#pid16111" rel="ugc nofollow">here</a> - and_key.itr<br/>
 
 <sup>5</sup> You can consider the second part as a “salt”. If it is equal to 00000000, the CRC32 code will be considered as “not salted”<br/>
 
@@ -1942,7 +1947,7 @@ Joomla (MD5) </td><td class="col2"> $P$9d2OMJEOHyPg11MeSv46hashcatG.F1 </td>
 <p>
 <br/>
 
-<sup>20</sup> Password: “hashcat_hashcat_hashcat_hashcat_”<br/>
+<sup>20</sup> Password: “hashcat_hashcat_hashcat_hashcat_“<br/>
 
 <sup>21</sup> you can extract the hashes with <a href="https://github.com/0x6470/bitwarden2hashcat" class="urlextern" title="https://github.com/0x6470/bitwarden2hashcat" rel="ugc nofollow">https://github.com/0x6470/bitwarden2hashcat</a><br/>
 
@@ -2139,7 +2144,7 @@ These hash types are only supported in <a href="/wiki/doku.php?id=hashcat-legacy
 		<td class="col0"> <del>3720</del> </td><td class="col1"> <del>md5($pass.md5($salt))</del> <sup>1</sup> </td><td class="col2"> 10ce488714fdbde9453670e0e4cbe99c:1234 </td>
 	</tr>
 	<tr class="row7">
-		<td class="col0"> <del>3721</del> </td><td class="col1"> <del>WebEdition <abbr title="Content Management System">CMS</abbr></del> <sup>1</sup> </td><td class="col2"> fa01af9f0de5f377ae8befb03865178e:​5678 </td>
+		<td class="col0"> <del>3721</del> </td><td class="col1"> <del>WebEdition <abbr title="Content Management System">CMS</abbr></del> <sup>1</sup> </td><td class="col2"> fa01af9f0de5f377ae8befb03865178e:5678 </td>
 	</tr>
 	<tr class="row8">
 		<td class="col0"> <del>4210</del> </td><td class="col1"> <del>md5($username.0.$pass)</del> <sup>1</sup> </td><td class="col2"> 09ea048c345ad336ebe38ae5b6c4de24:1234 </td>
@@ -2201,7 +2206,7 @@ These hash types used to be in some version of hashcat, but were removed or repl
 
   </div>
 
-  <div class="license">Except where otherwise noted, content on this wiki is licensed under the following license: <bdi><a href="http://creativecommons.org/licenses/publicdomain/" rel="license" class="urlextern">Public Domain</a></bdi></div>
+  <div class="license">Except where otherwise noted, content on this wiki is licensed under the following license: <bdi><a href="https://creativecommons.org/licenses/publicdomain/deed.en" rel="license" class="urlextern">Public Domain</a></bdi></div>
 </div>
 
 </body>
